@@ -1,6 +1,6 @@
-prompt_toolkit
 questionary
+prompt_toolkit
 numpy
-scipy
 sympy
+scipy
 rich

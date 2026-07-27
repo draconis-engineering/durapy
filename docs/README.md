@@ -1,4 +1,4 @@
-# DuraPy - An Open-Source Python Toolbox for STEM Workflows | By Durendal
+# DuraPy - An Open-Source Python Toolbox for STEM Workflows | By Draconis
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
