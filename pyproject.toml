@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=68", "wheel", "pybind11"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "durapy"
+version = "1.0.0.3"
+description = "DuraPy - Multi-disciplinary engineering software for STEM workflows"
+readme = "docs/README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+keywords = [
+    "engineering",
+    "math",
+    "physics",
+    "science",
+    "python",
+    "cli",
+    "stem",
+]
+
+authors = [
+    {name = "Simon Stordal Amundgård"}
+]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+dependencies = [
+    "prompt_toolkit",
+    "questionary",
+    "numpy",
+    "scipy",
+    "sympy",
+    "rich",
+]
+
+[project.urls]
+Homepage = "https://github.com/amundgaard09/durendal"
+Repository = "https://github.com/amundgaard09/durendal"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["durapy*"]

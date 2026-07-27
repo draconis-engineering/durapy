@@ -1,0 +1,77 @@
+Metadata-Version: 2.4
+Name: durapy
+Version: 1.0.0.3
+Summary: DuraPy - Multi-disciplinary engineering software for STEM workflows
+Author: Simon Stordal Amundgård
+License: MIT
+Project-URL: Homepage, https://github.com/amundgaard09/durendal
+Project-URL: Repository, https://github.com/amundgaard09/durendal
+Keywords: engineering,math,physics,science,python,cli,stem
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: prompt_toolkit
+Requires-Dist: questionary
+Requires-Dist: numpy
+Requires-Dist: scipy
+Requires-Dist: sympy
+Requires-Dist: rich
+
+# DuraPy - An Open-Source Python Toolbox for STEM Workflows | By Durendal
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
+DuraPy is a growing toolbox for science, engineering, and STEM workflows. It brings together helpful utilities for mathematics, physics, robotics, chemistry-adjacent calculations, and more under one Python universal package.
+
+## What makes it useful
+
+- A practical math layer for geometry, trigonometry, and algebra
+- Physics constants and helper modules for scientific exploration
+- A lightweight foundation for future CLI tools and engineering utilities
+- A simple package structure that is easy to extend
+
+## Installation
+
+```bash
+pip install durapy
+```
+
+## Quick start
+
+```python
+from durapy import unimath
+
+print(unimath.pythagoras(A=3, B=4))
+```
+
+Output:
+
+```text
+5.0
+```
+
+## Example: constants and units
+
+```python
+from durapy import constants
+
+print(constants.PI)
+print(constants.C)
+```
+
+## Suggested next improvements
+
+If you want to evolve the package further, the most impactful next steps are:
+
+- Add more polished examples and tutorials
+- Create a small CLI for common calculations
+- Add documentation pages for each submodule
+- Introduce a richer test suite and versioned release workflow
+
+DuraPy is intentionally open-ended, so it can grow into whatever your STEM projects need next.
