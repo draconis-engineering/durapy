@@ -18,28 +18,39 @@ DuraPy is a growing toolbox for science, engineering, and STEM workflows. It bri
 pip install durapy
 ```
 
-## Quick start
+## Modules
 
-```python
-from durapy import unimath
+DuraPy is composed of several submodules, each providing a specific set of functionality.
 
-print(unimath.pythagoras(A=3, B=4))
-```
+- MaxCompute: C++-based libraryfor high-performance numerical computations
+- Shared Library: a collection of shared utilities for all submodules
+    - Color Systems - a collection of color systems and color space conversions, such as RGB, HEX, and CMYK
+    - Constants, Numerical Value types, and Unit modules, for scientific calculations
+    - Exceptions - Custom exception classes for error handling
 
-Output:
+- UniCLI - a command-line interface framework for making CLI tools
+- UniCogni - Advanced AI/ML utilities for natural language processing and machine learning
+- UniCrypto - Cryptographic utilities for encryption and decryption
+- UniMath - Mathematical utilities for numerical computations
+    - Basic Algebra - Tools for basic algebraic operations
+    - Linear Algebra - Tools for linear algebra operations, built on top of NumPy + Custom types for Matrices and Vectors
+    - Coordinate Systems - Custom types for representing points and vectors in N-dimensional space, such as Cartesian, polar, and spherical coordinates
+    - Geometry, Number Theory and Trigonometry - Tools for geometric calculations and trigonometric functions
+    - Decorators and Exceptions - utilities for decorators and exception handling, providing error-free and mathematically correct calculations
 
-```text
-5.0
-```
+- UniOps - A framework built for mechatronics and robotics, providing kinematics and dynamics utilities
+- UniPhys - A physics calculation library, providing calculation resources for a range of domains
+    - Acoustics
+    - Astrophysics
+    - Electromagnetics
+    - Fluid Dynamics
+    - Mechanics
+    - Nuclear Physics
+    - Quantum Physics
+    - Thermodynamics
 
-## Example: constants and units
-
-```python
-from durapy import constants
-
-print(constants.PI)
-print(constants.C)
-```
+- UniPower - An advanced electronics/electrical engineering library, providing electrical component models, circuit simulation, and power analysis tools
+- UniSky - Aerospace/Spaceflight simulation and analysis tools
 
 ## Suggested next improvements
 

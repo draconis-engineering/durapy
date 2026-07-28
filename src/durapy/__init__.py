@@ -3,7 +3,7 @@
 from . import (
     uniCLI,
     unicogni,
-    unicrypt,
+    unicrypto,
     unimath,
     uniops,
     uniphys,
@@ -25,7 +25,7 @@ __all__ = [
     "numval_types",
     "uniCLI",
     "unicogni",
-    "unicrypt",
+    "unicrypto",
     "unimath",
     "uniops",
     "uniphys",

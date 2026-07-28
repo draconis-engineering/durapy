@@ -10,7 +10,6 @@ except ImportError:
 
 from . import (
     algebra,
-    algorithms,
     decorators,
     exceptions,
     geometry,
@@ -35,7 +34,6 @@ __all__ = [
     "Polar",
     "Spherical",
     "algebra",
-    "algorithms",
     "decorators",
     "exceptions",
     "geometry",
