@@ -6,12 +6,12 @@ build-backend = "setuptools.build_meta"
 name = "durapy"
 version = "1.0.0.3"
 description = "A modern Python utility library from the Durendal ecosystem."
-readme = "README.md"
+readme = "docs/README.md"
 requires-python = ">=3.11"
-license = { text = "LICENSE" }
+license = { file = "LICENSE" }
 
 authors = [
-    { name = "Simon Stordal Amundgård" }
+    { name = "Simon Stordal Amundgård", email = "nomispus@icloud.com" }
 ]
 
 keywords = [
@@ -29,6 +29,8 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Operating System :: OS Independent"
 ]
 
@@ -42,9 +44,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/amundgaard09/durendal"
-Repository = "https://github.com/amundgaard09/durendal"
-Issues = "https://github.com/amundgaard09/durendal/issues"
+Homepage = "https://github.com/draconis-engineering/durapy"
+Repository = "https://github.com/draconis-engineering/durapy"
+Issues = "https://github.com/draconis-engineering/durapy/issues"
 
 [tool.setuptools]
 package-dir = {"" = "src"}

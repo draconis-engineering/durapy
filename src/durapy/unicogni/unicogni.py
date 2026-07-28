@@ -30,7 +30,7 @@ def d_leaky_relu(x: np.ndarray) -> np.ndarray:
 
 def gelu(x: np.ndarray) -> np.ndarray:
     """Gaussian Error Linear Unit using the tanh approximation."""
-    return 0.5 * x * (1.0 + tanh(np.sqrt(float(2.0 / PI)) * (x + 0.044715 * x**3)))
+    return 0.5 * x * (1.0 + tanh(np.sqrt(2.0 / PI.value) * (x + 0.044715 * x**3)))
 
 
 def d_gelu(x: np.ndarray) -> np.ndarray:
@@ -82,7 +82,8 @@ def d_cdelu(x: np.ndarray, alpha: float = 1.0) -> np.ndarray:
 
 def sigmoid(x: np.ndarray) -> np.ndarray:
     """Returns the Sigmoid activation of x with overflow protection."""
-    return np.where(x >= 0, 1.0 / (1.0 +np.exp(-x)), np.exp(x) / (1.0 + np.exp(x)))
+    expx = np.exp(x)
+    return np.where(x >= 0, 1.0 / (1.0 + np.exp(-x)), expx / (1.0 + expx))
 
 
 def d_sigmoid(x: np.ndarray) -> np.ndarray:

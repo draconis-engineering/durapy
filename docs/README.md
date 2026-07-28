@@ -22,7 +22,7 @@ pip install durapy
 
 DuraPy is composed of several submodules, each providing a specific set of functionality.
 
-- MaxCompute: C++-based libraryfor high-performance numerical computations
+- MaxCompute: C++-based library for high-performance numerical computations
 - Shared Library: a collection of shared utilities for all submodules
     - Color Systems - a collection of color systems and color space conversions, such as RGB, HEX, and CMYK
     - Constants, Numerical Value types, and Unit modules, for scientific calculations
