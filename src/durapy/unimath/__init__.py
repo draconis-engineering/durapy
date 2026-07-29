@@ -6,12 +6,9 @@ try:
 except ImportError:
     _maxcompute = None
 
-# ... keep the rest of your wrapper functions (mat_mat_mul, etc.) unchanged
-
 from . import (
     algebra,
     decorators,
-    exceptions,
     geometry,
     linalg,
     num_theory,
@@ -35,7 +32,6 @@ __all__ = [
     "Spherical",
     "algebra",
     "decorators",
-    "exceptions",
     "geometry",
     "linalg",
     "num_theory",

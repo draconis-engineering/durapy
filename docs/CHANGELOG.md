@@ -8,4 +8,4 @@
 - Fixed some invalid __ init __ files to avoid things like "from durapy import unicli.unicli"
 
 - Added stronger/consistent typing all troughout the DuraPy codebase
-- Added input validation to `unimath`.`linalg` - especially for matrix operations, replacing the deficient requires_square decorator
+- Added input validation to `unimath`.`linalg` - especially for matrix operations, replacing the deficient requires_square decorators
