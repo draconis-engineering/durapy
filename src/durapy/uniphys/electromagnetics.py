@@ -6,7 +6,7 @@ from ..shared.numval_types import Quantity
 from ..shared.units import ELECTRONVOLT, JOULE, METER
 
 # Ultraviolet Spectrum Wavelengths
-_UV_SPEC_WAVLEN: dict[tuple[float, float], str] = {
+UV_SPEC_WAVLEN: dict[tuple[float, float], str] = {
     (10, 13.5): f"{color_text('EUV', 'Violet')}",
     (13.5, 100): f"{color_text('DUV', 'Violet')}",
     (100, 280): f"{color_text('UVC', 'Violet')}",
@@ -15,7 +15,7 @@ _UV_SPEC_WAVLEN: dict[tuple[float, float], str] = {
 }
 
 # Visible Spectrum Wavelengths
-_VSBL_SPEC_WAVLEN: dict[tuple[float, float], str] = {
+VSBL_SPEC_WAVLEN: dict[tuple[float, float], str] = {
     (390, 450): f"{color_text('Violet', 'violet')}",
     (450, 495): f"{color_text('Blue', 'blue')}",
     (495, 570): f"{color_text('Green', 'green')}",
@@ -25,25 +25,26 @@ _VSBL_SPEC_WAVLEN: dict[tuple[float, float], str] = {
 }
 
 # Electromagnetic Spectrum Wavelengths
-_EM_SPEC_WAVLEN: dict[tuple[float, float], str | dict[tuple[float, float], str]] = {
+EM_SPEC_WAVLEN = {
     (0, 0.01): "Gamma-ray",
     (0.01, 10): "X-Ray",
-    (10, 400): _UV_SPEC_WAVLEN,
-    (400, 700): _VSBL_SPEC_WAVLEN,
+    (10, 400): UV_SPEC_WAVLEN,
+    (400, 700): VSBL_SPEC_WAVLEN,
     (700, 1e6): "Infrared Light",
     (1e7, 1e10): "Micro Wave",
     (1e10, INF.value): "Radio Wave",
 }
 
 
-def _spectrum_label(
-    λ: float, spectrum_map: dict[tuple[float, float], str | dict]
+def spectrum_label(
+    λ: float, spectrum_map: dict[tuple[float, float], str | dict[tuple[float, float], str]]
 ) -> str:
     """Return the spectrum label (e.g. `Radio Wave` or `X-Ray`) by checking recursively for wavelength `λ` in `spectrum_map`."""
     for (low, high), value in spectrum_map.items():
         if low <= λ < high:
             if isinstance(value, dict):
-                return _spectrum_label(λ, value)
+                return spectrum_label(λ, dict(value))
+
             return value
     raise ValueError(f"Wavelength {λ!r} is out of range for this spectrum map")
 
@@ -60,7 +61,7 @@ def Hz(λ: float) -> Quantity:
 
 def ems(λ: float) -> tuple[str, float, str]:
     """Get the part of the electromagnetic spectrum the wavelength `λ` sits in, as well as the hertz."""
-    label = _spectrum_label(λ, _EM_SPEC_WAVLEN)
+    label = spectrum_label(λ, EM_SPEC_WAVLEN)
     hz = float(Hz(λ))
 
     return label, hz, f"{label} - {hz} Hz"

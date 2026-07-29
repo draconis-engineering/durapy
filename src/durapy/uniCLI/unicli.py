@@ -2,15 +2,15 @@
 
 import os
 import subprocess
-
-from rich.progress import Progress, SpinnerColumn, TextColumn
+from types import TracebackType
+from rich.progress import Progress, SpinnerColumn, TaskID, TextColumn
 
 from ..shared.color_system import color_text
 
 
 def clear_terminal() -> None:
     """Clear the terminal screen."""
-    subprocess.run(["cls" if os.name == "nt" else "clear"], shell=True, check=False)
+    _ = subprocess.run(["cls" if os.name == "nt" else "clear"], shell=True, check=False)
 
 
 def console_msg(
@@ -58,19 +58,19 @@ def console_confirm(
 
 class Console:
     def __init__(self):
-        self.progress = Progress(
+        self.progress: Progress = Progress(
             SpinnerColumn(spinner_name="dots"),
             TextColumn("{task.description}"),
             transient=False,  # Keeps completed tasks visible on screen
         )
         # Dictionary mapping: { "task_name": task_id }
-        self.active_tasks = {}
+        self.active_tasks: dict[str, int] = {}
 
     def __enter__(self):
         self.progress.start()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: type[BaseException] | None, exc_val: BaseException | None, exc_tb: TracebackType | None):
         self.progress.stop()
 
     def start_task(self, name: str):
@@ -99,8 +99,8 @@ class Console:
                 f" Error: {error_msg}" if error_msg else ""
             )
 
-        self.progress.update(task_id, description=status_text, completed=True)
+        self.progress.update(TaskID(task_id), description=status_text, completed=True)
 
-    def print(self, text, style):
+    def print(self, text: str, style: str):
         """Prints a message to the console with a specific style."""
         self.progress.console.print(text, style=style)

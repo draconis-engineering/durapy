@@ -15,7 +15,7 @@ def lovelace(
     return x, y
 
 
-def fibonacci_integer(fib_idx: float) -> int:
+def fibonacci_integer(fib_idx: int) -> int:
     """Fibonacci integer generator that returns the Fibonacci integer at the given index."""
 
     if fib_idx < 2 or not isinstance(fib_idx, int):
@@ -92,7 +92,7 @@ def lcm(*ints: int) -> int:
 
 def prime_factorize(n: int) -> list[int]:
     """Returns the prime factorization of a number as a list of its prime factors."""
-    factors = []
+    factors: list[int] = []
     div = 2
 
     while n >= 2:
@@ -128,7 +128,7 @@ def is_perfect_cube(n: int) -> bool:
     """Returns True if the number is a perfect cube, else returns False."""
     if n < 0:
         return False
-    return round(n ** (1 / 3)) ** 3 == n
+    return math.pow(math.sqrt(n), 3) == n
 
 
 def is_perfect_power(n: int) -> bool:
@@ -136,7 +136,7 @@ def is_perfect_power(n: int) -> bool:
     if n < 1:
         return False
     for b in range(2, int(math.log2(n)) + 1):
-        a = round(n ** (1 / b))
+        a: int = round(pow(n, 1 / b))
         if a**b == n:
             return True
     return False

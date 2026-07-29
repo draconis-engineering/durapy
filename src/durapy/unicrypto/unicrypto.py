@@ -64,7 +64,7 @@ def vigenere_decrypt(cipher: str, key: str) -> str:
 def railfence_encrypt(plaintext: str, key: int) -> str:
     key = int(key)
     pos, direction = 0, 1
-    rows = [[] for _ in range(key)]
+    rows: list[list[str]] = [[] for _ in range(key)]
 
     for char in plaintext:
         rows[pos].append(char)
@@ -76,7 +76,8 @@ def railfence_encrypt(plaintext: str, key: int) -> str:
     return ''.join([''.join(row) for row in rows])
 def railfence_decrypt(cipher: str, key: int) -> str:
     key = int(key)
-    pattern, rows = [], []
+    pattern: list[int] = []
+    rows: list[list[str]] = []
     pos, idx, direction =  0, 0, 1
     plaintext = ''
 

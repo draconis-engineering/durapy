@@ -12,7 +12,7 @@ def tw_ratio(thrust: float, weight: float) -> str:
     return f"Ratio: {color_text(f'{ratio}', 'green' if ratio > 1 else 'red' if ratio != 1 else 'yellow')}"
 
 
-def mach_number(vel: float, mach: float = MACH.quantity._value.real) -> str:
+def mach_number(vel: float, mach: float = MACH.value) -> str:
     """Mach Number Calulator. Speed of sound is defaulted to 343 m/s. Ensure consistent units!"""
     ratio = vel / mach
     label = (

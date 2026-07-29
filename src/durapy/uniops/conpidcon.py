@@ -9,14 +9,14 @@ class ContinuousPIDController:
     def __init__(
         self, kp: float = 0, ki: float = 0, kd: float = 0, setpoint: int = 0
     ) -> None:
-        self.kp = kp
-        self.ki = ki
-        self.kd = kd
-        self.setpoint = setpoint
+        self.kp: float = kp
+        self.ki: float = ki
+        self.kd: float = kd
+        self.setpoint: int = setpoint
 
-        self.integral = 0
-        self.prev_error = 0
-        self.prev_time = time.time()
+        self.integral: float = 0
+        self.prev_error: float = 0
+        self.prev_time: float = time.time()
 
     def update(self, measured_value: float) -> float:
         now = time.time()

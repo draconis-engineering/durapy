@@ -7,7 +7,7 @@ from ..shared.constants import GAS_CONSTANT, MACH
 
 def sound_speed(temp: float, γ: float = 1.4, molar_mass: float = 0.02897) -> float:
     """Calculate the speed of sound in a gas given the temperature, adiabatic index (gamma), and molar mass."""
-    return ((γ * GAS_CONSTANT.value * temp) / molar_mass) ** 0.5
+    return math.sqrt((γ * GAS_CONSTANT.value * temp) / molar_mass)
 
 
 def sound_pressure_level(pressure: float, reference_pressure: float = 20e-6) -> float:
