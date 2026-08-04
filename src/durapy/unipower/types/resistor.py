@@ -51,7 +51,7 @@ TOLERANCES: MappingProxyType[str, float] = MappingProxyType(
 )
 
 
-def _color_2_value_(
+def resistor_insight(
     C1: str, C2: str, C3: str, C4: str, C5: str | None = None
 ) -> tuple[float, float, float, float]:
     """Returns the resistance value of a resistor given its color bands."""
@@ -63,7 +63,7 @@ def _color_2_value_(
 
     # Invalid colors given
     except KeyError as e:
-        raise InvalidColors(str(e)) from e
+        raise InvalidColors(e) from e
 
     # 4-color mode
     if C5 is None:
@@ -71,7 +71,7 @@ def _color_2_value_(
             multiplier = MULTIPLIERS[C3]
             tolerance = TOLERANCES[C4]
         except KeyError as e:
-            raise InvalidColors(str(e)) from e
+            raise InvalidColors(e) from e
 
         ohms = (b1 * 10 + b2) * multiplier
 
@@ -82,7 +82,7 @@ def _color_2_value_(
             multiplier = MULTIPLIERS[C4]
             tolerance = TOLERANCES[C5]
         except KeyError as e:
-            raise InvalidColors(str(e)) from e
+            raise InvalidColors(e) from e
 
         ohms = (b1 * 100 + b2 * 10 + b3) * multiplier
 
@@ -91,14 +91,14 @@ def _color_2_value_(
     lower = ohms * (1 - tolerance_decimal)
     upper = ohms * (1 + tolerance_decimal)
 
-    return (ohms, tolerance, lower, upper)
+    return ohms, tolerance, lower, upper
 
 
 class Resistor:
     """Resistor class that represents a resistor with color bands and ohms value."""
 
     def __init__(self, colors: tuple[str, str, str, str, str | None]) -> None:
-        self._ohms, self.tolerance, self.lower, self.upper = _color_2_value_(*colors)
+        self._ohms, self.tolerance, self.lower, self.upper = resistor_insight(*colors)
         self.c_1, self.c_2, self.c_3, self.c_4, self.c_5 = colors
 
     def __repr__(self) -> str:
