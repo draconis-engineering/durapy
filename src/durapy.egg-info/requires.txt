@@ -1,6 +1,0 @@
-questionary
-prompt_toolkit
-numpy
-sympy
-scipy
-rich

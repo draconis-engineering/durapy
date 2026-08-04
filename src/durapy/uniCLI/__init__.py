@@ -5,14 +5,20 @@ It provides the necessary functions and classes to create a command-line interfa
 including command parsing, argument validation, and command dispatching.
 """
 
-from .unicli import (clear_terminal, console_confirm, console_input, console_msg, console_print, Console)
-
+from .unicli import (
+    Console,
+    clear_terminal,
+    console_confirm,
+    console_input,
+    console_msg,
+    console_print,
+)
 
 __all__ = [
+    "Console",
     "clear_terminal",
     "console_confirm",
     "console_input",
     "console_msg",
     "console_print",
-    "Console"
 ]

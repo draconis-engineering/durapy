@@ -3,6 +3,7 @@
 import os
 import subprocess
 from types import TracebackType
+
 from rich.progress import Progress, SpinnerColumn, TaskID, TextColumn
 
 from ..shared.color_system import color_text
@@ -70,7 +71,12 @@ class Console:
         self.progress.start()
         return self
 
-    def __exit__(self, exc_type: type[BaseException] | None, exc_val: BaseException | None, exc_tb: TracebackType | None):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ):
         self.progress.stop()
 
     def start_task(self, name: str):
