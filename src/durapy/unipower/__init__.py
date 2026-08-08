@@ -4,17 +4,16 @@ This library contains functions for electrical calculations and simulations. The
 The library is still in development and may contain some unstable functions that are not yet fully tested.
 """
 
-from .types import (
-    capacitor,
-    diode,
-    fuse,
-    ic,
-    inductor,
-    oscillator,
-    potentiometer,
-    resistor,
-    transistor,
-)
+from .types.capacitor import Capacitor
+from .types.circuit import Circuit
+from .types.diode import Diode
+from .types.fuse import Fuse
+from .types.ic import IC
+from .types.inductor import Inductor
+from .types.oscillator import Oscillator
+from .types.potentiometer import Potentiometer
+from .types.resistor import BANDS, MULTIPLIERS, TOLERANCES, Resistor
+from .types.transistor import Transistor
 from .unipower import (
     inductor_impedance,
     ohms_law,
@@ -26,20 +25,24 @@ from .unipower import (
 )
 
 __all__ = [
-    "capacitor",
-    "diode",
-    "fuse",
-    "ic",
-    "inductor",
+    "BANDS",
+    "IC",
+    "MULTIPLIERS",
+    "TOLERANCES",
+    "Capacitor",
+    "Circuit",
+    "Diode",
+    "Fuse",
+    "Inductor",
+    "Oscillator",
+    "Potentiometer",
+    "Resistor",
+    "Transistor",
     "inductor_impedance",
     "ohms_law",
-    "oscillator",
-    "potentiometer",
     "power_dissipation",
     "rc_time_constant",
-    "resistor",
     "total_capacitance",
     "total_esr",
-    "transistor",
     "volt_divider",
 ]

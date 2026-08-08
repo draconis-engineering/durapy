@@ -1,0 +1,2 @@
+class Potentiometer:
+    pass

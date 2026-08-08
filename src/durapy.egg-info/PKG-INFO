@@ -1,0 +1,106 @@
+Metadata-Version: 2.4
+Name: durapy
+Version: 1.0.0.3
+Summary: A modern Python utility library from the Durendal ecosystem.
+Author-email: Simon Stordal Amundgård <nomispus@icloud.com>
+License: 
+        Copyright © 2026 Simon Stordal Amundgård
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), 
+        to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+        and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+        INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+        IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+        WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+Project-URL: Homepage, https://github.com/draconis-engineering/durapy
+Project-URL: Repository, https://github.com/draconis-engineering/durapy
+Project-URL: Issues, https://github.com/draconis-engineering/durapy/issues
+Keywords: engineering,utilities,python,math,cli
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: 3.14
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: questionary
+Requires-Dist: prompt_toolkit
+Requires-Dist: numpy
+Requires-Dist: sympy
+Requires-Dist: scipy
+Requires-Dist: rich
+Dynamic: license-file
+
+# DuraPy - An Open-Source Python Toolbox for STEM Workflows | By Draconis
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
+DuraPy is a growing toolbox for science, engineering, and STEM workflows. It brings together helpful utilities for mathematics, physics, robotics, chemistry-adjacent calculations, and more under one Python universal package.
+
+## What makes it useful
+
+- A practical math layer for geometry, trigonometry, and algebra
+- Physics constants and helper modules for scientific exploration
+- A lightweight foundation for future CLI tools and engineering utilities
+- A simple package structure that is easy to extend
+
+## Installation
+
+```bash
+pip install durapy
+```
+
+## Modules
+
+DuraPy is composed of several submodules, each providing a specific set of functionality.
+
+- MaxCompute: C++-based library for high-performance numerical computations
+- Shared Library: a collection of shared utilities for all submodules
+    - Color Systems - a collection of color systems and color space conversions, such as RGB, HEX, and CMYK
+    - Constants, Numerical Value types, and Unit modules, for scientific calculations
+    - Exceptions - Custom exception classes for error handling
+
+- UniCLI - a command-line interface framework for making CLI tools
+- UniCogni - Advanced AI/ML utilities for natural language processing and machine learning
+- UniCrypto - Cryptographic utilities for encryption and decryption
+- UniMath - Mathematical utilities for numerical computations
+    - Basic Algebra - Tools for basic algebraic operations
+    - Linear Algebra - Tools for linear algebra operations, built on top of NumPy + Custom types for Matrices and Vectors - Accelerated with DracoLIX and custom C++ backend
+    - Coordinate Systems - Custom types for representing points and vectors in N-dimensional space, such as Cartesian, polar, and spherical coordinates
+    - Geometry, Number Theory and Trigonometry - Tools for geometric calculations and trigonometric functions
+    - Decorators and Exceptions - utilities for decorators and exception handling, providing error-free and mathematically correct calculations
+
+- UniOps - A framework built for mechatronics and robotics, providing kinematics and dynamics utilities
+- UniPhys - A physics calculation library, providing calculation resources for a range of domains
+    - Acoustics
+    - Astrophysics
+    - Electromagnetics
+    - Fluid Dynamics
+    - Mechanics
+    - Nuclear Physics
+    - Quantum Physics
+    - Thermodynamics
+
+- UniPower - An advanced electronics/electrical engineering library, providing electrical component models, circuit simulation, and power analysis tools
+- UniSky - Aerospace/Spaceflight simulation and analysis tools
+
+## Suggested next improvements
+
+If you want to evolve the package further, the most impactful next steps are:
+
+- Add more polished examples and tutorials
+- Create a small CLI for common calculations
+- Add documentation pages for each submodule
+- Introduce a richer test suite and versioned release workflow
+
+DuraPy is intentionally open-ended, so it can grow into whatever your STEM projects need next.

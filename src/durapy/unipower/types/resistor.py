@@ -105,9 +105,7 @@ class Resistor:
         return f"Resistor(ohms={self._ohms}, tolerance={self.tolerance}, lower={self.lower}, upper={self.upper})"
 
     def __str__(self) -> str:
-        return (
-            f"{self._ohms} Ω +- {self.tolerance}% - LO: {self.lower}, HI: {self.upper}"
-        )
+        return f"{self._ohms} ohms +- {self.tolerance}% \n Low: {self.lower} High: {self.upper}"
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Resistor):
