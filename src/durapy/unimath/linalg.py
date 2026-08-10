@@ -20,21 +20,16 @@ from collections.abc import Sequence
 from typing import overload, override
 
 import numpy as np
+from dracolix import matmatmul, matvecmul  # type: ignore missing pyi files
 
 from ..shared.exceptions import ArgumentError
-from ._maxcompute import (
-    dot_product,
-    mat_mat_mul,
-    mat_vec_mul,
-    outer_product,
-    vec_mat_mul,
-)
 
 EPSILON = 1e-9
 
 Real = int | float
 Scalar = int | float | complex
 Numerical = int | float | complex | np.ndarray | list[float] | list[list[float]]
+
 
 def is_close(a: Numerical, b: Numerical) -> bool:
     """Checks if two floats / list-like objects of floats are close"""
@@ -65,7 +60,9 @@ class Vector:
 
     def __init__(self, components: Sequence[Scalar]):
         self.components: list[Scalar] = list(components)
-        self.real_components: list[float] = [component.real for component in self.components]
+        self.real_components: list[float] = [
+            component.real for component in self.components
+        ]
         self.imag_components: list[float] = [
             component.imag for component in components if component.imag != 0
         ]
@@ -175,14 +172,18 @@ class Vector:
     def __mul__(self, other: object) -> Vector | float:
         if isinstance(other, Real):  # scalar multiplication
             if len(self.components) != 1:
-                raise ValueError("Scalar multiplication is only supported for 1D vectors")
+                raise ValueError(
+                    "Scalar multiplication is only supported for 1D vectors"
+                )
             return Vector(
                 [other * self.components[i] for i in range(len(self.components))]
             )
         if isinstance(other, Vector):  # vector multiplication | Dot product
             if self.shape[0] != other.shape[0]:
                 raise ValueError("Vectors must have the same length for dot product")
-            return dot_product(np.array(self.components), np.array(other.components))
+            return np.dot(
+                np.array(self.components), np.array(other.components)
+            )  ### MIGRATE TO DRACOLIX WHEN IMPLEMENTED
 
         return NotImplemented
 
@@ -214,17 +215,23 @@ class Vector:
             if self.shape[1] != other.shape[0]:
                 raise ValueError("Matrix dimensions do not match for multiplication")
             return Matrix(
-                array=list(outer_product(
-                    np.array(self.components), np.array(other.components)
-                ))
+                array=list(
+                    np.outer(  ### MIGRATE TO DRACOLIX WHEN IMPLEMENTED
+                        np.array(self.components), np.array(other.components)
+                    ).tolist()
+                )
             )
         if isinstance(other, Matrix):
             if self.shape[1] != other.shape[0]:
-                raise ValueError("Matrix dimensions do not match for multiplication")
+                raise ValueError(
+                    "Matrix dimensions do not match for multiplication"
+                )  ### MIGRATE TO DRACOLIX WHEN IMPLEMENTED
             return Matrix(
-                array=list(vec_mat_mul(
-                    np.array(self.components), np.array(other.array)
-                ))
+                array=list(
+                    np.vecmat(
+                        np.array(self.components), np.array(other.array)
+                    )  ### MIGRATE TO DRACOLIX WHEN IMPLEMENTED
+                )
             )
         return NotImplemented
 
@@ -494,10 +501,12 @@ class Matrix:
                 raise ValueError("Matrix dimensions do not match for multiplication")
 
             return Matrix(
-                array=list(mat_mat_mul(
-                    np.array(self._array, dtype=np.float64),
-                    np.array(other._array, dtype=np.float64),
-                ))
+                array=list(
+                    matmatmul(
+                        np.array(self._array, dtype=np.float64),
+                        np.array(other._array, dtype=np.float64),
+                    )
+                )
             )
 
         if isinstance(other, Vector):
@@ -505,10 +514,12 @@ class Matrix:
                 raise ValueError("Matrix dimensions do not match for multiplication")
 
             return Vector(
-                components=list(mat_vec_mul(
-                    np.array(self._array, dtype=np.float64),
-                    np.array(other.components, dtype=np.float64),
-                ))
+                components=list(
+                    matvecmul(
+                        np.array(self._array, dtype=np.float64),
+                        np.array(other.components, dtype=np.float64),
+                    )
+                )
             )
 
         return NotImplemented
@@ -548,7 +559,7 @@ class Matrix:
     @staticmethod
     def __sign(expr: float, idx: int) -> float:
         """Helper method to compute the sign of an expression based on the index."""
-        return expr * (-1.0 ** idx)
+        return expr * (-(1.0**idx))
 
     @staticmethod
     def __2x2_det(_array: list[list[float]]) -> float:
@@ -638,7 +649,6 @@ class Matrix:
             # Find a non-zero pivot in the current column
             if pivot == 0:
                 for j in range(i + 1, n):
-
                     # Swap rows to bring a non-zero pivot into the current row
                     if aug[j][i] != 0:
                         aug[i], aug[j] = aug[j], aug[i]
@@ -796,7 +806,9 @@ class Matrix:
         - `SquareMatrix`: A matrix where columns represent the corresponding eigenvectors
         """
         if not self.is_square():
-            raise ValueError("Matrix must be square to compute eigenvalues and eigenvectors.")
+            raise ValueError(
+                "Matrix must be square to compute eigenvalues and eigenvectors."
+            )
         return self._eigen()
 
     def _diagonal(self) -> list[float]:
@@ -835,7 +847,9 @@ class Matrix:
     def to_identity(self) -> Matrix:
         """Returns the identity matrix of the same dimension as this matrix."""
         if not self.is_square():
-            raise ValueError("Matrix must be square to be converted to an identity matrix.")
+            raise ValueError(
+                "Matrix must be square to be converted to an identity matrix."
+            )
         return self._to_identity()
 
     def is_singular(self) -> bool:
@@ -849,7 +863,6 @@ class Matrix:
         if not self.is_square():
             raise ValueError("Matrix must be square to be an identity matrix.")
         return self == self.to_identity
-
 
     def is_diagonal(self) -> bool:
         if not self.is_square():
@@ -941,6 +954,7 @@ class Matrix:
         Returns True if all eigenvalues are strictly positive.
         """
         return all(value > 0 for value in self.eigen[0])
+
 
 def rot_x(θ: float) -> Matrix:
     """Returns the rotation matrix for a rotation around the x-axis by the given angle in degrees."""
