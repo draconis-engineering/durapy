@@ -1,6 +1,4 @@
-"""
-The `DuraPy` Coordinate Systems for the `UniMath` subpackage.
-"""
+"""`UniMath` Coordinate Systems source"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""UniMath algebra module."""
+"""`UniMath` Algebra source"""
 
 import math
 

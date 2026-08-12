@@ -1,4 +1,4 @@
-"""The `DuraPy` `UniFlight` module provides a collection of functions and classes for performing calculations and simulations related to flight dynamics, aerodynamics, and propulsion."""
+"""`UniFlight` source"""
 
 from ..shared.color_system import color_text
 from ..shared.constants import MACH

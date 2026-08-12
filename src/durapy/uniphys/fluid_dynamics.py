@@ -1,6 +1,9 @@
-"""UniPhys Fluid Dynamics Source"""
+"""`UniPhys` fluid dynamics source"""
 
-def reynolds_number(velocity: float, characteristic_length: float, kinematic_viscosity: float) -> float:
+
+def reynolds_number(
+    velocity: float, characteristic_length: float, kinematic_viscosity: float
+) -> float:
     """
     Calculate the Reynolds number for a given flow.
 

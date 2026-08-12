@@ -1,4 +1,4 @@
-"""DuraPy UniCogni Source"""
+"""`UniCogni` source"""
 
 import numpy as np
 from scipy import special

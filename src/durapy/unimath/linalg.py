@@ -1,5 +1,5 @@
 """
-Linear Algebra Library for the `DuraPy` package.
+`UniMath` Linear Algebra source
 
 Data Types
 ----------

@@ -1,4 +1,4 @@
-"""UniPhys Acoustics Source"""
+"""`UniPhys` acoustics source"""
 
 import math
 

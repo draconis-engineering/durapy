@@ -1,4 +1,4 @@
-"""Exceptions for the UniPower module."""
+"""Exceptions for the `UniPower` module."""
 
 from ..shared.color_system import color_text
 

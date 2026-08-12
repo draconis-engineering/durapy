@@ -1,4 +1,4 @@
-"""DuraPy Number Theory module"""
+"""`UniMath` Number Theory source"""
 
 import math
 
@@ -19,7 +19,9 @@ def fibonacci_integer(fib_idx: int) -> int:
     """Fibonacci integer generator that returns the Fibonacci integer at the given index."""
 
     if fib_idx < 2 or not isinstance(fib_idx, int):
-        raise ValueError("fibonacci_integer does not take integers less than 2 or floats/strings!")
+        raise ValueError(
+            "fibonacci_integer does not take integers less than 2 or floats/strings!"
+        )
 
     if fib_idx == 2:
         return 1

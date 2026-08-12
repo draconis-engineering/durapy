@@ -1,8 +1,4 @@
-"""UniPhys Astrophysics Source"""
-
-# Alpha - A α, Beta - B β, Gamma - Γ γ, Delta - Δ δ,  Epsilon - E ε, Zeta - Z ζ, Eta - H η,
-# Theta - Θ θ, Iota - I ι, Kappa - K κ, Lambda - Λ λ, Mu - M μ,      Nu - N ν,   Xi - Ξ ξ,  Omicron - O ο,
-# Pi - Π π,    Rho - P ρ,  Sigma - Σ σ ς, Tau - T τ,  Ypsilon - Y υ, Phi - Φ φ,  Chi - X χ, Psi - Ψ ψ, Omega - Ω ω
+"""`UniPhys` astrophysics source"""
 
 import math
 
@@ -12,6 +8,7 @@ from ..shared.units import METER, MPS, NEWTON, SECOND, G
 
 
 def schwarzschild_radius(M: float) -> Quantity:
+    """Schwarzschild Radius of an object with mass `M`"""
     return Quantity(((2 * UNI_G * M) / C * C), METER)
 
 

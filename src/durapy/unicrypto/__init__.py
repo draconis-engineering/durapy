@@ -1,7 +1,7 @@
 """
 The `DuraPy` `UniCrypto` module.
-This module contains all the encryption and decryption functions of the `DuraPy` library.
-These include methods such as binary, ceasar, vigenere, railfence and OTP with encryption and decryption for all cryptography methods.
+
+UniCrypto includes a range of cryptography methods, for both encryption and decryption.
 """
 
 from .unicrypto import (

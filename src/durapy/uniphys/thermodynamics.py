@@ -1,4 +1,4 @@
-"""UniPhys Thermodynamics Source"""
+"""`UniPhys` thermodynamics source"""
 
 from ..shared.constants import GAS_CONSTANT
 from ..shared.numval_types import Quantity
@@ -169,7 +169,9 @@ def helmholtz_free_energy(
     return internal_energy - temperature * entropy
 
 
-def van_der_waals_pressure(n: float, vol: float, temp: float, a: float, b: float) -> Quantity:
+def van_der_waals_pressure(
+    n: float, vol: float, temp: float, a: float, b: float
+) -> Quantity:
     """
     Calculate the pressure of a real gas using the Van der Waals equation.
 
@@ -185,4 +187,6 @@ def van_der_waals_pressure(n: float, vol: float, temp: float, a: float, b: float
     -------
         float: The pressure of the gas (in pascals).
     """
-    return Quantity((n * GAS_CONSTANT.value * temp) / (vol - n * b) - (a * n**2) / vol**2, PASCAL)
+    return Quantity(
+        (n * GAS_CONSTANT.value * temp) / (vol - n * b) - (a * n**2) / vol**2, PASCAL
+    )

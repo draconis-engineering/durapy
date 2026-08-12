@@ -1,4 +1,4 @@
-"""UniPhys Electromagnetics Source"""
+"""`UniPhys` electromagnetics source"""
 
 from ..shared.color_system import color_text
 from ..shared.constants import INF, PLANCK, C
@@ -37,7 +37,8 @@ EM_SPEC_WAVLEN = {
 
 
 def spectrum_label(
-    λ: float, spectrum_map: dict[tuple[float, float], str | dict[tuple[float, float], str]]
+    λ: float,
+    spectrum_map: dict[tuple[float, float], str | dict[tuple[float, float], str]],
 ) -> str:
     """Return the spectrum label (e.g. `Radio Wave` or `X-Ray`) by checking recursively for wavelength `λ` in `spectrum_map`."""
     for (low, high), value in spectrum_map.items():

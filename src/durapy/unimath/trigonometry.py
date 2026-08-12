@@ -1,4 +1,4 @@
-"""DuraPy Trigonometry module"""
+"""`UniMath` Trigonometry module"""
 
 import math
 

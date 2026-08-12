@@ -1,4 +1,4 @@
-"""DuraPy UniCLI Source"""
+"""`UniCLI` source"""
 
 import os
 import subprocess

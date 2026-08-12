@@ -1,1 +1,1 @@
-"""UniPhys Quantum Physics Source"""
+"""`UniPhys` quantum physics source"""

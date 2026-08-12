@@ -1,14 +1,7 @@
 """The UniMath module for DuraPy."""
 
-try:
-    # Setuptools places the binary inside the exact module path defined in setup.py
-    from . import _maxcompute
-except ImportError:
-    _maxcompute = None
-
 from . import (
     algebra,
-    decorators,
     geometry,
     linalg,
     num_theory,
@@ -31,7 +24,6 @@ __all__ = [
     "Polar",
     "Spherical",
     "algebra",
-    "decorators",
     "geometry",
     "linalg",
     "num_theory",

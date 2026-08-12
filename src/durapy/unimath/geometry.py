@@ -1,4 +1,4 @@
-"""UniMath Geometry Module"""
+"""`UniMath` Geometry source"""
 
 import math
 

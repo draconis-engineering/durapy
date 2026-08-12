@@ -1,4 +1,4 @@
-"""UniPhys Nuclear Physics Source"""
+"""`UniPhys` nuclear physics source"""
 
 from ..shared.constants import E
 from ..shared.numval_types import Quantity

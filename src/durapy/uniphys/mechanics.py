@@ -1,4 +1,4 @@
-"""UniPhys Classical Mechanics Source"""
+"""`UniPhys` classical mechanics source"""
 
 import math
 
