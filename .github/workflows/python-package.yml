@@ -4,20 +4,20 @@ on:
   release:
     types: [published]
   workflow_dispatch:
-    permissions:
-          id-token: write  # Mandatory for Trusted Publishing
-          contents: read   # Required to checkout repository code
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Mandatory for Trusted Publishing
+      contents: read   # Required to checkout repository code
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
 
@@ -31,6 +31,3 @@ jobs:
 
     - name: Publish to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        password: ${{ secrets.PYPI_API_TOKEN_MAIN }}
-        verbose: true
