@@ -1,0 +1,6 @@
+prompt_toolkit
+questionary
+numpy
+sympy
+scipy
+rich

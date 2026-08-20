@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from fractions import Fraction
+from typing import override
 
 
 @dataclass(frozen=True, slots=True)
@@ -99,7 +100,7 @@ class Unit:
         )
 
 
-# The 7 SI Base symbols mapping to your 7-tuple indices
+# The 7 SI Base symbols mapping to 7-tuple indices
 BASE_SYMBOLS = ["m", "kg", "s", "A", "K", "mol", "cd"]
 SUPERSCRIPTS = {
     "-": "⁻",
@@ -129,11 +130,11 @@ def get_symbol(quantity: Quantity) -> str:
     """Dynamic construction of a string from base elements (e.g., m·kg·s⁻²)"""
 
     # Iterate over base symbols and exponents to build the symbol string
-    positives = []
-    negatives = []
+    positives: list[str] = []
+    negatives: list[str] = []
 
     # Iterate over base symbols and exponents to build the symbol string
-    for symbol, exp in zip(BASE_SYMBOLS, quantity.unit.dimension):
+    for symbol, exp in zip(BASE_SYMBOLS, quantity._unit.dimension):
         if exp == 0:
             continue
         elif exp > 0:
@@ -156,15 +157,18 @@ class Quantity:
 
     def __init__(self, value: complex | Quantity, unit: Unit) -> None:
 
+        self._value: int | float | complex
+        self._unit: Unit
+
         # Handle Quantity input
         if isinstance(value, Quantity):
             self._value = value._value
-            self.unit = unit if unit else value.unit
+            self._unit = unit if unit else value._unit
 
         # Handle float/complex input
         else:
             self._value = value
-            self.unit = unit
+            self._unit = unit
 
     @property
     def value(self) -> float:
@@ -175,65 +179,65 @@ class Quantity:
         return self._value.imag
 
     def __repr__(self) -> str:
-        return f"Quantity({self._value!r}, {self.unit!r})"
+        return f"Quantity({self._value!r}, {self._unit!r})"
 
     def __str__(self) -> str:
-        return f"{self._value} {self.unit.symbol}"
+        return f"{self._value} {self._unit.symbol}"
 
     def __abs__(self) -> Quantity:
-        return Quantity(abs(self._value), self.unit)
+        return Quantity(abs(self._value), self._unit)
 
     def __neg__(self) -> Quantity:
-        return Quantity(-self._value, self.unit)
+        return Quantity(-self._value, self._unit)
 
     def __add__(self, other: Quantity) -> Quantity:
         if not isinstance(other, Quantity):
             raise TypeError("Cannot add a Quantity to a scalar.")
-        if self.unit != other.unit:
-            raise ValueError(f"Unit mismatch: {self.unit} vs {other.unit}")
-        return Quantity(self._value + other._value, self.unit)
+        if self._unit != other._unit:
+            raise ValueError(f"Unit mismatch: {self._unit} vs {other._unit}")
+        return Quantity(self._value + other._value, self._unit)
 
     def __sub__(self, other: Quantity) -> Quantity:
         if not isinstance(other, Quantity):
             raise TypeError("Cannot subtract a Quantity from a scalar.")
-        if self.unit != other.unit:
-            raise ValueError(f"Unit mismatch: {self.unit} vs {other.unit}")
-        return Quantity(self._value - other._value, self.unit)
+        if self._unit != other._unit:
+            raise ValueError(f"Unit mismatch: {self._unit} vs {other._unit}")
+        return Quantity(self._value - other._value, self._unit)
 
     def __mul__(self, other: float | Quantity) -> Quantity:
         if not isinstance(other, Quantity):
-            return Quantity(self._value * other, self.unit)
-        newunit = self.unit * other.unit
+            return Quantity(self._value * other, self._unit)
+        newunit = self._unit * other._unit
         return Quantity(self._value * other._value, newunit)
 
     def __rmul__(self, other: float) -> Quantity:
         return self.__mul__(other)  # Commutative
 
-    def __truediv__(self, other: Quantity | float) -> Quantity:
+    def __truediv__(self, other: Quantity | float | int) -> Quantity:
         if isinstance(other, Quantity):
-            return Quantity(self.value / other.value, self.unit / other.unit)
+            return Quantity(self.value / other.value, self._unit / other._unit)
         if isinstance(other, (int, float)):
-            return Quantity(self._value / other, self.unit)
+            return Quantity(self._value / other, self._unit)
         raise TypeError(f"Cannot divide Quantity by {type(other)}")
 
     def __rtruediv__(self, other: Quantity | float) -> Quantity:
         if not isinstance(other, Quantity):
-            return Quantity(other / self._value, -self.unit)
+            return Quantity(other / self._value, -self._unit)
         return other.__truediv__(self)
 
     def __pow__(self, power: Quantity | float) -> Quantity:
         if not isinstance(power, (int, float)):
             raise TypeError("Power must be a scalar number.")
-        new_dims = self.unit**power
+        new_dims = self._unit**power
         return Quantity(self._value**power, new_dims)
 
     def __rpow__(self, other: Quantity | float) -> Quantity:
         if isinstance(other, Quantity):
             return Quantity(
-                other._value**self._value, self.unit
+                other._value**self._value, self._unit
             )  # What about unit change?
         else:
-            return Quantity(other**self._value, self.unit)
+            return Quantity(other**self._value, self._unit)
 
     def __int__(self) -> int:
         return int(self._value.real)
@@ -246,7 +250,7 @@ class Quantity:
 
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Quantity):
-            return self.unit == value.unit and self._value == value._value
+            return self._unit == value._unit and self._value == value._value
         if isinstance(value, (int, float)):
             return self._value == value
         return NotImplemented
@@ -256,36 +260,36 @@ class Quantity:
 
     def __ge__(self, other: float | Quantity) -> bool:
         if isinstance(other, Quantity):
-            if self.unit != other.unit:
+            if self._unit != other._unit:
                 raise ValueError(
-                    f"Cannot compare units of different dimensions: {self.unit} vs {other.unit}"
+                    f"Cannot compare units of different dimensions: {self._unit} vs {other._unit}"
                 )
             return self._value.real >= other._value.real
         return NotImplemented
 
     def __gt__(self, other: float | Quantity) -> bool:
         if isinstance(other, Quantity):
-            if self.unit != other.unit:
+            if self._unit != other._unit:
                 raise ValueError(
-                    f"Cannot compare units of different dimensions: {self.unit} vs {other.unit}"
+                    f"Cannot compare units of different dimensions: {self._unit} vs {other._unit}"
                 )
             return self._value.real > other._value.real
         return NotImplemented
 
     def __le__(self, other: float | Quantity) -> bool:
         if isinstance(other, Quantity):
-            if self.unit != other.unit:
+            if self._unit != other._unit:
                 raise ValueError(
-                    f"Cannot compare units of different dimensions: {self.unit} vs {other.unit}"
+                    f"Cannot compare units of different dimensions: {self._unit} vs {other._unit}"
                 )
             return self._value.real <= other._value.real
         return NotImplemented
 
     def __lt__(self, other: float | Quantity) -> bool:
         if isinstance(other, Quantity):
-            if self.unit != other.unit:
+            if self._unit != other._unit:
                 raise ValueError(
-                    f"Cannot compare units of different dimensions: {self.unit} vs {other.unit}"
+                    f"Cannot compare units of different dimensions: {self._unit} vs {other._unit}"
                 )
             return self._value.real < other._value.real
         return NotImplemented
@@ -306,9 +310,11 @@ class Constant(Quantity):
         return complex(self.quantity)
 
     @property
+    @override
     def value(self) -> float:
         return self.quantity._value.real
 
     @property
+    @override
     def unit(self) -> Unit:
-        return self.quantity.unit
+        return self.quantity._unit

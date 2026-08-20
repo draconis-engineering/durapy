@@ -6,9 +6,9 @@ This module includes terminal text coloring tools and color data classes such as
 
 from __future__ import annotations
 
-from typing import Any
+from typing import overload
 
-ANSI_COLORS = {
+ANSI_COLORS: dict[str, str] = {
     "black": "\033[30m",
     "brown": "\033[38;5;94m",
     "red": "\033[31m",
@@ -36,8 +36,8 @@ ANSI_COLORS = {
 
 
 def color_text(
-    text: Any,
-    color: str,
+    text: object,
+    color: str | None,
     bold: bool = False,
     underline: bool = False,
     italic: bool = False,
@@ -48,15 +48,15 @@ def color_text(
         return str(text)
 
     text = str(text)
-    ANSI = ANSI_COLORS.get(color.lower(), "\033[0m")
+    ansi = ANSI_COLORS.get(color.lower(), "\033[0m")
 
     if bold:
-        ANSI += "\033[1m"
+        ansi += "\033[1m"
     if underline:
-        ANSI += "\033[4m"
+        ansi += "\033[4m"
     if italic:
-        ANSI += "\033[3m"
-    return ANSI + text + "\033[0m"
+        ansi += "\033[3m"
+    return ansi + text + "\033[0m"
 
 
 def clip_int(val: int, lower: int, upper: int) -> int:
@@ -85,34 +85,34 @@ def validate_hex(hexcode: str) -> str:
 class _BaseColor:
     "Base class for color data types."
 
-    def __init__(self, colorname: str):
-        self.colorname = colorname
+    def __init__(self, colorname: str) -> None:
+        self.colorname: str = colorname
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.colorname
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.colorname
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, _BaseColor):
             return self.colorname == other.colorname
         return False
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self.colorname)
 
 
 class RGB(_BaseColor):
     "RGB color data type."
 
-    def __init__(self, colorname: str, r: int, g: int, b: int):
+    def __init__(self, colorname: str, r: int, g: int, b: int) -> None:
         super().__init__(colorname)
         self._r = r
         self._g = g
         self._b = b
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, RGB):
             return (self.r, self.g, self.b) == (other.r, other.g, other.b)
         elif isinstance(other, HEX):
@@ -122,11 +122,16 @@ class RGB(_BaseColor):
         else:
             return False
 
-    def __getitem__(self, key):
+    @overload
+    def __getitem__(self, key: None) -> tuple[int, int, int]: ...
+    @overload
+    def __getitem__(self, key: int) -> int: ...
+    def __getitem__(self, key: int | None) -> int | tuple[int, int, int]:
         if key is None:
             return (self.r, self.g, self.b)
         if key in [0, 1, 2]:
             return (self.r, self.g, self.b)[key]
+        raise IndexError("Key must be None or an integer in [0, 1, 2]")
 
     @property
     def r(self) -> int:
@@ -188,7 +193,7 @@ class HEX(_BaseColor):
         super().__init__(colorname)
         self.hexcode = validate_hex(hexcode)
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, HEX):
             return self.hexcode == other.hexcode
         elif isinstance(other, RGB):
@@ -261,12 +266,12 @@ class CMYK(_BaseColor):
 
     def __init__(self, colorname: str, c: int, m: int, y: int, k: int):
         super().__init__(colorname)
-        self.c = clip_int(c, 0, 100)
-        self.m = clip_int(m, 0, 100)
-        self.y = clip_int(y, 0, 100)
-        self.k = clip_int(k, 0, 100)
+        self.c: int = clip_int(c, 0, 100)
+        self.m: int = clip_int(m, 0, 100)
+        self.y: int = clip_int(y, 0, 100)
+        self.k: int = clip_int(k, 0, 100)
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, CMYK):
             return (self.c, self.m, self.y, self.k) == (
                 other.c,
