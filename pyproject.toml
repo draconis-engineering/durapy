@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "durapy"
-version = "1.0.0.4"
+version = "1.0.0.7"
 description = "A modern Python utility library from the Draconis ecosystem."
 readme = "docs/README.md"
 requires-python = ">=3.11"
