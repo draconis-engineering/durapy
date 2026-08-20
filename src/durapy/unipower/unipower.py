@@ -4,10 +4,8 @@ import math
 from types import MappingProxyType
 
 from ..shared.constants import PI
-from ..shared.exceptions import ArgumentError
 from ..shared.numval_types import Quantity
 from ..shared.units import FARAD, OHM, SECOND, VOLT, WATT
-from .exceptions import InconsistencyError
 
 BANDS: MappingProxyType[str, int] = MappingProxyType(
     {
@@ -65,12 +63,12 @@ def ohms_law(
 
     if v is None:
         if i is None or r is None:
-            raise ArgumentError(ohms_law, missing)
+            raise TypeError(ohms_law, missing)
         v = i * r
 
     elif i is None:
         if r is None:
-            raise ArgumentError(ohms_law, missing)
+            raise TypeError(ohms_law, missing)
         i = v / r
 
     elif r is None:
@@ -106,12 +104,12 @@ def power_dissipation(
 
     if v is None:
         if i is None or r is None:  # Too many missing arguments
-            raise ArgumentError(power_dissipation, missing)
+            raise TypeError(power_dissipation, missing)
         return Quantity(i**2 * r, WATT)
 
     elif i is None:
         if r is None:  # Too many missing arguments
-            raise ArgumentError(power_dissipation, missing)
+            raise TypeError(power_dissipation, missing)
         return Quantity(v**2 / r, WATT)
 
     elif (
@@ -129,16 +127,16 @@ def power_dissipation(
         if not math.isclose(P1, P2):
             # P1 != P3 -> Error with P1
             if not math.isclose(P1, P3):
-                raise InconsistencyError("Inconsistency with P1 = I ** 2 * R")
+                raise ValueError("Inconsistency with P1 = I ** 2 * R")
             # P1 == P3 -> Error with P2
             else:
-                raise InconsistencyError("Inconsistency with P2 = V ** 2 / R")
+                raise ValueError("Inconsistency with P2 = V ** 2 / R")
 
         # P1 == P2
         else:
             # P2 != P3 -> Error with P3
             if not math.isclose(P2, P3):
-                raise InconsistencyError("Inconsistency with P3 = V * I")
+                raise ValueError("Inconsistency with P3 = V * I")
             # P1 == P2 == P3 -> All formulas agree
             else:
                 return Quantity(math.fsum([P1, P2, P3]) / 3, WATT)

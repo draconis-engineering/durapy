@@ -1,23 +1,27 @@
 [build-system]
-requires = ["setuptools>=69", "wheel", "pybind11>=2.6"]
+requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "durapy"
-version = "1.0.0.3"
-description = "A modern Python utility library from the Durendal ecosystem."
+version = "1.0.0.4"
+description = "A modern Python utility library from the Draconis ecosystem."
 readme = "docs/README.md"
 requires-python = ">=3.11"
 license = { file = "LICENSE" }
 
 authors = [
-    { name = "Simon Stordal Amundgård", email = "nomispus@icloud.com" }
+    { name = "Simon Stordal Amundgård", email = "stordalamundgard@gmail.com" }
 ]
 
 keywords = [
     "engineering",
     "utilities",
+    "framework",
+    "draconis",
+    "science",
     "python",
+    "stem",
     "math",
     "cli",
 ]
