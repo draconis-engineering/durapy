@@ -24,7 +24,7 @@ def derivative(func: str, x: float | None = None, h: float = 1e-5) -> float:
         return float(sympy.diff(f, x_sym))
 
     else:
-        return (f.subs(x_sym, x + h) - f.subs(x_sym, x - h)) / (2 * h)  # type: ignore - 'Basic' arithmetic is apparently invalid
+        return (f.subs(x_sym, x + h) - f.subs(x_sym, x - h)) / (2 * h) # type: ignore - 'Basic' arithmetic is apparently invalid
 
 
 def line_intersection(
@@ -145,14 +145,14 @@ def cubic_num_roots(a: float, b: float, c: float, d: float) -> int:
     return 3 if D > 0 else 2 if D == 0 else 1
 
 
-def cubic_solutions(a: float, b: float, c: float, d: float) -> list:
+def cubic_solutions(a: float, b: float, c: float, d: float) -> list[float]:
     """Returns the roots of a cubic function in a tuple."""
     x = sympy.symbols("x")
     f = sympy.sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
     return sympy.solve(f, x)
 
 
-def cubic_zeros(a: float, b: float, c: float, d: float) -> list:
+def cubic_zeros(a: float, b: float, c: float, d: float) -> list[float]:
     """Returns the x-values where the cubic function crosses the x-axis."""
     x = sympy.symbols("x")
     f = sympy.sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
@@ -165,17 +165,19 @@ def cubic_evaluation(a: float, b: float, c: float, d: float, x: float) -> float:
 
 
 def cubic_evaluation_bruteforce(
-    a: float, b: float, c: float, d: float, lower: int, upper: int
-) -> list[int]:
+    a: float, b: float, c: float, d: float, lower: int, upper: int, step: float
+) -> list[float]:
     """Brute Force evaluation of a third-degree polynomial. The function checks all evaluations from `LowerBound` to `UpperBound` and highlights roots as green."""
-    x_vals: list[int] = []
+    x_vals: list[float] = []
     y_vals: list[float] = []
-    roots: list[int] = []
+    roots: list[float] = []
+    x: float = lower
 
-    for x in range(int(lower), int(upper + 1)):
+    while x <= upper:
         result = cubic_evaluation(a, b, c, d, x)
         x_vals.append(x)
         y_vals.append(result)
         roots.append(x) if result == 0 else None
+        x += step
 
     return roots

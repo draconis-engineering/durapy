@@ -8,7 +8,7 @@ Data Types
 
 `Matrix` - N*M-matrix.
 
-`D4Tensor` - 4-dimensional tensor (A matrix of matrices.)
+`D4Tensor` - 4-dimensional tensor (A matrix of matrices)
 """
 
 from __future__ import annotations
@@ -21,8 +21,6 @@ from typing import overload, override
 
 import numpy as np
 from dracolix import matmatmul, matvecmul  # type: ignore missing pyi files
-
-from ..shared.exceptions import ArgumentError
 
 EPSILON = 1e-9
 
@@ -277,14 +275,14 @@ class Matrix:
 
         if array:
             if shape:
-                raise ArgumentError(
+                raise ValueError(
                     "Both array and size parameters are provided! Only one should be specified."  # Make this config valid, by taking the array and reshaping it into the specified shape
                 )
             if len(array) == 0 or any(len(row) != len(array[0]) for row in array):
                 raise ValueError("Matrix must be rectangular and non-empty")
         else:
             if not shape:
-                raise ArgumentError(
+                raise ValueError(
                     "Missing array and size parameters! Matrix() needs atleast 1!"
                 )
 

@@ -8,12 +8,12 @@ from .geometry import herons_formula
 
 
 def interpolate_triangle(
-    a: float,
-    b: float,
-    c: float,
-    A: float | None = None,
-    B: float | None = None,
-    C: float | None = None,
+    degA: float,
+    degB: float,
+    degC: float,
+    lenA: float | None = None,
+    lenB: float | None = None,
+    lenC: float | None = None,
 ) -> tuple[
     float,
     tuple[float, float, float],
@@ -28,36 +28,36 @@ def interpolate_triangle(
         Area, (A, B, C), (a, b, c), (sin(a), sin(b), sin(c))
     """
 
-    if sum([a, b, c]) != 180:
+    if sum([degA, degB, degC]) != 180:
         raise ValueError("The sum of the angles of a triangle must be 180 degrees!")
 
-    sin_A = math.sin(math.radians(a))
-    sin_B = math.sin(math.radians(b))
-    sin_C = math.sin(math.radians(c))
+    sin_A = math.sin(math.radians(degA))
+    sin_B = math.sin(math.radians(degB))
+    sin_C = math.sin(math.radians(degC))
 
-    if A and not B and not C:
-        B = (A * sin_B) / sin_A
-        C = (A * sin_C) / sin_A
+    if lenA and not lenB and not lenC:
+        lenB = (lenA * sin_B) / sin_A
+        lenC = (lenA * sin_C) / sin_A
 
-    elif B and not A and not C:
-        A = (B * sin_A) / sin_B
-        C = (B * sin_C) / sin_B
+    elif lenB and not lenA and not lenC:
+        lenA = (lenB * sin_A) / sin_B
+        lenC = (lenB * sin_C) / sin_B
 
-    elif C and not A and not B:
-        A = (C * sin_A) / sin_C
-        B = (C * sin_B) / sin_C
+    elif lenC and not lenA and not lenB:
+        lenA = (lenC * sin_A) / sin_C
+        lenB = (lenC * sin_B) / sin_C
 
     else:
         raise ValueError("A, B, and C cannot all be None!")
 
-    area = herons_formula(A, B, C)
+    area = herons_formula(lenA, lenB, lenC)
 
-    return area, (A, B, C), (a, b, c), (sin_A, sin_B, sin_C)
+    return area, (lenA, lenB, lenC), (degA, degB, degC), (sin_A, sin_B, sin_C)
 
 
-def cosine_rule(len_A: float, len_B: float, angle_A: float) -> float:
+def cosine_rule(len_A: float, len_B: float, deg_A: float) -> float:
     return math.sqrt(
-        len_A**2 + len_B**2 - ((2 * len_A * len_B) * math.cos(math.radians(angle_A)))
+        len_A**2 + len_B**2 - ((2 * len_A * len_B) * math.cos(math.radians(deg_A)))
     )
 
 
@@ -84,12 +84,12 @@ def reverse_cosine_rule(
     )
 
 
-def tangent_formula(func1: str, func2: str) -> list[str]:
+def tangent_formula(f_1: str, f_2: str) -> list[str]:
     """Returns the tangent(s) between two functions by finding the points where the derivatives are equal and then calculating the slope of the tangent line at those points."""
 
-    x = sympy.symbols("x")
-    f1 = sympy.sympify(func1)
-    f2 = sympy.sympify(func2)
+    x: sympy.Symbol = sympy.symbols("x")
+    f1 = sympy.sympify(f_1)
+    f2 = sympy.sympify(f_2)
     df1 = sympy.diff(f1, x)
     df2 = sympy.diff(f2, x)
 
