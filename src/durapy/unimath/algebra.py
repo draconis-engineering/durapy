@@ -7,6 +7,8 @@ import sympy
 
 def slope(x1: float, y1: float, x2: float, y2: float) -> float:
     """Returns the slope of a line from two points `(x1, y1)` and `(x2, y2)`"""
+    if x2 == x1:
+        raise ValueError("Slope is undefined for vertical line (x1 == x2)")
     return (y2 - y1) / (x2 - x1)
 
 
@@ -15,22 +17,24 @@ def distance(x1: float, y1: float, x2: float, y2: float) -> float:
     return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 
 
-def derivative(func: str, x: float | None = None, h: float = 1e-5) -> float:
-    """Returns `f'(x)` if `x` is not given, else returns the numerical derivative of the function at the given x-value using the definition of the derivative."""
+def derivative(func: str, x: float | None = None, h: float = 1e-5):
+    """Returns `f'(x)` symbolic if `x` is None, else numerical derivative at x."""
     x_sym = sympy.symbols("x")
     f = sympy.sympify(func)
 
     if x is None:
-        return float(sympy.diff(f, x_sym))
+        return sympy.diff(f, x_sym)
 
     else:
-        return (f.subs(x_sym, x + h) - f.subs(x_sym, x - h)) / (2 * h) # type: ignore - 'Basic' arithmetic is apparently invalid
+        return float((f.subs(x_sym, x + h) - f.subs(x_sym, x - h)) / (2 * h))  # type: ignore
 
 
 def line_intersection(
     m1: float, b1: float, m2: float, b2: float
 ) -> tuple[float, float]:
-    """ "Return the point of intersection of two lines in the form of `(x, y)`"""
+    """Return the point of intersection of two lines in the form of `(x, y)`"""
+    if m1 == m2:
+        raise ValueError("Lines are parallel (m1 == m2), no unique intersection")
     x = (b2 - b1) / (m1 - m2)
     y = m1 * x + b1
     return (x, y)
@@ -38,6 +42,8 @@ def line_intersection(
 
 def line_from_points(x1: float, y1: float, x2: float, y2: float) -> tuple[float, float]:
     """Returns `m`, `b` as parts of the equation `y = mx + b` from the two given points `(x1, y1)` and `(x2, y2)`."""
+    if x2 == x1:
+        raise ValueError("Cannot form y=mx+b for vertical line (x1 == x2)")
     m = (y2 - y1) / (x2 - x1)
     b = y1 - m * x1
     return (m, b)
@@ -45,6 +51,8 @@ def line_from_points(x1: float, y1: float, x2: float, y2: float) -> tuple[float,
 
 def linear_zero(m: float, b: float) -> float:
     """Find the x-value where the line `y = mx + b` crosses the x-axis"""
+    if m == 0:
+        raise ValueError("No zero crossing for horizontal line (m == 0)")
     return -b / m
 
 
@@ -78,8 +86,9 @@ def quadratic_solutions(
     D = B**2 - 4 * A * C
 
     if D > 0:
-        x1 = (-B - math.hypot(0, D)) / (2 * A)
-        x2 = (-B + math.hypot(0, D)) / (2 * A)
+        sqrtD = math.sqrt(D)
+        x1 = (-B - sqrtD) / (2 * A)
+        x2 = (-B + sqrtD) / (2 * A)
         return (x1, x2)
 
     elif D == 0:
@@ -99,9 +108,16 @@ def quadratic_factorized(a: float, b: float, c: float) -> str:
         return "-" if x < 0 else "+"
 
     if D > 0:
-        x1 = (-b - math.hypot(0, D)) / (2 * a)
-        x2 = (-b + math.hypot(0, D)) / (2 * a)
-        return f"{a}(x {sign(x1)} {x1})(x {sign(x2)} {x2})"
+        sqrtD = math.sqrt(D)
+        x1 = (-b - sqrtD) / (2 * a)
+        x2 = (-b + sqrtD) / (2 * a)
+        # Use (x - x1) form; handle sign correctly
+        def factor_str(root: float) -> str:
+            if root < 0:
+                return f"(x + {-root})"
+            else:
+                return f"(x - {root})"
+        return f"{a}{factor_str(x1)}{factor_str(x2)}"
 
     elif D == 0:
         x1 = -b / (2 * a)
@@ -168,16 +184,13 @@ def cubic_evaluation_bruteforce(
     a: float, b: float, c: float, d: float, lower: int, upper: int, step: float
 ) -> list[float]:
     """Brute Force evaluation of a third-degree polynomial. The function checks all evaluations from `LowerBound` to `UpperBound` and highlights roots as green."""
-    x_vals: list[float] = []
-    y_vals: list[float] = []
     roots: list[float] = []
     x: float = lower
 
     while x <= upper:
         result = cubic_evaluation(a, b, c, d, x)
-        x_vals.append(x)
-        y_vals.append(result)
-        roots.append(x) if result == 0 else None
+        if math.isclose(result, 0, abs_tol=1e-9):
+            roots.append(x)
         x += step
 
     return roots

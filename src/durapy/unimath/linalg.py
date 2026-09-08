@@ -20,7 +20,16 @@ from collections.abc import Sequence
 from typing import overload, override
 
 import numpy as np
-from dracolix import matmatmul, matvecmul  # type: ignore missing pyi files
+
+try:
+    from dracolix import matmatmul, matvecmul  # type: ignore missing pyi files
+except ImportError:
+
+    def matmatmul(a: np.ndarray, b: np.ndarray) -> np.ndarray:  # type: ignore
+        return np.matmul(a, b)
+
+    def matvecmul(a: np.ndarray, b: np.ndarray) -> np.ndarray:  # type: ignore
+        return np.matmul(a, b)
 
 EPSILON = 1e-9
 
@@ -69,8 +78,8 @@ class Vector:
 
     @property
     def magnitude(self) -> float:
-        """The magnitude (length) of the vector. Uses the real components only."""
-        return math.hypot(*self.real_components)
+        """The magnitude (length) of the vector. Uses full complex magnitude."""
+        return math.sqrt(sum(abs(c) ** 2 for c in self.components))
 
     @property
     def shape(self) -> tuple[int, int]:
@@ -90,7 +99,7 @@ class Vector:
 
     @override
     def __repr__(self) -> str:
-        return f"<Vector{(component for component in self.components)}>"
+        return f"Vector({self.components!r})"
 
     @override
     def __str__(self) -> str:
@@ -118,7 +127,7 @@ class Vector:
     @overload
     def __add__(self, other: Vector) -> Vector: ...
     def __add__(self, other: object) -> Vector:
-        if isinstance(other, Real):  # scalar addition
+        if isinstance(other, (int, float, complex)):  # scalar addition (broadcast)
             return Vector(
                 [self.components[i] + other for i in range(len(self.components))]
             )
@@ -141,10 +150,7 @@ class Vector:
     @overload
     def __sub__(self, other: Vector) -> Vector: ...
     def __sub__(self, other: object) -> Vector:
-        if isinstance(other, Real):  # scalar subtraction
-            if len(self.components) != 1:
-                raise ValueError("Scalar subtraction is only supported for 1D vectors")
-
+        if isinstance(other, (int, float, complex)):  # scalar subtraction (broadcast)
             return Vector(
                 [self.components[i] - other for i in range(len(self.components))]
             )
@@ -161,6 +167,8 @@ class Vector:
         return NotImplemented
 
     def __rsub__(self, other: Vector) -> Vector:
+        if isinstance(other, (int, float, complex)):
+            return Vector([other - c for c in self.components])
         return other.__sub__(self)
 
     @overload
@@ -168,11 +176,7 @@ class Vector:
     @overload
     def __mul__(self, other: Vector) -> float: ...
     def __mul__(self, other: object) -> Vector | float:
-        if isinstance(other, Real):  # scalar multiplication
-            if len(self.components) != 1:
-                raise ValueError(
-                    "Scalar multiplication is only supported for 1D vectors"
-                )
+        if isinstance(other, (int, float, complex)):  # scalar multiplication (broadcast)
             return Vector(
                 [other * self.components[i] for i in range(len(self.components))]
             )
@@ -186,7 +190,9 @@ class Vector:
         return NotImplemented
 
     def __rmul__(self, other: Real) -> Vector:
-        return self.__mul__(other)
+        if isinstance(other, (int, float, complex)):
+            return self.__mul__(other)
+        return NotImplemented
 
     @overload
     def __truediv__(self, other: Real) -> Vector: ...
@@ -334,12 +340,12 @@ class Matrix:
         return nonzero
 
     def __getitem__(self, idx: int) -> list[float]:
-        if idx < 0 or idx > self.shape[0]:
+        if idx < 0 or idx >= self.shape[0]:
             raise IndexError("Key out of bounds!")
         return self._array[idx]
 
     def __setitem__(self, key: int, value: list[float]) -> None:
-        if key < 0 or key > self.shape[0]:
+        if key < 0 or key >= self.shape[0]:
             raise IndexError("Key out of bounds!")
         if len(value) != self._cols:
             raise ValueError(
@@ -633,7 +639,7 @@ class Matrix:
         """Helper method to compute the inverse of the matrix."""
 
         # Check if the determinant is zero, indicating the matrix is singular and cannot be inverted
-        if self.det == 0:
+        if abs(self.det) < EPSILON:
             return None
 
         # Build the augmented matrix
@@ -645,16 +651,16 @@ class Matrix:
             pivot = aug[i][i]
 
             # Find a non-zero pivot in the current column
-            if pivot == 0:
+            if abs(pivot) < EPSILON:
                 for j in range(i + 1, n):
                     # Swap rows to bring a non-zero pivot into the current row
-                    if aug[j][i] != 0:
+                    if abs(aug[j][i]) > EPSILON:
                         aug[i], aug[j] = aug[j], aug[i]
                         pivot = aug[i][i]
                         break
 
             # If no non-zero pivot is found, return None
-            if pivot == 0:
+            if abs(pivot) < EPSILON:
                 return None
 
             # Scale the pivot row to make the pivot element 1
@@ -854,7 +860,7 @@ class Matrix:
         """Returns if the matrix is singular, which is a matrix with a determinant of 0."""
         if not self.is_square():
             raise ValueError("Matrix must be square to be singular.")
-        return self.det == 0
+        return abs(self.det) < EPSILON
 
     def is_identity(self) -> bool:
         """Returns if the matrix is equal to the identity matrix of the same dimension."""
@@ -863,20 +869,17 @@ class Matrix:
         return self == self.to_identity
 
     def is_diagonal(self) -> bool:
-        if not self.is_square():
-            raise ValueError("Matrix must be square to be diagonal.")
-
         """Returns if the matrix is diagonal.
 
         A diagonal matrix is a matrix where all the elements outside of the leading diagonal is 0.
         The identity matrix is a common example.
         """
+        if not self.is_square():
+            raise ValueError("Matrix must be square to be diagonal.")
         for idx1 in range(self.shape[0]):
             for idx2 in range(self.shape[1]):
-                if idx1 != idx2 and self[idx1][idx2] != 0:
+                if idx1 != idx2 and abs(self[idx1][idx2]) > EPSILON:
                     return False
-                else:
-                    continue
         return True
 
     def is_symmetric(self) -> bool:
@@ -889,7 +892,7 @@ class Matrix:
         """Returns True if the matrix raised to some power becomes a zero matrix."""
         if not self.is_square():
             raise ValueError("Matrix must be square to be nilpotent.")
-        return all(value == 0 for value in self.eigen[0]) and self.det == 0
+        return all(abs(value) < EPSILON for value in self.eigen[0]) and abs(self.det) < EPSILON
 
     def is_idempotent(self) -> bool:
         """Returns True if the matrix multiplied by itself equals itself: `A^2` = `A`."""
@@ -901,13 +904,16 @@ class Matrix:
         """Returns if the matrix is orthogonal, which is a matrix whose transpose is equal to its inverse."""
         if not self.is_square():
             raise ValueError("Matrix must be square to be orthogonal.")
-        return self.T == self.inverse
+        inv = self.inverse
+        if inv is None:
+            return False
+        return self.T == inv
 
     def is_invertible(self) -> bool:
         """Returns if the matrix is invertible, which is a matrix whose determinant is not 0."""
         if not self.is_square():
             raise ValueError("Matrix must be square to be invertible.")
-        return self.det != 0
+        return abs(self.det) > EPSILON
 
     def is_skew_symmetric(self) -> bool:
         """
@@ -929,7 +935,7 @@ class Matrix:
             raise ValueError("Matrix must be square to be upper triangular.")
         for idx1 in range(1, self.shape[0]):
             for idx2 in range(idx1):
-                if self[idx1][idx2] != 0:
+                if abs(self[idx1][idx2]) > EPSILON:
                     return False
         return True
 
@@ -943,7 +949,7 @@ class Matrix:
             raise ValueError("Matrix must be square to be lower triangular.")
         for idx1 in range(self.shape[0]):
             for idx2 in range(idx1 + 1, self.shape[1]):
-                if self[idx1][idx2] != 0:
+                if abs(self[idx1][idx2]) > EPSILON:
                     return False
         return True
 

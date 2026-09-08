@@ -23,14 +23,14 @@ NUMERICAL = Unit("NUM", NUMDIM)  # N/A
 METER = Unit("M", Dimension((F1, F0, F0, F0, F0, F0, F0)))  # L
 KILOGRAM = Unit("KG", Dimension((F0, F1, F0, F0, F0, F0, F0)))  # M
 SECOND = Unit("S", Dimension((F0, F0, F1, F0, F0, F0, F0)))  # T
-AMPERE = Unit("B", Dimension((F0, F0, F0, F1, F0, F0, F0)))  # I
+AMPERE = Unit("A", Dimension((F0, F0, F0, F1, F0, F0, F0)))  # I
 KELVIN = Unit("K", Dimension((F0, F0, F0, F0, F1, F0, F0)))  # Θ
 MOLE = Unit("MOL", Dimension((F0, F0, F0, F0, F0, F1, F0)))  # N
 CANDELA = Unit("CD", Dimension((F0, F0, F0, F0, F0, F0, F1)))  # J
 
-PASCAL = Unit("Pa", Dimension((F1, F1, F_2, F0, F0, F0, F0)))  # L * M / T^2
-PSI = Unit("psi", Dimension((F1, F1, F_2, F0, F0, F0, F0)))  # L * M / T^2
-BAR = Unit("bar", Dimension((F1, F1, F_2, F0, F0, F0, F0)))  # L * M / T^2
+PASCAL = Unit("Pa", Dimension((F_1, F1, F_2, F0, F0, F0, F0)))  # M / (L * T^2)
+PSI = Unit("psi", Dimension((F_1, F1, F_2, F0, F0, F0, F0)))  # M / (L * T^2)
+BAR = Unit("bar", Dimension((F_1, F1, F_2, F0, F0, F0, F0)))  # M / (L * T^2)
 
 UNIGUNIT = Unit("UNI_G", Dimension((F3, F_1, F_2, F0, F0, F0, F0)))  # L^3 / M * T^2
 G = Unit("G", Dimension((F1, F0, F_2, F0, F0, F0, F0)))  # L / T^2

@@ -10,8 +10,8 @@ def lovelace(
     D = a * e - b * d
     if D == 0:
         raise ValueError("The system has no unique solution.")
-    x = c * e - b * f / D
-    y = a * f - c * d / D
+    x = (c * e - b * f) / D
+    y = (a * f - c * d) / D
     return x, y
 
 
@@ -79,7 +79,7 @@ def subfactorial(n: int) -> int:
         raise ValueError(
             "Subfactorial and Factorial are not defined for negative numbers or floats/strings!"
         )
-    return int(factorial(n) * sum((-1) ** k / factorial(k) for k in range(n)))
+    return int(round(factorial(n) * sum((-1) ** k / factorial(k) for k in range(n + 1))))
 
 
 def gcd(*ints: int) -> int:
@@ -123,14 +123,17 @@ def is_perfect_square(n: int) -> bool:
     """Returns True if the number is a perfect square, else returns False."""
     if n < 0:
         return False
-    return int(math.sqrt(n)) ** 2 == n
+    r = math.isqrt(n)
+    return r * r == n
 
 
 def is_perfect_cube(n: int) -> bool:
     """Returns True if the number is a perfect cube, else returns False."""
     if n < 0:
         return False
-    return math.pow(math.sqrt(n), 3) == n
+    c = round(n ** (1 / 3))
+    # Check neighbors to handle floating errors
+    return any((c + d) ** 3 == n for d in (-1, 0, 1))
 
 
 def is_perfect_power(n: int) -> bool:

@@ -29,11 +29,14 @@ class Cartesian2D(_BaseCoordinate):
 
     def to_polar(self) -> Polar:
         return Polar(
-            unit=self.unit, r=math.hypot(self.x, self.y), θ=math.atan(self.y / self.x)
+            unit=self.unit, r=math.hypot(self.x, self.y), θ=math.atan2(self.y, self.x)
         )
 
     def distance_to_origo(self) -> float:
         return math.hypot(self.x, self.y)
+
+    # Keep backwards compat for typo
+    distance_to_origin = distance_to_origo
 
 
 class Cartesian3D(_BaseCoordinate):
@@ -47,16 +50,17 @@ class Cartesian3D(_BaseCoordinate):
 
     def to_spherical(self) -> Spherical:
         p = math.hypot(self.x, self.y, self.z)
-
+        if p == 0:
+            return Spherical(unit=self.unit, r=0, θ=0, φ=0)
         return Spherical(
-            unit=self.unit, r=p, θ=math.atan(self.y / self.x), φ=math.acos(self.z / p)
+            unit=self.unit, r=p, θ=math.atan2(self.y, self.x), φ=math.acos(self.z / p)
         )
 
     def to_cylindrical(self) -> Cylindrical:
         return Cylindrical(
             unit=self.unit,
-            r=math.hypot(self.x, self.y, self.z),
-            θ=math.atan(self.y / self.x),
+            r=math.hypot(self.x, self.y),
+            θ=math.atan2(self.y, self.x),
             z=self.z,
         )
 
@@ -68,7 +72,7 @@ class Polar(_BaseCoordinate):
     """The polar coordinate system."""
 
     def __init__(self, unit: str, r: float, θ: float) -> None:
-        super().__init__(unit=unit, dims=3)
+        super().__init__(unit=unit, dims=2)
         self.r = r
         self.θ = θ
 
@@ -77,8 +81,12 @@ class Polar(_BaseCoordinate):
             unit=self.unit, x=self.r * math.cos(self.θ), y=self.r * math.sin(self.θ)
         )
 
-    def distanse_to_origo(self) -> float:
+    def distance_to_origo(self) -> float:
         return self.r
+
+    # Backwards compat for typo
+    distanse_to_origo = distance_to_origo
+    distance_to_origin = distance_to_origo
 
 
 class Spherical(_BaseCoordinate):
@@ -93,8 +101,8 @@ class Spherical(_BaseCoordinate):
     def to_cartesian3D(self) -> Cartesian3D:
         return Cartesian3D(
             unit=self.unit,
-            x=self.r * self.φ * math.cos(self.θ),
-            y=self.r * self.φ * math.sin(self.θ),
+            x=self.r * math.sin(self.φ) * math.cos(self.θ),
+            y=self.r * math.sin(self.φ) * math.sin(self.θ),
             z=self.r * math.cos(self.φ),
         )
 
@@ -119,8 +127,8 @@ class Cylindrical(_BaseCoordinate):
     def to_cartesian3D(self) -> Cartesian3D:
         return Cartesian3D(
             unit=self.unit,
-            x=self.r * math.sin(self.θ),
-            y=self.r * math.cos(self.θ),
+            x=self.r * math.cos(self.θ),
+            y=self.r * math.sin(self.θ),
             z=self.z,
         )
 
@@ -131,3 +139,5 @@ class Cylindrical(_BaseCoordinate):
 
     def distance_to_origo(self) -> float:
         return math.hypot(self.r, self.z)
+
+    distance_to_origin = distance_to_origo

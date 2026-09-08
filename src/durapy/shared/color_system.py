@@ -70,16 +70,17 @@ def clip_int(val: int, lower: int, upper: int) -> int:
 
 def validate_hex(hexcode: str) -> str:
     """Validates a hexstring for colors. If invalid, returns `#000000`"""
-    hexcode = hexcode[1:7]
-    hexchars = "abcdef0123456789"
+    if not isinstance(hexcode, str):
+        return "#000000"
+    hexcode = hexcode.strip()
+    if hexcode.startswith("#"):
+        hexcode = hexcode[1:]
     if len(hexcode) != 6:
         return "#000000"
-
-    for char in hexcode.lower():
-        if char not in hexchars:
-            return "#000000"
-
-    return "#" + hexcode
+    hexchars = "abcdef0123456789"
+    if any(c.lower() not in hexchars for c in hexcode):
+        return "#000000"
+    return "#" + hexcode.lower()
 
 
 class _BaseColor:
@@ -108,9 +109,9 @@ class RGB(_BaseColor):
 
     def __init__(self, colorname: str, r: int, g: int, b: int) -> None:
         super().__init__(colorname)
-        self._r = r
-        self._g = g
-        self._b = b
+        self._r = clip_int(int(r), 0, 255)
+        self._g = clip_int(int(g), 0, 255)
+        self._b = clip_int(int(b), 0, 255)
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, RGB):
@@ -299,5 +300,5 @@ class CMYK(_BaseColor):
 
     def toHex(self) -> HEX:
         """Converts the CMYK color values to a hexadecimal color code in the format "#RRGGBB"."""
-        r, g, b = self.toRGB()
-        return HEX(self.colorname, f"#{r:02x}{g:02x}{b:02x}")
+        rgb = self.toRGB()
+        return HEX(self.colorname, f"#{rgb.r:02x}{rgb.g:02x}{rgb.b:02x}")

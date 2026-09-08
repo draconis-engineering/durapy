@@ -146,7 +146,7 @@ def mae(actual: np.ndarray, pred: np.ndarray) -> float:
     if len(pred) != len(actual):
         raise ValueError("Loss functions must be given two equal-length arrays/lists!")
 
-    return sum(np.abs(actual - pred)) / len(actual)
+    return float(np.mean(np.abs(np.asarray(actual) - np.asarray(pred))))
 
 
 def mse(actual: np.ndarray, pred: np.ndarray) -> float:
@@ -154,15 +154,15 @@ def mse(actual: np.ndarray, pred: np.ndarray) -> float:
     if len(pred) != len(actual):
         raise ValueError("Loss functions must be given two equal-length arrays/lists!")
 
-    return np.mean((actual - pred) ** 2) / len(actual)
+    return float(np.mean((np.asarray(actual) - np.asarray(pred)) ** 2))
 
 
 def mse_grad(actual: np.ndarray, pred: np.ndarray) -> np.ndarray:
-    """Gradient of the Mean Squared Error metric function"""
+    """Gradient of the Mean Squared Error metric function (d/d_pred MSE)"""
     if len(pred) != len(actual):
         raise ValueError("Loss functions must be given two equal-length arrays/lists!")
 
-    return 2 * (pred - actual) / len(actual)
+    return 2 * (np.asarray(pred) - np.asarray(actual)) / len(np.asarray(actual))
 
 
 def rmse(actual: np.ndarray, pred: np.ndarray) -> float:

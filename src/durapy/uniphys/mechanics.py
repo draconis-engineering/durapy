@@ -15,6 +15,8 @@ def torque(moment_arm_distance: float, force: float) -> Quantity:
 
 def gear_ratio(driving_teeth: int, driven_teeth: int) -> str:
     """Returns the gear ratio from the driving gear's teeth count and the driven gear's teeth count."""
+    if driving_teeth == 0:
+        raise ValueError("driving_teeth cannot be zero")
     ratio = driven_teeth / driving_teeth
     if ratio > 1:
         return f"{ratio} - {color_text('Speed-', 'red')} - {color_text('Torque+', 'green')}"
@@ -25,13 +27,13 @@ def gear_ratio(driving_teeth: int, driven_teeth: int) -> str:
 
 
 def angular_velocity_r(RPM: float) -> Quantity:
-    """Returns angular velocity from RPM in radians/s"""
-    return Quantity((RPM * PI / 30), RADIAN)
+    """Returns angular velocity from RPM in radians/s ( ω = RPM * 2π / 60 )"""
+    return Quantity(RPM * float(PI) * 2 / 60, RADIAN)
 
 
 def angular_velocity_d(RPM: float) -> Quantity:
-    """Returns angular velocity from RPM in degrees/s"""
-    return Quantity(math.radians(RPM * PI / 30), DEGREE)
+    """Returns angular velocity from RPM in degrees/s ( 360 deg per revolution )"""
+    return Quantity(RPM * 360 / 60, DEGREE)
 
 
 def kinetic_energy(mass: float, vel: float) -> Quantity:
@@ -45,4 +47,4 @@ def potential_energy(mass: float, height: float, g: float = EARTH_G.value) -> Qu
 
 
 def einstein_mass_energy_equivalence(mass: float) -> Quantity:
-    return Quantity((mass * C * C), JOULE)
+    return Quantity(mass * float(C) ** 2, JOULE)

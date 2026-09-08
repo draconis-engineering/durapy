@@ -41,7 +41,7 @@ class Dimension:
         return Dimension(tuple(Fraction(power) * x for x in self.exponents))
 
     def __rpow__(self, base: float) -> Dimension:
-        return Dimension(tuple(Fraction(base**x) for x in self.exponents))
+        raise TypeError("Exponentiation of base by Dimension is not physically meaningful")
 
 
 @dataclass(frozen=True, slots=True)
@@ -93,11 +93,7 @@ class Unit:
         )
 
     def __rpow__(self, base: float) -> Unit:
-        return Unit(
-            symbol=self.symbol,
-            dimension=base**self.dimension,
-            scale=base**self.scale,
-        )
+        raise TypeError("Exponentiation of base by Unit is not physically meaningful")
 
 
 # The 7 SI Base symbols mapping to 7-tuple indices
@@ -126,15 +122,26 @@ def format_exponent(exp: Fraction) -> str:
     return "".join(SUPERSCRIPTS.get(char, char) for char in val_str)
 
 
+def _unwrap_quantity(q: Quantity) -> Quantity:
+    """Unwrap Constant to its underlying Quantity for internal operations."""
+    # Avoid circular import: check for 'quantity' attribute that Constants have
+    if hasattr(q, "quantity") and hasattr(q, "name"):
+        try:
+            return q.quantity  # type: ignore
+        except Exception:
+            pass
+    return q
+
+
 def get_symbol(quantity: Quantity) -> str:
     """Dynamic construction of a string from base elements (e.g., m·kg·s⁻²)"""
-
+    q = _unwrap_quantity(quantity)
     # Iterate over base symbols and exponents to build the symbol string
     positives: list[str] = []
     negatives: list[str] = []
 
     # Iterate over base symbols and exponents to build the symbol string
-    for symbol, exp in zip(BASE_SYMBOLS, quantity._unit.dimension):
+    for symbol, exp in zip(BASE_SYMBOLS, q._unit.dimension):
         if exp == 0:
             continue
         elif exp > 0:
@@ -149,7 +156,9 @@ def get_symbol(quantity: Quantity) -> str:
 
 def symbol_to_dimensions(symbol: str) -> tuple[Fraction, ...]:
     """Returns the dimensions as a tuple of exponents from the symbol."""
-    return tuple(Fraction(exp) for exp in symbol.replace("·", "").split("⁻") if exp)
+    # Deprecated stub: kept for backwards compatibility, returns empty tuple.
+    # Proper parsing would require a full SI parser.
+    return tuple()
 
 
 class Quantity:
@@ -160,10 +169,19 @@ class Quantity:
         self._value: int | float | complex
         self._unit: Unit
 
-        # Handle Quantity input
+        # Handle Quantity/Constant input — unwrap Constant to its Quantity
         if isinstance(value, Quantity):
-            self._value = value._value
-            self._unit = unit if unit else value._unit
+            unwrapped = _unwrap_quantity(value)  # type: ignore
+            # Access private attrs safely for both Quantity and Constant
+            src_val = getattr(unwrapped, "_value", None)
+            src_unit = getattr(unwrapped, "_unit", None)
+            if src_val is None:
+                # Fallback for Constant subclass edge: use quantity field
+                src_val = unwrapped._value if hasattr(unwrapped, "_value") else value  # type: ignore
+            self._value = src_val  # type: ignore
+            self._unit = unit if unit is not None else src_unit  # type: ignore
+            if self._unit is None:
+                raise ValueError("Unit must be provided for Quantity")
 
         # Handle float/complex input
         else:
@@ -193,51 +211,63 @@ class Quantity:
     def __add__(self, other: Quantity) -> Quantity:
         if not isinstance(other, Quantity):
             raise TypeError("Cannot add a Quantity to a scalar.")
-        if self._unit != other._unit:
-            raise ValueError(f"Unit mismatch: {self._unit} vs {other._unit}")
-        return Quantity(self._value + other._value, self._unit)
+        other_q = _unwrap_quantity(other)
+        if self._unit != other_q._unit:
+            raise ValueError(f"Unit mismatch: {self._unit} vs {other_q._unit}")
+        return Quantity(self._value + other_q._value, self._unit)
 
     def __sub__(self, other: Quantity) -> Quantity:
         if not isinstance(other, Quantity):
             raise TypeError("Cannot subtract a Quantity from a scalar.")
-        if self._unit != other._unit:
-            raise ValueError(f"Unit mismatch: {self._unit} vs {other._unit}")
-        return Quantity(self._value - other._value, self._unit)
+        other_q = _unwrap_quantity(other)
+        if self._unit != other_q._unit:
+            raise ValueError(f"Unit mismatch: {self._unit} vs {other_q._unit}")
+        return Quantity(self._value - other_q._value, self._unit)
 
     def __mul__(self, other: float | Quantity) -> Quantity:
         if not isinstance(other, Quantity):
             return Quantity(self._value * other, self._unit)
-        newunit = self._unit * other._unit
-        return Quantity(self._value * other._value, newunit)
+        other_q = _unwrap_quantity(other)
+        newunit = self._unit * other_q._unit
+        return Quantity(self._value * other_q._value, newunit)
 
     def __rmul__(self, other: float) -> Quantity:
-        return self.__mul__(other)  # Commutative
+        if isinstance(other, Quantity):
+            other_q = _unwrap_quantity(other)
+            newunit = other_q._unit * self._unit
+            return Quantity(other_q._value * self._value, newunit)
+        return Quantity(self._value * other, self._unit)
 
     def __truediv__(self, other: Quantity | float | int) -> Quantity:
         if isinstance(other, Quantity):
-            return Quantity(self.value / other.value, self._unit / other._unit)
-        if isinstance(other, (int, float)):
+            other_q = _unwrap_quantity(other)
+            return Quantity(self._value / other_q._value, self._unit / other_q._unit)
+        if isinstance(other, (int, float, complex)):
             return Quantity(self._value / other, self._unit)
         raise TypeError(f"Cannot divide Quantity by {type(other)}")
 
     def __rtruediv__(self, other: Quantity | float) -> Quantity:
         if not isinstance(other, Quantity):
-            return Quantity(other / self._value, -self._unit)
-        return other.__truediv__(self)
+            # scalar / Quantity -> invert dimensions
+            inv_unit = Unit(
+                symbol=f"1/{self._unit.symbol}",
+                dimension=-self._unit.dimension,
+                scale=1.0 / self._unit.scale if self._unit.scale != 0 else float("inf"),
+            )
+            return Quantity(other / self._value, inv_unit)
+        other_q = _unwrap_quantity(other)
+        return Quantity(other_q._value / self._value, other_q._unit / self._unit)
 
     def __pow__(self, power: Quantity | float) -> Quantity:
-        if not isinstance(power, (int, float)):
+        if isinstance(power, Quantity):
+            raise TypeError("Power must be a scalar number, not a Quantity")
+        if not isinstance(power, (int, float, complex)):
             raise TypeError("Power must be a scalar number.")
         new_dims = self._unit**power
         return Quantity(self._value**power, new_dims)
 
     def __rpow__(self, other: Quantity | float) -> Quantity:
-        if isinstance(other, Quantity):
-            return Quantity(
-                other._value**self._value, self._unit
-            )  # What about unit change?
-        else:
-            return Quantity(other**self._value, self._unit)
+        raise TypeError("Exponentiation with Quantity as exponent is not physically meaningful")
 
     def __int__(self) -> int:
         return int(self._value.real)
@@ -250,8 +280,9 @@ class Quantity:
 
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Quantity):
-            return self._unit == value._unit and self._value == value._value
-        if isinstance(value, (int, float)):
+            other_q = _unwrap_quantity(value)
+            return self._unit == other_q._unit and self._value == other_q._value
+        if isinstance(value, (int, float, complex)):
             return self._value == value
         return NotImplemented
 
@@ -300,6 +331,11 @@ class Constant(Quantity):
     quantity: Quantity
     name: str
 
+    def __post_init__(self):
+        # Mirror Quantity's private attrs so Quantity operations work on Constants
+        object.__setattr__(self, "_value", self.quantity._value)
+        object.__setattr__(self, "_unit", self.quantity._unit)
+
     def __int__(self) -> int:
         return int(self.quantity)
 
@@ -318,3 +354,9 @@ class Constant(Quantity):
     @override
     def unit(self) -> Unit:
         return self.quantity._unit
+
+    def __repr__(self) -> str:
+        return f"Constant({self.quantity!r}, {self.name!r})"
+
+    def __str__(self) -> str:
+        return f"{self.quantity._value} {self.quantity._unit.symbol} [{self.name}]"

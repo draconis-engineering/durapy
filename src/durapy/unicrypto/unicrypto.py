@@ -42,18 +42,16 @@ def ceasar_decrypt(cipher: str, key: int) -> str:
 
 def vigenere_encrypt(plaintext: str, key: str) -> str:
     """Vigenêre encryption"""
+    if not key or not key.isalpha():
+        raise ValueError("Key must be non-empty alphabetic string")
     cipher = ""
-
-    for idx, char in enumerate(plaintext):
+    key_idx = 0
+    for char in plaintext:
         if char.isalpha():
-            if char.isupper():
-                cipher += chr(
-                    (ord(char) - ord(key[idx % len(key)].upper()) + 26) % 26 + ord("A")
-                )
-            else:
-                cipher += chr(
-                    (ord(char) - ord(key[idx % len(key)].lower()) + 26) % 26 + ord("a")
-                )
+            shift = ord(key[key_idx % len(key)].lower()) - ord("a")
+            base = ord("A") if char.isupper() else ord("a")
+            cipher += chr((ord(char) - base + shift) % 26 + base)
+            key_idx += 1
         else:
             cipher += char
     return cipher
@@ -87,6 +85,10 @@ def vigenere_decrypt(cipher: str, key: str) -> str:
 def railfence_encrypt(plaintext: str, key: int) -> str:
     """Railfence encryption"""
     key = int(key)
+    if key <= 1:
+        raise ValueError("Railfence key must be >= 2")
+    if key > len(plaintext):
+        return plaintext
     pos, direction = 0, 1
     rows: list[list[str]] = [[] for _ in range(key)]
 
@@ -103,6 +105,10 @@ def railfence_encrypt(plaintext: str, key: int) -> str:
 def railfence_decrypt(cipher: str, key: int) -> str:
     """Railfence decryption"""
     key = int(key)
+    if key <= 1:
+        raise ValueError("Railfence key must be >= 2")
+    if key > len(cipher):
+        return cipher
     pattern: list[int] = []
     rows: list[list[str]] = []
     pos, idx, direction = 0, 0, 1
@@ -130,17 +136,28 @@ def railfence_decrypt(cipher: str, key: int) -> str:
 
 
 def otp_encrypt(plaintext: str, key: str) -> str:
-    """One Time Pad encryption"""
+    """One Time Pad encryption — key must be at least as long as plaintext"""
+    if len(key) < len(plaintext):
+        raise ValueError("OTP key must be at least as long as plaintext")
     binary_text = "".join(format(ord(i), "08b") for i in plaintext)
     binary_key = "".join(format(ord(i), "08b") for i in key)
+    # Only use key bits matching plaintext length
+    binary_key = binary_key[: len(binary_text)]
     cipher = "".join(str(int(b1) ^ int(b2)) for b1, b2 in zip(binary_text, binary_key))
     return " ".join(cipher[i : i + 8] for i in range(0, len(cipher), 8))
 
 
 def otp_decrypt(cipher: str, key: str) -> str:
     """One Time Pad decryption"""
+    # Remove spaces from cipher
+    cipher_bits = cipher.replace(" ", "")
     bintext = "".join(format(ord(i), "08b") for i in key)
-    plaintext_bits = "".join(str(int(b1) ^ int(b2)) for b1, b2 in zip(cipher, bintext))
+    bintext = bintext[: len(cipher_bits)]
+    if len(bintext) < len(cipher_bits):
+        raise ValueError("Key too short for given cipher")
+    plaintext_bits = "".join(
+        str(int(b1) ^ int(b2)) for b1, b2 in zip(cipher_bits, bintext)
+    )
     return "".join(
         chr(int(plaintext_bits[i : i + 8], 2)) for i in range(0, len(plaintext_bits), 8)
     )

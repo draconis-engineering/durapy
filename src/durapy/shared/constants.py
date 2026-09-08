@@ -101,7 +101,7 @@ MOON_R = Constant(Quantity(1.737e6, _METER), "Radius of the Moon")
 SUN_R = Constant(Quantity(6.957e8, _METER), "Radius of the Sun")
 MARS_R = Constant(Quantity(3.390e6, _METER), "Radius of Mars")
 LIGHTYR = Constant(Quantity(9.461e15, _METER), "Light year")
-PARSEC = Constant(Quantity(0.086e16, _METER), "Parsec")
+PARSEC = Constant(Quantity(3.085677581e16, _METER), "Parsec")
 
 # Mass Constants - M
 ELECTRON_M = Constant(Quantity(9.1093837015e-31, _KILOGRAM), "Electron Mass")
@@ -138,12 +138,12 @@ C = Constant(Quantity(299792458, _MPS), "Speed of Light")
 MACH = Constant(Quantity(343, _MPS), "Speed of Sound at sea level")
 
 # Energy Constants
-PLANCK = Constant(Quantity(6.2607015e-34, _JOULE), "Planck's Constant")
+PLANCK = Constant(Quantity(6.62607015e-34, _JOULE), "Planck's Constant")
 PLANCKR = Constant(Quantity(1.054571817e-34, _JOULE), "Reduced Planck Constant")
 
 # Universal Gravitational Constant
 UNI_G = Constant(
-    Quantity(6.74e-11, _UNIGUNIT), "Gravitational Constant"
+    Quantity(6.67430e-11, _UNIGUNIT), "Gravitational Constant"
 )  # L^3 / M * T^2
 
 # Vacuum-related Constants
@@ -160,7 +160,7 @@ VAC_IMPEDANCE = Constant(
 # Miscellaneous Constants
 STEFAN_BOLTZMANN = Constant(
     Quantity(5.670374419e-08, _WATT / (_METER**2 * _KELVIN**4)),
-    "Stefan-Boltzmann Constant"
+    "Stefan-Boltzmann Constant",
 )  # Constant of proportionality in the Stefan-Boltzmann law relating total energy radiated per unit surface area of a black body.
 COULOMB_CONST = Constant(
     Quantity(8.9875517923e09, _NEWTON * _METER**2 / _AMPERE**2), "Coulomb Constant"
@@ -172,7 +172,7 @@ JOSEPHSON = Constant(
     Quantity(483597.8484e09, _HERTZ / _VOLT), "Josephson Constant"
 )  # Constant relating the potential difference across a Josephson junction to the frequency of the alternating current.
 BOLTZMANN = Constant(
-    Quantity(0.380649e-23, _JOULE / _KELVIN), "Boltzmann Constant"
+    Quantity(1.380649e-23, _JOULE / _KELVIN), "Boltzmann Constant"
 )  # Relates the average relative kinetic energy of particles in a gas with the thermodynamic temperature of the gas.
 AVOGADRO = Constant(
     Quantity(6.02214076e23, _MOLE**-1), "Avogadro Constant"
@@ -184,8 +184,8 @@ RYDBERG = Constant(
     Quantity(10973731.56816, _METER**-1), "Rydberg Constant"
 )  # Limiting value of the highest wavenumber of any photon that can be emitted from an atom.
 HUBBLE = Constant(
-    Quantity(70000, _MPS) / PARSEC, "Hubble Constant"
-)  # The average speed of galaxies moving away from each other in the universe -- the expansion rate of the universe.
+    Quantity(70000, _MPS) / Quantity(3.085677581e22, _METER), "Hubble Constant"
+)  # ~70 km/s/Mpc = 2.2685e-18 s^-1 ; value kept as Quantity(70km/s / Mpc) for historical compatibility
 WIEN = Constant(
     Quantity(2.897771955e-03, _METER * _KELVIN), "Wien Displacement Constant"
 )  # Relationship between the thermodynamic temperature of a blackbody and the wavelength of its peak radiation.

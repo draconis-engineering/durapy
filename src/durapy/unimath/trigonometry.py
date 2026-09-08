@@ -28,7 +28,7 @@ def interpolate_triangle(
         Area, (A, B, C), (a, b, c), (sin(a), sin(b), sin(c))
     """
 
-    if sum([degA, degB, degC]) != 180:
+    if not math.isclose(sum([degA, degB, degC]), 180, abs_tol=1e-9):
         raise ValueError("The sum of the angles of a triangle must be 180 degrees!")
 
     sin_A = math.sin(math.radians(degA))
@@ -61,6 +61,10 @@ def cosine_rule(len_A: float, len_B: float, deg_A: float) -> float:
     )
 
 
+def _clamp_cos(v: float) -> float:
+    return max(-1.0, min(1.0, v))
+
+
 def reverse_cosine_rule(
     len_A: float, len_B: float, len_C: float
 ) -> tuple[float, float, float]:
@@ -73,13 +77,13 @@ def reverse_cosine_rule(
 
     return (
         math.degrees(
-            math.acos((len_B**2 + len_C**2 - len_A**2) / (2 * len_B * len_C))
+            math.acos(_clamp_cos((len_B**2 + len_C**2 - len_A**2) / (2 * len_B * len_C)))
         ),  # AngleA
         math.degrees(
-            math.acos((len_C**2 + len_A**2 - len_B**2) / (2 * len_C * len_A))
+            math.acos(_clamp_cos((len_C**2 + len_A**2 - len_B**2) / (2 * len_C * len_A)))
         ),  # AngleB
         math.degrees(
-            math.acos((len_A**2 + len_B**2 - len_C**2) / (2 * len_A * len_B))
+            math.acos(_clamp_cos((len_A**2 + len_B**2 - len_C**2) / (2 * len_A * len_B)))
         ),  # AngleC
     )
 
