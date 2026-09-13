@@ -1,6 +1,6 @@
 # DuraPy - An Open-Source Python Toolbox for STEM Workflows | By Draconis
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org)
+[![License: GNUv3](https://img.shields.io/badge/License-GNUv3-yellow.svg)](https://opensource.org)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
 DuraPy is a growing toolbox for science, engineering, and STEM workflows. It brings together helpful utilities for mathematics, physics, robotics, chemistry-adjacent calculations, and more under one Python universal package.
@@ -51,14 +51,3 @@ DuraPy is composed of several submodules, each providing a specific set of funct
 
 - UniPower - An advanced electronics/electrical engineering library, providing electrical component models, circuit simulation, and power analysis tools
 - UniSky - Aerospace/Spaceflight simulation and analysis tools
-
-## Suggested next improvements
-
-If you want to evolve the package further, the most impactful next steps are:
-
-- Add more polished examples and tutorials
-- Create a small CLI for common calculations
-- Add documentation pages for each submodule
-- Introduce a richer test suite and versioned release workflow
-
-DuraPy is intentionally open-ended, so it can grow into whatever your STEM projects need next.
