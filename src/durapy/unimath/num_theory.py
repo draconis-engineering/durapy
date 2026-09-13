@@ -79,7 +79,7 @@ def subfactorial(n: int) -> int:
         raise ValueError(
             "Subfactorial and Factorial are not defined for negative numbers or floats/strings!"
         )
-    return int(round(factorial(n) * sum((-1) ** k / factorial(k) for k in range(n + 1))))
+    return round(factorial(n) * sum((-1) ** k / factorial(k) for k in range(n + 1)))
 
 
 def gcd(*ints: int) -> int:

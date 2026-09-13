@@ -115,6 +115,7 @@ SUPERSCRIPTS = {
 
 def format_exponent(exp: Fraction) -> str:
     """Converts a number like -2 into a superscript string like ⁻²."""
+
     # Handle ints cleanly so 2.0 becomes ² instead of ².⁰
     val_str = str(int(exp)) if exp.is_integer() else str(exp)
     if val_str == "1":
@@ -124,17 +125,19 @@ def format_exponent(exp: Fraction) -> str:
 
 def _unwrap_quantity(q: Quantity) -> Quantity:
     """Unwrap Constant to its underlying Quantity for internal operations."""
+
     # Avoid circular import: check for 'quantity' attribute that Constants have
     if hasattr(q, "quantity") and hasattr(q, "name"):
         try:
             return q.quantity  # type: ignore
-        except Exception:
+        except:
             pass
     return q
 
 
 def get_symbol(quantity: Quantity) -> str:
     """Dynamic construction of a string from base elements (e.g., m·kg·s⁻²)"""
+
     q = _unwrap_quantity(quantity)
     # Iterate over base symbols and exponents to build the symbol string
     positives: list[str] = []
@@ -156,9 +159,10 @@ def get_symbol(quantity: Quantity) -> str:
 
 def symbol_to_dimensions(symbol: str) -> tuple[Fraction, ...]:
     """Returns the dimensions as a tuple of exponents from the symbol."""
+
     # Deprecated stub: kept for backwards compatibility, returns empty tuple.
     # Proper parsing would require a full SI parser.
-    return tuple()
+    return ()
 
 
 class Quantity:
@@ -238,7 +242,7 @@ class Quantity:
             return Quantity(other_q._value * self._value, newunit)
         return Quantity(self._value * other, self._unit)
 
-    def __truediv__(self, other: Quantity | float | int) -> Quantity:
+    def __truediv__(self, other: Quantity | float) -> Quantity:
         if isinstance(other, Quantity):
             other_q = _unwrap_quantity(other)
             return Quantity(self._value / other_q._value, self._unit / other_q._unit)
@@ -346,12 +350,10 @@ class Constant(Quantity):
         return complex(self.quantity)
 
     @property
-    @override
     def value(self) -> float:
         return self.quantity._value.real
 
     @property
-    @override
     def unit(self) -> Unit:
         return self.quantity._unit
 

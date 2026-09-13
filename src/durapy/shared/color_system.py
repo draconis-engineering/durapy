@@ -73,8 +73,7 @@ def validate_hex(hexcode: str) -> str:
     if not isinstance(hexcode, str):
         return "#000000"
     hexcode = hexcode.strip()
-    if hexcode.startswith("#"):
-        hexcode = hexcode[1:]
+    hexcode = hexcode.removeprefix("#")
     if len(hexcode) != 6:
         return "#000000"
     hexchars = "abcdef0123456789"
