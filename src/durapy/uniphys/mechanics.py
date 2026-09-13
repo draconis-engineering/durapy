@@ -1,7 +1,5 @@
 """`UniPhys` classical mechanics source"""
 
-import math
-
 from ..shared.color_system import color_text
 from ..shared.constants import EARTH_G, PI, C
 from ..shared.numval_types import Quantity

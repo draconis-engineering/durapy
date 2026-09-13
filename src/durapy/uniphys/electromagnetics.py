@@ -3,7 +3,7 @@
 from ..shared.color_system import color_text
 from ..shared.constants import INF, PLANCK, C
 from ..shared.numval_types import Quantity
-from ..shared.units import ELECTRONVOLT, JOULE, METER
+from ..shared.units import ELECTRONVOLT, HERTZ, JOULE, METER
 
 # Ultraviolet Spectrum Wavelengths
 UV_SPEC_WAVLEN: dict[tuple[float, float], str] = {
@@ -51,22 +51,20 @@ def spectrum_label(
     raise ValueError(f"Wavelength {λ!r} is out of range for this spectrum map")
 
 
-def λ(Hz: float, in_nm: bool = False) -> Quantity:
+def λ(hertz: float, in_nm: bool = False) -> Quantity:
     """Return wavelength `λ` from `Hertz`. If in_nm, input Hz is assumed to produce nm output scaling."""
-    from ..shared.units import HERTZ
 
-    if Hz == 0:
+    if hertz == 0:
         raise ValueError("Frequency cannot be zero")
     # λ = c / f  (meters)
-    wav_m = float(C) / Hz
+    wav_m = float(C) / hertz
     if in_nm:
         wav_m *= 1e9
     return Quantity(wav_m, METER)
 
 
-def Hz(λ: float, in_nm: bool = False) -> Quantity:
+def hz(λ: float, in_nm: bool = False) -> Quantity:
     """Return `Hertz` from wavelength `λ` (in meters, or nm if in_nm=True)."""
-    from ..shared.units import HERTZ
 
     lam_m = λ * 1e-9 if in_nm else λ
     if lam_m == 0:
@@ -77,14 +75,14 @@ def Hz(λ: float, in_nm: bool = False) -> Quantity:
 def ems(λ: float) -> tuple[str, float, str]:
     """Get the part of the electromagnetic spectrum the wavelength `λ` sits in, as well as the hertz."""
     label = spectrum_label(λ, EM_SPEC_WAVLEN)
-    hz = float(Hz(λ))
+    hertz = float(hz(λ))
 
-    return label, hz, f"{label} - {hz} Hz"
+    return label, hertz, f"{label} - {hertz} Hz"
 
 
 def photon_energy_λ(λ: float) -> Quantity:
     """Calculate the energy of a photon in joules with wavelength `λ` (in meters)."""
-    return Quantity(float(PLANCK) * float(Hz(λ)), JOULE)
+    return Quantity(float(PLANCK) * float(hz(λ)), JOULE)
 
 
 def photon_energy_hz(Hz: float) -> Quantity:
