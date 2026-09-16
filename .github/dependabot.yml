@@ -1,0 +1,27 @@
+version: 2
+updates:
+  # 1. Track Python Packages
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+
+    # Group updates together to minimize PR noise
+    groups:
+      python-dependencies:
+        patterns:
+          - "*"
+
+    # Prevent breaking changes by ignoring major version updates for specific packages
+    ignore:
+      - dependency-name: "django"
+        versions: [">= 5.0.0"]
+
+  # 2. Recommended: Keep GitHub Actions up to date as well
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
