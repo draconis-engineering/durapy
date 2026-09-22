@@ -138,8 +138,10 @@ C = Constant(Quantity(299792458, _MPS), "Speed of Light")
 MACH = Constant(Quantity(343, _MPS), "Speed of Sound at sea level")
 
 # Energy Constants
-PLANCK = Constant(Quantity(6.62607015e-34, _JOULE), "Planck's Constant")
-PLANCKR = Constant(Quantity(1.054571817e-34, _JOULE), "Reduced Planck Constant")
+PLANCK = Constant(Quantity(6.62607015e-34, _JOULE * _SECOND), "Planck's Constant")
+PLANCKR = Constant(
+    Quantity(1.054571817e-34, _JOULE * _SECOND), "Reduced Planck Constant"
+)
 
 # Universal Gravitational Constant
 UNI_G = Constant(

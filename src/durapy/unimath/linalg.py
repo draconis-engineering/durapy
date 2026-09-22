@@ -17,7 +17,7 @@ import copy
 import math
 import random
 from collections.abc import Sequence
-from typing import overload, override
+from typing import overload
 
 import numpy as np
 
@@ -97,11 +97,11 @@ class Vector:
     def __iter__(self):
         return iter(self.components)
 
-    @override
+    
     def __repr__(self) -> str:
         return f"Vector({self.components!r})"
 
-    @override
+    
     def __str__(self) -> str:
         return str(self.components).replace(",", "")
 
@@ -114,7 +114,7 @@ class Vector:
     def __neg__(self) -> Vector:
         return Vector([-(component) for component in self.components])
 
-    @override
+    
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Vector):
             return self.components == value.components and self.shape == value.shape
@@ -211,13 +211,11 @@ class Vector:
         return other.__truediv__(self)
 
     @overload
-    def __matmul__(self, other: Vector) -> Vector: ...
+    def __matmul__(self, other: Vector) -> Matrix: ...
     @overload
-    def __matmul__(self, other: Matrix) -> Matrix: ...
+    def __matmul__(self, other: Matrix) -> Vector: ...
     def __matmul__(self, other: object) -> Vector | Matrix:
         if isinstance(other, Vector):  # Outer product
-            if self.shape[1] != other.shape[0]:
-                raise ValueError("Matrix dimensions do not match for multiplication")
             return Matrix(
                 array=list(
                     np.outer(  ### MIGRATE TO DRACOLIX WHEN IMPLEMENTED
@@ -225,24 +223,22 @@ class Vector:
                     ).tolist()
                 )
             )
-        if isinstance(other, Matrix):
-            if self.shape[1] != other.shape[0]:
+        if isinstance(other, Matrix):  # Row-vector × matrix
+            if len(self.components) != other.shape[0]:
                 raise ValueError(
                     "Matrix dimensions do not match for multiplication"
                 )  ### MIGRATE TO DRACOLIX WHEN IMPLEMENTED
-            return Matrix(
-                array=list(
-                    np.vecmat(
-                        np.array(self.components), np.array(other.array)
-                    )  ### MIGRATE TO DRACOLIX WHEN IMPLEMENTED
-                )
+            return Vector(
+                components=np.dot(
+                    np.array(self.components), np.array(other.array)
+                ).tolist()  ### MIGRATE TO DRACOLIX WHEN IMPLEMENTED
             )
         return NotImplemented
 
     @overload
-    def __rmatmul__(self, other: Vector) -> Vector: ...
+    def __rmatmul__(self, other: Vector) -> Matrix: ...
     @overload
-    def __rmatmul__(self, other: Matrix) -> Matrix: ...
+    def __rmatmul__(self, other: Matrix) -> Vector: ...
     def __rmatmul__(self, other: Vector | Matrix) -> Vector | Matrix:
         return other.__matmul__(self)
 
@@ -387,11 +383,11 @@ class Matrix:
     def __iter__(self):
         return iter(self._array)
 
-    @override
+    
     def __repr__(self) -> str:
         return f"Matrix({self._array!r})"
 
-    @override
+    
     def __str__(self) -> str:
         return_str = ""
         for row in self:
@@ -408,12 +404,12 @@ class Matrix:
         )
 
     def __len__(self) -> int:
-        return self._rows * self._cols
+        return self._rows
 
     def __abs__(self) -> float:
         return math.sqrt(sum(cell * cell for row in self._array for cell in row))
 
-    @override
+    
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Matrix):
             return (
@@ -563,7 +559,7 @@ class Matrix:
     @staticmethod
     def __sign(expr: float, idx: int) -> float:
         """Helper method to compute the sign of an expression based on the index."""
-        return expr * (-(1.0**idx))
+        return expr * ((-1.0) ** idx)
 
     @staticmethod
     def __2x2_det(_array: list[list[float]]) -> float:

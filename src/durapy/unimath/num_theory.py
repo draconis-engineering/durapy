@@ -23,12 +23,9 @@ def fibonacci_integer(fib_idx: int) -> int:
             "fibonacci_integer does not take integers less than 2 or floats/strings!"
         )
 
-    if fib_idx == 2:
-        return 1
-
     fib0, fib1, fib2 = 0, 1, 1
 
-    for _ in range(fib_idx - 2):
+    for _ in range(fib_idx - 1):
         fib2 = fib0 + fib1
         fib0, fib1 = fib1, fib2
 
@@ -89,7 +86,7 @@ def gcd(*ints: int) -> int:
 
 def lcm(*ints: int) -> int:
     """Returns the least common multiple of the given integers."""
-    return abs(math.prod(ints)) // gcd(*ints)
+    return math.lcm(*ints)
 
 
 def prime_factorize(n: int) -> list[int]:

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from fractions import Fraction
-from typing import override
 
 
 @dataclass(frozen=True, slots=True)
@@ -41,7 +40,9 @@ class Dimension:
         return Dimension(tuple(Fraction(power) * x for x in self.exponents))
 
     def __rpow__(self, base: float) -> Dimension:
-        raise TypeError("Exponentiation of base by Dimension is not physically meaningful")
+        raise TypeError(
+            "Exponentiation of base by Dimension is not physically meaningful"
+        )
 
 
 @dataclass(frozen=True, slots=True)
@@ -271,7 +272,9 @@ class Quantity:
         return Quantity(self._value**power, new_dims)
 
     def __rpow__(self, other: Quantity | float) -> Quantity:
-        raise TypeError("Exponentiation with Quantity as exponent is not physically meaningful")
+        raise TypeError(
+            "Exponentiation with Quantity as exponent is not physically meaningful"
+        )
 
     def __int__(self) -> int:
         return int(self._value.real)
@@ -290,8 +293,8 @@ class Quantity:
             return self._value == value
         return NotImplemented
 
-    def __ne__(self, value: object) -> bool:
-        return not self.__eq__(value)
+    def __hash__(self) -> int:
+        return hash((self._value, self._unit))
 
     def __ge__(self, other: float | Quantity) -> bool:
         if isinstance(other, Quantity):
@@ -339,6 +342,11 @@ class Constant(Quantity):
         # Mirror Quantity's private attrs so Quantity operations work on Constants
         object.__setattr__(self, "_value", self.quantity._value)
         object.__setattr__(self, "_unit", self.quantity._unit)
+
+    def __eq__(self, value: object) -> bool:
+        if isinstance(value, Constant):
+            return (self.quantity, self.name) == (value.quantity, value.name)
+        return Quantity.__eq__(self, value)
 
     def __int__(self) -> int:
         return int(self.quantity)
