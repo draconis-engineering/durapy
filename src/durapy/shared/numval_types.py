@@ -131,7 +131,7 @@ def _unwrap_quantity(q: Quantity) -> Quantity:
     if hasattr(q, "quantity") and hasattr(q, "name"):
         try:
             return q.quantity  # type: ignore
-        except:
+        except (TypeError, AttributeError):
             pass
     return q
 
@@ -182,9 +182,9 @@ class Quantity:
             src_unit = getattr(unwrapped, "_unit", None)
             if src_val is None:
                 # Fallback for Constant subclass edge: use quantity field
-                src_val = unwrapped._value if hasattr(unwrapped, "_value") else value  # type: ignore
+                src_val = unwrapped._value if hasattr(unwrapped, "_value") else value
             self._value = src_val  # type: ignore
-            self._unit = unit if unit is not None else src_unit  # type: ignore
+            self._unit = unit if unit is not None else src_unit
             if self._unit is None:
                 raise ValueError("Unit must be provided for Quantity")
 

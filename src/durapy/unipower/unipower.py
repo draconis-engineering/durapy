@@ -63,12 +63,16 @@ def ohms_law(
 
     if v is None:
         if i is None or r is None:
-            raise TypeError(ohms_law, missing)
+            raise TypeError(
+                f"function ohms_law is missing too many parameters: {missing}"
+            )
         v = i * r
 
     elif i is None:
         if r is None:
-            raise TypeError(ohms_law, missing)
+            raise TypeError(
+                f"function ohms_law is missing too many parameters: {missing}"
+            )
         i = v / r
 
     elif r is None:

@@ -29,8 +29,8 @@ VSBL_SPEC_WAVLEN: dict[tuple[float, float], str] = {
 EM_SPEC_WAVLEN = {
     (0, 0.01): "Gamma-ray",
     (0.01, 10): "X-Ray",
-    (10, 400): UV_SPEC_WAVLEN,
-    (400, 700): VSBL_SPEC_WAVLEN,
+    (10, 390): UV_SPEC_WAVLEN,
+    (390, 700): VSBL_SPEC_WAVLEN,
     (700, 1e6): "Infrared Light",
     (1e6, 1e10): "Micro Wave",
     (1e10, INF.value): "Radio Wave",
