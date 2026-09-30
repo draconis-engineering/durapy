@@ -69,5 +69,5 @@ total_esr([(100, 50, 0), (100, 50, 10)], "parallel")   # 10 Ω, expected 0 Ω
 - [?] DMISH Negative error - the formula is correct?
 - [ ] Hardcoded CEL-axis
 - [x] Ohms law error fix
-- [ ] TotalESR fault
+- [.] TotalESR fault - was already handled by a `ZeroDivisionError` guard
 - [x] Bare except in unwrap_quantity

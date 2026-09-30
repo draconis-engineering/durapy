@@ -152,10 +152,13 @@ def total_esr(caps: list[tuple[float, float, float]], connection: str) -> Quanti
         return Quantity(math.fsum(cap[2] for cap in caps), OHM)
 
     if connection == "parallel":
+        # Calculate the total ESR, while checking for zero ESR
         try:
             return Quantity(
                 1 / math.fsum(1 / cap[2] for cap in caps if cap[2] != 0), OHM
             )
+
+        # If any ESR is 0, the total ESR is 0
         except ZeroDivisionError:
             return Quantity(0, OHM)
 
