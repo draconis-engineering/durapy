@@ -33,7 +33,7 @@ DuraPy is composed of several submodules, each providing a specific set of funct
 - UniCrypto - Cryptographic utilities for encryption and decryption
 - UniMath - Mathematical utilities for numerical computations
     - Algebra - Tools for generic algebraic operations
-      - Linear Algebra - Tools for linear algebra operations, built on top of NumPy + Custom types for Matrices and Vectors - Accelerated with DracoLIX and custom C++ backend
+        - Linear Algebra - Tools for linear algebra operations & custom types for matrices and vectors - Built with DracoLIX
     - Coordinate Systems - Custom types for representing points and vectors in N-dimensional space, such as Cartesian, polar, and spherical coordinates
     - Geometry, Number Theory and Trigonometry - Tools for geometric calculations and trigonometric functions
     - Decorators and Exceptions - utilities for decorators and exception handling, providing error-free and mathematically correct calculations

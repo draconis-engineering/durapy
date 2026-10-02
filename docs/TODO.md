@@ -12,6 +12,7 @@ Each item was reproduced by running code against Python 3.14 (`PYTHONPATH=src`).
 Mish is monotonically increasing, so its derivative must be non-negative everywhere, but `d_mish` returns negative values for all `x < 0` (e.g. `d_mish(-10) ≈ -0.0004`). Formula bug in the mixed derivative.
 
 **Repro:**
+
 ```python
 import numpy as np
 from durapy.unicogni.unicogni import d_mish
@@ -31,27 +32,13 @@ d_mish(np.array([-100.0, -10.0]))   # all negative below 0
 Hardcodes `axis=1`, so 1-D arrays raise `AxisError("axis 1 is out of bounds for array of dimension 1")`.
 
 **Repro:**
+
 ```python
 import numpy as np
 cross_entropy_loss(np.array([1.0, 0.0, 0.0]), np.array([0.9, 0.05, 0.05]))   # AxisError
 ```
 
 **Fix:** derive the softmax/cross-entropy axis from `ndim` (use `axis=-1` or handle 1-D explicitly) and add numerical-stability clipping.
-
----
-
-## 7. `total_esr` mishandles zero-ESR capacitors
-
-**File:** `src/durapy/unipower/unipower.py:145`
-
-A capacitor with `ESR = 0` short-circuits a parallel bank, so total parallel ESR must be `0`. Current code returns the parallel resistance of the non-zero caps (`[(100,50,0), (100,50,10)]` → `10.0 Ω`, should be `0 Ω`).
-
-**Repro:**
-```python
-total_esr([(100, 50, 0), (100, 50, 10)], "parallel")   # 10 Ω, expected 0 Ω
-```
-
-**Fix:** if any ESR equals 0 in a parallel connection, return 0; also guard the all-zero case.
 
 ---
 
