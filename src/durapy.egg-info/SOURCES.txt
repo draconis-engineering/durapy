@@ -1,6 +1,5 @@
 LICENSE
 pyproject.toml
-setup.py
 docs/README.md
 src/durapy/__init__.py
 src/durapy.egg-info/PKG-INFO
@@ -8,12 +7,10 @@ src/durapy.egg-info/SOURCES.txt
 src/durapy.egg-info/dependency_links.txt
 src/durapy.egg-info/requires.txt
 src/durapy.egg-info/top_level.txt
-src/durapy/maxcompute/maxcompute.cpp
 src/durapy/shared/__init__.py
 src/durapy/shared/color_system.py
 src/durapy/shared/constants.py
 src/durapy/shared/exceptions.py
-src/durapy/shared/graph.py
 src/durapy/shared/numval_types.py
 src/durapy/shared/units.py
 src/durapy/uniCLI/__init__.py
@@ -23,10 +20,8 @@ src/durapy/unicogni/unicogni.py
 src/durapy/unicrypto/__init__.py
 src/durapy/unicrypto/unicrypto.py
 src/durapy/unimath/__init__.py
-src/durapy/unimath/_maxcompute.pyi
 src/durapy/unimath/algebra.py
 src/durapy/unimath/coordinate_systems.py
-src/durapy/unimath/decorators.py
 src/durapy/unimath/geometry.py
 src/durapy/unimath/linalg.py
 src/durapy/unimath/num_theory.py
@@ -59,4 +54,3 @@ src/durapy/unipower/types/resistor.py
 src/durapy/unipower/types/transistor.py
 src/durapy/unisky/__init__.py
 src/durapy/unisky/unisky.py
-tests/testbox.py
