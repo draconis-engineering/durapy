@@ -100,9 +100,7 @@ def validate(sequence: str, kind: str = "dna") -> str:
     allowed = VALID_DNA if kind == "dna" else VALID_RNA
     invalid = sorted(set(seq) - allowed)
     if invalid:
-        raise ValueError(
-            f"Invalid {kind.upper()} base(s): {', '.join(invalid)}"
-        )
+        raise ValueError(f"Invalid {kind.upper()} base(s): {', '.join(invalid)}")
     return seq
 
 
@@ -142,20 +140,20 @@ def reverse_complement(sequence: str, kind: str = "dna") -> str:
 
 
 def transcribe(sequence: str) -> str:
-    """Transcribe a DNA coding strand to mRNA (``T`` → ``U``)."""
+    """Transcribe a DNA coding strand to mRNA (`T` → `U`)."""
     return validate(sequence, "dna").replace("T", "U")
 
 
 def reverse_transcribe(sequence: str) -> str:
-    """Reverse-transcribe an RNA sequence to DNA (``U`` → ``T``)."""
+    """Reverse-transcribe an RNA sequence to DNA (`U` → `T`)."""
     return validate(sequence, "rna").replace("U", "T")
 
 
 def translate(sequence: str, kind: str | None = None, to_stop: bool = False) -> str:
     """Translate a nucleotide sequence into a protein (single-letter codes).
 
-    ``kind`` is auto-detected when ``None``. Translation proceeds codon by codon;
-    a trailing partial codon is ignored. When ``to_stop`` is ``True`` the
+    `kind` is auto-detected when `None`. Translation proceeds codon by codon;
+    a trailing partial codon is ignored. When `to_stop` is `True` the
     trailing stop codon is omitted from the result.
     """
     rna = _as_rna(sequence, kind)
@@ -199,7 +197,9 @@ def hamming_distance(first: str, second: str) -> int:
     return sum(x != y for x, y in zip(a, b))
 
 
-def molecular_weight(sequence: str, kind: str = "dna", double_stranded: bool = False) -> float:
+def molecular_weight(
+    sequence: str, kind: str = "dna", double_stranded: bool = False
+) -> float:
     """Return an approximate molecular weight in Daltons.
 
     Uses average nucleotide residue masses for single strands. For double
@@ -285,9 +285,7 @@ def find_orfs(
                         start, end = index, cursor
                         if reverse:
                             start, end = len(seq) - end, len(seq) - index
-                        results.append(
-                            ORF(start, end, frame, strand, "".join(protein))
-                        )
+                        results.append(ORF(start, end, frame, strand, "".join(protein)))
                     index = cursor
                 else:
                     index += 3
