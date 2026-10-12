@@ -176,7 +176,7 @@ class Quantity:
 
         # Handle Quantity/Constant input — unwrap Constant to its Quantity
         if isinstance(value, Quantity):
-            unwrapped = _unwrap_quantity(value)  # type: ignore
+            unwrapped = _unwrap_quantity(value)
             # Access private attrs safely for both Quantity and Constant
             src_val = getattr(unwrapped, "_value", None)
             src_unit = getattr(unwrapped, "_unit", None)

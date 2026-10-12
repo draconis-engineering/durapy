@@ -129,7 +129,7 @@ class RGB(_BaseColor):
     def __getitem__(self, key: int | None) -> int | tuple[int, int, int]:
         if key is None:
             return (self.r, self.g, self.b)
-        if key in [0, 1, 2]:
+        if key in {0, 1, 2}:
             return (self.r, self.g, self.b)[key]
         raise IndexError("Key must be None or an integer in [0, 1, 2]")
 
