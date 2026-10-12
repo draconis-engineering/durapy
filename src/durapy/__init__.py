@@ -2,6 +2,8 @@
 
 from . import (
     uniCLI,
+    unibio,
+    unichem,
     unicogni,
     unicrypto,
     unimath,
@@ -24,6 +26,8 @@ __all__ = [
     "exceptions",
     "numval_types",
     "uniCLI",
+    "unibio",
+    "unichem",
     "unicogni",
     "unicrypto",
     "unimath",

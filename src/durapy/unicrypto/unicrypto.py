@@ -2,14 +2,23 @@
 
 
 def binary_encrypt(plaintext: str) -> str:
-    """Binary encryption"""
-    binary = "".join(format(ord(char), "08b") for char in plaintext)
-    return " ".join(binary[i : i + 8] for i in range(0, len(binary), 8))
+    """Encode text as space-separated 8-bit binary bytes using UTF-8.
+
+    This is a reversible encoding, not encryption. Any Unicode input (including
+    characters outside the ASCII range) round-trips correctly through
+    :func:`binary_decrypt`.
+    """
+    data = plaintext.encode()
+    return " ".join(format(byte, "08b") for byte in data)
 
 
 def binary_decrypt(binary: str) -> str:
-    """Binary decryption"""
-    return "".join(chr(int(b, 2)) for b in binary.split())
+    """Decode space-separated 8-bit binary bytes back to text using UTF-8."""
+    try:
+        data = bytes(int(chunk, 2) for chunk in binary.split())
+    except ValueError as exc:
+        raise ValueError(f"Invalid binary input: {exc}") from exc
+    return data.decode()
 
 
 def ceasar_encrypt(plaintext: str, key: int) -> str:
@@ -59,6 +68,8 @@ def vigenere_encrypt(plaintext: str, key: str) -> str:
 
 def vigenere_decrypt(cipher: str, key: str) -> str:
     """Vigenêre decryption"""
+    if not key or not key.isalpha():
+        raise ValueError("Key must be non-empty alphabetic string")
     plaintext = ""
     key = key.lower()
     key_idx = 0
@@ -136,28 +147,29 @@ def railfence_decrypt(cipher: str, key: int) -> str:
 
 
 def otp_encrypt(plaintext: str, key: str) -> str:
-    """One Time Pad encryption — key must be at least as long as plaintext"""
-    if len(key) < len(plaintext):
+    """One Time Pad encryption.
+
+    The key must be at least as long as the UTF-8 encoding of the plaintext.
+    The output is space-separated 8-bit binary of the XOR stream. Note that
+    this is only information-theoretically secure when the key is truly random,
+    used once, and kept secret.
+    """
+    text = plaintext.encode()
+    key_bytes = key.encode()
+    if len(key_bytes) < len(text):
         raise ValueError("OTP key must be at least as long as plaintext")
-    binary_text = "".join(format(ord(i), "08b") for i in plaintext)
-    binary_key = "".join(format(ord(i), "08b") for i in key)
-    # Only use key bits matching plaintext length
-    binary_key = binary_key[: len(binary_text)]
-    cipher = "".join(str(int(b1) ^ int(b2)) for b1, b2 in zip(binary_text, binary_key))
-    return " ".join(cipher[i : i + 8] for i in range(0, len(cipher), 8))
+    cipher = bytes(t ^ k for t, k in zip(text, key_bytes))
+    return " ".join(format(byte, "08b") for byte in cipher)
 
 
 def otp_decrypt(cipher: str, key: str) -> str:
-    """One Time Pad decryption"""
-    # Remove spaces from cipher
-    cipher_bits = cipher.replace(" ", "")
-    bintext = "".join(format(ord(i), "08b") for i in key)
-    bintext = bintext[: len(cipher_bits)]
-    if len(bintext) < len(cipher_bits):
+    """One Time Pad decryption (inverse of :func:`otp_encrypt`)."""
+    key_bytes = key.encode()
+    try:
+        cipher_bytes = bytes(int(chunk, 2) for chunk in cipher.split())
+    except ValueError as exc:
+        raise ValueError(f"Invalid cipher input: {exc}") from exc
+    if len(key_bytes) < len(cipher_bytes):
         raise ValueError("Key too short for given cipher")
-    plaintext_bits = "".join(
-        str(int(b1) ^ int(b2)) for b1, b2 in zip(cipher_bits, bintext)
-    )
-    return "".join(
-        chr(int(plaintext_bits[i : i + 8], 2)) for i in range(0, len(plaintext_bits), 8)
-    )
+    plain = bytes(c ^ k for c, k in zip(cipher_bytes, key_bytes))
+    return plain.decode()

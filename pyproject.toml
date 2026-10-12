@@ -59,3 +59,14 @@ include-package-data = true
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["durapy*"]
+
+[tool.setuptools.package-data]
+durapy = ["py.typed"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"

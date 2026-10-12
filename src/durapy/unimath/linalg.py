@@ -420,7 +420,7 @@ class Matrix:
         else:
             return self._array == other
 
-    def __add__(self, other: Matrix | float) -> Matrix:
+    def __add__(self, other: Matrix | Real) -> Matrix:
         if isinstance(other, Matrix):
             if self.shape != other.shape:
                 raise ValueError("Matrix summation only takes same-size dimensions!")
@@ -430,7 +430,7 @@ class Matrix:
                     for i in range(self._rows)
                 ]
             )
-        elif isinstance(other, float):
+        elif isinstance(other, Real):
             return Matrix(
                 [
                     [self[i][j] + other for j in range(self._cols)]
@@ -439,10 +439,10 @@ class Matrix:
             )
         return NotImplemented
 
-    def __radd__(self, other: Matrix | float) -> Matrix:
+    def __radd__(self, other: Matrix | Real) -> Matrix:
         return self.__add__(other)
 
-    def __sub__(self, other: Matrix | float) -> Matrix:
+    def __sub__(self, other: Matrix | Real) -> Matrix:
         if isinstance(other, Matrix):
             if self._rows != other._rows or self._cols != other._cols:
                 raise ValueError("Matrix subtraction only takes same-size dimensions!")
@@ -452,7 +452,7 @@ class Matrix:
                     for i in range(self._rows)
                 ]
             )
-        elif isinstance(other, float):
+        elif isinstance(other, Real):
             return Matrix(
                 [
                     [self[i][j] - other for j in range(self._cols)]
@@ -461,13 +461,13 @@ class Matrix:
             )
         return NotImplemented
 
-    def __rsub__(self, other: Matrix | float) -> Matrix:
+    def __rsub__(self, other: Matrix | Real) -> Matrix:
         if not isinstance(other, Matrix):
             return NotImplemented  # Cant subtract a matrix from a int/float
         return other.__sub__(self)
 
-    def __mul__(self, other: float) -> Matrix:
-        if isinstance(other, float):
+    def __mul__(self, other: Real) -> Matrix:
+        if isinstance(other, Real):
             return Matrix(
                 [
                     [self[i][j] * other for j in range(self._cols)]
@@ -476,13 +476,13 @@ class Matrix:
             )
         return NotImplemented
 
-    def __rmul__(self, other: float) -> Matrix:
-        if isinstance(other, float):
+    def __rmul__(self, other: Real) -> Matrix:
+        if isinstance(other, Real):
             return self.__mul__(other)  # Commutative
         return NotImplemented
 
-    def __truediv__(self, other: float) -> Matrix:
-        if isinstance(other, float):
+    def __truediv__(self, other: Real) -> Matrix:
+        if isinstance(other, Real):
             return Matrix(
                 [
                     [self[i][j] / other for j in range(self._cols)]

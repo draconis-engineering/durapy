@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from fractions import Fraction
 
+from .exceptions import UnitError
+
 
 @dataclass(frozen=True, slots=True)
 class Dimension:
@@ -201,6 +203,32 @@ class Quantity:
     def imagvalue(self) -> float:
         return self._value.imag
 
+    def _value_in(self, unit: Unit) -> float:
+        """Return this quantity's value expressed in ``unit`` (same dimension).
+
+        The conversion uses each unit's ``scale``, defined as the factor that
+        maps a value in that unit onto the corresponding base-unit value
+        (``base = value * scale``).
+        """
+        if self._unit.dimension != unit.dimension:
+            raise UnitError(
+                f"Cannot convert between incompatible dimensions: "
+                f"{self._unit.symbol} vs {unit.symbol}"
+            )
+        if unit.scale == 0:
+            raise UnitError(f"Target unit {unit.symbol!r} has a zero scale")
+        return self._value * self._unit.scale / unit.scale
+
+    def to(self, unit: Unit) -> Quantity:
+        """Return this quantity converted to ``unit``.
+
+        Raises
+        ------
+        UnitError
+            If ``unit`` has a different physical dimension.
+        """
+        return Quantity(self._value_in(unit), unit)
+
     def __repr__(self) -> str:
         return f"Quantity({self._value!r}, {self._unit!r})"
 
@@ -218,7 +246,7 @@ class Quantity:
             raise TypeError("Cannot add a Quantity to a scalar.")
         other_q = _unwrap_quantity(other)
         if self._unit != other_q._unit:
-            raise ValueError(f"Unit mismatch: {self._unit} vs {other_q._unit}")
+            return Quantity(self._value + other_q._value_in(self._unit), self._unit)
         return Quantity(self._value + other_q._value, self._unit)
 
     def __sub__(self, other: Quantity) -> Quantity:
@@ -226,7 +254,7 @@ class Quantity:
             raise TypeError("Cannot subtract a Quantity from a scalar.")
         other_q = _unwrap_quantity(other)
         if self._unit != other_q._unit:
-            raise ValueError(f"Unit mismatch: {self._unit} vs {other_q._unit}")
+            return Quantity(self._value - other_q._value_in(self._unit), self._unit)
         return Quantity(self._value - other_q._value, self._unit)
 
     def __mul__(self, other: float | Quantity) -> Quantity:
@@ -298,38 +326,34 @@ class Quantity:
 
     def __ge__(self, other: float | Quantity) -> bool:
         if isinstance(other, Quantity):
-            if self._unit != other._unit:
-                raise ValueError(
-                    f"Cannot compare units of different dimensions: {self._unit} vs {other._unit}"
-                )
-            return self._value.real >= other._value.real
+            other_q = _unwrap_quantity(other)
+            if self._unit != other_q._unit:
+                return self._value.real >= other_q._value_in(self._unit).real
+            return self._value.real >= other_q._value.real
         return NotImplemented
 
     def __gt__(self, other: float | Quantity) -> bool:
         if isinstance(other, Quantity):
-            if self._unit != other._unit:
-                raise ValueError(
-                    f"Cannot compare units of different dimensions: {self._unit} vs {other._unit}"
-                )
-            return self._value.real > other._value.real
+            other_q = _unwrap_quantity(other)
+            if self._unit != other_q._unit:
+                return self._value.real > other_q._value_in(self._unit).real
+            return self._value.real > other_q._value.real
         return NotImplemented
 
     def __le__(self, other: float | Quantity) -> bool:
         if isinstance(other, Quantity):
-            if self._unit != other._unit:
-                raise ValueError(
-                    f"Cannot compare units of different dimensions: {self._unit} vs {other._unit}"
-                )
-            return self._value.real <= other._value.real
+            other_q = _unwrap_quantity(other)
+            if self._unit != other_q._unit:
+                return self._value.real <= other_q._value_in(self._unit).real
+            return self._value.real <= other_q._value.real
         return NotImplemented
 
     def __lt__(self, other: float | Quantity) -> bool:
         if isinstance(other, Quantity):
-            if self._unit != other._unit:
-                raise ValueError(
-                    f"Cannot compare units of different dimensions: {self._unit} vs {other._unit}"
-                )
-            return self._value.real < other._value.real
+            other_q = _unwrap_quantity(other)
+            if self._unit != other_q._unit:
+                return self._value.real < other_q._value_in(self._unit).real
+            return self._value.real < other_q._value.real
         return NotImplemented
 
 

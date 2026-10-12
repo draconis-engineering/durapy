@@ -229,6 +229,8 @@ Requires-Dist: numpy
 Requires-Dist: sympy
 Requires-Dist: scipy
 Requires-Dist: rich
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"
 Dynamic: license-file
 
 # DuraPy - An Open-Source Python Toolbox for STEM Workflows | By Draconis
@@ -262,6 +264,17 @@ DuraPy is composed of several submodules, each providing a specific set of funct
     - Exceptions - Custom exception classes for error handling
 
 - UniCLI - a command-line interface framework for making CLI tools
+- UniBio - Bioinformatics primitives for DNA/RNA/protein work
+    - Sequence validation, normalization, and IUPAC ambiguity handling
+    - Complement, reverse complement, transcription and translation
+    - GC content, melting temperature, approximate molecular weight
+    - Open reading frame (ORF) discovery on both strands
+- UniChem - Chemistry utilities
+    - Full periodic table (all 118 elements) with lookups by number, symbol, or name
+    - Chemical formula parsing (parentheses, hydrates) and molar mass
+    - Mass percent composition and empirical formulas
+    - Reaction balancing and percent yield
+    - Ideal gas law and acid/base (pH, pOH, buffers, dilution) calculations
 - UniCogni - Advanced AI/ML utilities for natural language processing and machine learning
 - UniCrypto - Cryptographic utilities for encryption and decryption
 - UniMath - Mathematical utilities for numerical computations

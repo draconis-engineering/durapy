@@ -174,11 +174,34 @@ def rmse(actual: np.ndarray, pred: np.ndarray) -> float:
 
 
 def cross_entropy_loss(actual: np.ndarray, pred: np.ndarray) -> float:
-    """Cross-entropy loss function for multi-class classification."""
-    if len(pred) != len(actual):
-        raise ValueError("Loss functions must be given two equal-length arrays/lists!")
+    """Cross-entropy loss function for multi-class classification.
 
-    array_len = actual.shape[0]
-    clipped_pred = np.clip(softmax(pred), 1e-15, 1 - 1e-15)
-    log_likelihood = -(np.log(clipped_pred[range(array_len), actual.argmax(axis=1)]))
-    return np.sum(log_likelihood) / array_len
+    ``pred`` holds raw logits and is normalized with a numerically stable
+    softmax over the last axis. ``actual`` is treated as one-hot (or
+    probability) targets and the class index is taken via ``argmax`` along the
+    same axis. Works for both 1-D (a single sample) and N-D inputs.
+    """
+    actual = np.asarray(actual, dtype=np.float64)
+    pred = np.asarray(pred, dtype=np.float64)
+
+    if actual.shape != pred.shape:
+        raise ValueError(
+            "Loss functions must be given two equal-shape arrays! "
+            f"Got {actual.shape} and {pred.shape}"
+        )
+    if actual.ndim == 0:
+        raise ValueError("Cross-entropy loss requires at least a 1-D input.")
+
+    probabilities = np.clip(softmax(pred), 1e-15, 1.0)
+    targets = np.argmax(actual, axis=-1)
+
+    if pred.ndim == 1:
+        return float(-np.log(probabilities[targets]))
+
+    # Flatten all leading (sample) dimensions and gather the target class.
+    flat_probabilities = probabilities.reshape(-1, probabilities.shape[-1])
+    flat_targets = targets.reshape(-1)
+    log_likelihood = -np.log(
+        flat_probabilities[np.arange(flat_probabilities.shape[0]), flat_targets]
+    )
+    return float(np.mean(log_likelihood))

@@ -2,6 +2,7 @@ LICENSE
 pyproject.toml
 docs/README.md
 src/durapy/__init__.py
+src/durapy/py.typed
 src/durapy.egg-info/PKG-INFO
 src/durapy.egg-info/SOURCES.txt
 src/durapy.egg-info/dependency_links.txt
@@ -15,6 +16,12 @@ src/durapy/shared/numval_types.py
 src/durapy/shared/units.py
 src/durapy/uniCLI/__init__.py
 src/durapy/uniCLI/unicli.py
+src/durapy/unibio/__init__.py
+src/durapy/unibio/unibio.py
+src/durapy/unichem/__init__.py
+src/durapy/unichem/elements.py
+src/durapy/unichem/exceptions.py
+src/durapy/unichem/unichem.py
 src/durapy/unicogni/__init__.py
 src/durapy/unicogni/unicogni.py
 src/durapy/unicrypto/__init__.py
@@ -54,3 +61,5 @@ src/durapy/unipower/types/resistor.py
 src/durapy/unipower/types/transistor.py
 src/durapy/unisky/__init__.py
 src/durapy/unisky/unisky.py
+tests/test_unibio.py
+tests/test_unichem.py
