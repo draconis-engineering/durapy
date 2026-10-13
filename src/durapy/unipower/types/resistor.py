@@ -4,7 +4,7 @@ from types import MappingProxyType
 
 from ...shared.color_system import ANSI_COLORS
 from ...shared.numval_types import Quantity
-from ...shared.units import OHM
+from ...shared.units import OHM, WATT
 from ..exceptions import InvalidColors
 
 BANDS: MappingProxyType[str, int] = MappingProxyType(
@@ -95,11 +95,47 @@ def resistor_insight(
 
 
 class Resistor:
-    """Resistor class that represents a resistor with color bands and ohms value."""
+    """Resistor class that represents a resistor with color bands and ohms value.
 
-    def __init__(self, colors: tuple[str, str, str, str, str | None]) -> None:
-        self._ohms, self.tolerance, self.lower, self.upper = resistor_insight(*colors)
-        self.c_1, self.c_2, self.c_3, self.c_4, self.c_5 = colors
+    Construct from color bands (e.g. ``Resistor(("red", "red", "red", "gold", None))``)
+    or from a value with the keyword-only ``ohms`` argument
+    (e.g. ``Resistor(ohms=1000, tolerance=5.0)``). Use :meth:`from_ohms` as a
+    convenience alias.
+    """
+
+    def __init__(
+        self,
+        colors: tuple[str, str, str, str, str | None] | None = None,
+        *,
+        ohms: float | None = None,
+        tolerance: float | None = None,
+    ) -> None:
+        if colors is not None and ohms is not None:
+            raise TypeError("Provide either 'colors' or 'ohms', not both")
+        if colors is None and ohms is None:
+            raise TypeError("Resistor requires either 'colors' or 'ohms'")
+
+        if colors is not None:
+            self._ohms, self.tolerance, self.lower, self.upper = resistor_insight(
+                *colors
+            )
+            self.c_1, self.c_2, self.c_3, self.c_4, self.c_5 = colors
+        else:
+            if ohms is None or ohms < 0:
+                raise ValueError("ohms must be a non-negative value")
+            tol = 5.0 if tolerance is None else tolerance
+            if tol < 0:
+                raise ValueError("tolerance cannot be negative")
+            self._ohms = ohms
+            self.tolerance = tol
+            self.lower = ohms * (1 - tol / 100)
+            self.upper = ohms * (1 + tol / 100)
+            self.c_1 = self.c_2 = self.c_3 = self.c_4 = self.c_5 = None  # type: ignore[assignment]
+
+    @classmethod
+    def from_ohms(cls, ohms: float, tolerance: float | None = None) -> Resistor:
+        """Build a resistor directly from a resistance value in ohms."""
+        return cls(ohms=ohms, tolerance=tolerance)
 
     def __repr__(self) -> str:
         return f"Resistor(ohms={self._ohms}, tolerance={self.tolerance}, lower={self.lower}, upper={self.upper})"
@@ -117,6 +153,9 @@ class Resistor:
             and self.upper == other.upper
         )
 
+    def __hash__(self) -> int:
+        return hash((self._ohms, self.tolerance, self.lower, self.upper))
+
     @property
     def ohms(self) -> Quantity:
         return Quantity(self._ohms, OHM)
@@ -124,6 +163,17 @@ class Resistor:
     @property
     def color_code(self) -> tuple[str, str, str, str, str | None]:
         return self.c_1, self.c_2, self.c_3, self.c_4, self.c_5
+
+    def power_dissipation(
+        self, voltage: float | None = None, current: float | None = None
+    ) -> Quantity:
+        """Power dissipated in watts (``P = V²/R`` or ``P = I²·R``)."""
+        if voltage is None and current is None:
+            raise TypeError("Provide either 'voltage' or 'current'")
+        if voltage is not None:
+            return Quantity(voltage**2 / self._ohms, WATT)
+        assert current is not None
+        return Quantity(current**2 * self._ohms, WATT)
 
     def visualize(self) -> str:
         """Prints a ASCII representation of a resistor with the color code"""

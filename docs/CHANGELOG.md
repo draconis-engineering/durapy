@@ -1,5 +1,36 @@
 # DURAPY CHANGELOG
 
+## 1.0.1.0 — 13.10.2026
+
+### Added
+
+- **UniPower component models** — every previously empty stub is now a real
+  dataclass with validation and physics helpers:
+  - `Capacitor` (charge, energy, time constant, reactance/impedance, rating)
+  - `Inductor` (energy, time constant, reactance/impedance, resonance, rating)
+  - `Diode` (Shockley current, piecewise-linear forward model, breakdown)
+  - `Transistor` (BJT current gain, saturation, power, ratings)
+  - `Potentiometer` (track halves, wiper voltage)
+  - `Fuse`, `IC` and `Oscillator` (period, angular frequency, waveform sampling)
+- **UniPower circuit solver** — `Circuit` implements modified nodal analysis
+  (MNA) for DC and sinusoidal steady-state (AC/phasor) analysis:
+  - `add_resistor` / `add_capacitor` / `add_inductor` / `add_voltage_source` /
+    `add_current_source` and `add_component` for the component models
+  - `solve_dc()` (capacitors open, inductors short), `solve_ac(frequency)` and
+    `equivalent_resistance(n1, n2)`
+  - `CircuitSolution` exposes node voltages and per-element currents
+  - Raises `CircuitError` for singular/floating networks
+- **UniPower AC/RLC analysis** (`durapy.unipower.ac`) — series/parallel
+  combinations for R/L/C, reactance, complex RLC impedance (magnitude/phase),
+  resonant frequency, series/parallel quality factor, bandwidth, RMS, decibel
+  and dBm conversions, filter cut-offs/gains, and real/reactive/apparent power
+  with power factor
+- `Resistor.from_ohms(...)` for ideal construction plus `Resistor.power_dissipation(...)`
+- New units: `HENRY` and `SIEMENS`
+- `CircuitError` and `Element`/`CircuitSolution` exported from `durapy.unipower`
+- `tests/test_unipower.py` — 33 tests covering the components, AC/RLC helpers
+  and the circuit solver
+
 ## 12.10.2026
 
 ### Fixed

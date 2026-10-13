@@ -47,8 +47,10 @@ src/durapy/uniphys/nuclear.py
 src/durapy/uniphys/quantum.py
 src/durapy/uniphys/thermodynamics.py
 src/durapy/unipower/__init__.py
+src/durapy/unipower/ac.py
 src/durapy/unipower/exceptions.py
 src/durapy/unipower/unipower.py
+src/durapy/unipower/types/__init__.py
 src/durapy/unipower/types/capacitor.py
 src/durapy/unipower/types/circuit.py
 src/durapy/unipower/types/diode.py
@@ -64,3 +66,4 @@ src/durapy/unisky/unisky.py
 tests/test_regressions.py
 tests/test_unibio.py
 tests/test_unichem.py
+tests/test_unipower.py

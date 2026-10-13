@@ -61,4 +61,7 @@ DuraPy is composed of several submodules, each providing a specific set of funct
     - Thermodynamics
 
 - UniPower - An advanced electronics/electrical engineering library, providing electrical component models, circuit simulation, and power analysis tools
+    - Component models - Resistor (color bands + ideal values), Capacitor, Inductor, Diode (Shockley + piecewise), Transistor (BJT), Potentiometer, Fuse, IC and Oscillator
+    - Circuit solver - Modified nodal analysis (MNA) for DC and sinusoidal steady-state (AC/phasor) analysis, plus equivalent resistance
+    - AC/RLC analysis - Reactance, impedance, resonance, quality factor, bandwidth, RMS, decibels (dB/dBm), filters, power and power factor
 - UniSky - Aerospace/Spaceflight simulation and analysis tools

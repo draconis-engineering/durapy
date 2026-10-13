@@ -10,3 +10,7 @@ class InvalidColors(Exception):
         super().__init__(
             f"Invalid colors for {color_text('resistor_insight()', 'blue')} at indices {args}"
         )
+
+
+class CircuitError(ValueError):
+    """Raised when a circuit cannot be solved (e.g. it is singular/floating)."""

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: durapy
-Version: 1.0.0.7
+Version: 1.0.1.0
 Summary: A modern Python utility library from the Draconis ecosystem.
 Author-email: Simon Stordal Amundgård <stordalamundgard@gmail.com>
 License: Copyright © 2026 Simon Stordal Amundgård
@@ -296,4 +296,7 @@ DuraPy is composed of several submodules, each providing a specific set of funct
     - Thermodynamics
 
 - UniPower - An advanced electronics/electrical engineering library, providing electrical component models, circuit simulation, and power analysis tools
+    - Component models - Resistor (color bands + ideal values), Capacitor, Inductor, Diode (Shockley + piecewise), Transistor (BJT), Potentiometer, Fuse, IC and Oscillator
+    - Circuit solver - Modified nodal analysis (MNA) for DC and sinusoidal steady-state (AC/phasor) analysis, plus equivalent resistance
+    - AC/RLC analysis - Reactance, impedance, resonance, quality factor, bandwidth, RMS, decibels (dB/dBm), filters, power and power factor
 - UniSky - Aerospace/Spaceflight simulation and analysis tools

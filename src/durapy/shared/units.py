@@ -47,6 +47,8 @@ FARAD = Unit("F", Dimension((F_2, F_1, F4, F2, F0, F0, F0)))  # T^4 * I^2 / L^2 
 WATT = Unit("W", Dimension((F2, F1, F_3, F0, F0, F0, F0)))  # L^2 * M / T^3
 VOLT = Unit("V", Dimension((F2, F1, F_2, F_1, F0, F0, F0)))  # L^2 * M / T^2 * I
 OHM = Unit("Ω", Dimension((F2, F1, F_3, F_2, F0, F0, F0)))  # L^2 * M / T^3 * I^2
+SIEMENS = Unit("S", Dimension((F_2, F_1, F3, F2, F0, F0, F0)))  # 1 / Ω
+HENRY = Unit("H", Dimension((F2, F1, F_2, F_2, F0, F0, F0)))  # L^2 * M / T^2 * I^2
 
 HERTZ = Unit("Hz", Dimension((F0, F0, F_1, F0, F0, F0, F0)))  # 1 / T
 

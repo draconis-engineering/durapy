@@ -1,54 +1,10 @@
 """`UniPower` source"""
 
 import math
-from types import MappingProxyType
 
 from ..shared.constants import PI
 from ..shared.numval_types import Quantity
 from ..shared.units import FARAD, OHM, SECOND, VOLT, WATT
-
-BANDS: MappingProxyType[str, int] = MappingProxyType(
-    {
-        "black": 0,
-        "brown": 1,
-        "red": 2,
-        "orange": 3,
-        "yellow": 4,
-        "green": 5,
-        "blue": 6,
-        "violet": 7,
-        "gray": 8,
-        "white": 9,
-    }
-)
-MULTIPLIERS: MappingProxyType[str, float] = MappingProxyType(
-    {
-        "silver": 0.01,
-        "gold": 0.1,
-        "black": 1.0,
-        "brown": 10.0,
-        "red": 100.0,
-        "orange": 1000.0,
-        "yellow": 10000.0,
-        "green": 100000.0,
-        "blue": 1000000.0,
-        "violet": 10000000.0,
-        "gray": 100000000.0,
-        "white": 1000000000.0,
-    }
-)
-TOLERANCES: MappingProxyType[str, float] = MappingProxyType(
-    {
-        "brown": 1.0,
-        "red": 2.0,
-        "green": 0.5,
-        "blue": 0.25,
-        "violet": 0.1,
-        "gray": 0.05,
-        "gold": 5.0,
-        "silver": 10.0,
-    }
-)
 
 
 def ohms_law(
@@ -108,12 +64,12 @@ def power_dissipation(
 
     if v is None:
         if i is None or r is None:  # Too many missing arguments
-            raise TypeError(power_dissipation, missing)
+            raise TypeError(missing)
         return Quantity(i**2 * r, WATT)
 
     elif i is None:
         if r is None:  # Too many missing arguments
-            raise TypeError(power_dissipation, missing)
+            raise TypeError(missing)
         return Quantity(v**2 / r, WATT)
 
     elif (
@@ -128,9 +84,9 @@ def power_dissipation(
         P3 = v * i
 
         # P1 != P2
-        if not math.isclose(P1, P2):
+        if not math.isclose(P1, P2, rel_tol=1e-3):
             # P1 != P3 -> Error with P1
-            if not math.isclose(P1, P3):
+            if not math.isclose(P1, P3, rel_tol=1e-3):
                 raise ValueError("Inconsistency with P1 = I ** 2 * R")
             # P1 == P3 -> Error with P2
             else:
@@ -139,7 +95,7 @@ def power_dissipation(
         # P1 == P2
         else:
             # P2 != P3 -> Error with P3
-            if not math.isclose(P2, P3):
+            if not math.isclose(P2, P3, rel_tol=1e-3):
                 raise ValueError("Inconsistency with P3 = V * I")
             # P1 == P2 == P3 -> All formulas agree
             else:
