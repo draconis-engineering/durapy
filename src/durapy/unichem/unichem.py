@@ -119,12 +119,12 @@ def parse_formula(formula: str) -> dict[str, int]:
     for fragment in _HYDRATE_SEPARATORS.split(cleaned):
         if not fragment:
             raise FormulaError(f"Malformed hydrate in formula {formula!r}")
-        coefficient, index = _read_number(fragment, 0)
-        remainder = fragment[index:]
+        coeff, idx = _read_number(fragment, 0)
+        remainder = fragment[idx:]
         if not remainder:
             raise FormulaError(f"Malformed hydrate in formula {formula!r}")
         for sym, count in _parse_part(remainder).items():
-            total[sym] = total.get(sym, 0) + count * coefficient
+            total[sym] = total.get(sym, 0) + count * coeff
     return total
 
 
@@ -277,8 +277,9 @@ def balance_equation(equation: str) -> str:
         raise ReactionError(f"Equation {equation!r} cannot be balanced")
 
     vec = null_space[0]
-    denominators = [sympy.denom(entry) for entry in vec]
-    multiplier = sympy.lcm(*denominators) if denominators else 1
+    denominators = [int(sympy.denom(entry)) for entry in vec]
+
+    multiplier = math.lcm(*denominators) if denominators else 1
     ints = [int(entry * multiplier) for entry in vec]
 
     divisor = reduce(math.gcd, (abs(val) for val in ints), 0)
