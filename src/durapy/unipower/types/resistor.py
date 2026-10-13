@@ -1,5 +1,7 @@
 """Resistor types for the UniPower module."""
 
+from __future__ import annotations
+
 from types import MappingProxyType
 
 from ...shared.color_system import ANSI_COLORS
@@ -110,8 +112,10 @@ class Resistor:
         ohms: float | None = None,
         tolerance: float | None = None,
     ) -> None:
+
         if colors is not None and ohms is not None:
             raise TypeError("Provide either 'colors' or 'ohms', not both")
+
         if colors is None and ohms is None:
             raise TypeError("Resistor requires either 'colors' or 'ohms'")
 
@@ -120,6 +124,7 @@ class Resistor:
                 *colors
             )
             self.c_1, self.c_2, self.c_3, self.c_4, self.c_5 = colors
+
         else:
             if ohms is None or ohms < 0:
                 raise ValueError("ohms must be a non-negative value")
@@ -130,7 +135,7 @@ class Resistor:
             self.tolerance = tol
             self.lower = ohms * (1 - tol / 100)
             self.upper = ohms * (1 + tol / 100)
-            self.c_1 = self.c_2 = self.c_3 = self.c_4 = self.c_5 = None  # type: ignore[assignment]
+            self.c_1 = self.c_2 = self.c_3 = self.c_4 = self.c_5 = None
 
     @classmethod
     def from_ohms(cls, ohms: float, tolerance: float | None = None) -> Resistor:
@@ -162,6 +167,7 @@ class Resistor:
 
     @property
     def color_code(self) -> tuple[str, str, str, str, str | None]:
+        assert self.c_1 and self.c_2 and self.c_3 and self.c_4
         return self.c_1, self.c_2, self.c_3, self.c_4, self.c_5
 
     def power_dissipation(
@@ -177,6 +183,8 @@ class Resistor:
 
     def visualize(self) -> str:
         """Prints a ASCII representation of a resistor with the color code"""
+
+        assert self.c_1 and self.c_2 and self.c_3 and self.c_4
 
         def block(color: str):
             ansi = ANSI_COLORS.get(color.lower(), "\033[0m")
