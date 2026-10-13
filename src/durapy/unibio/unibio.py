@@ -68,37 +68,37 @@ _PHOSPHATE_MASS = 79.975  # removed from a free 5' position
 # --------------------------------------------------------------------------- #
 
 
-def _normalize(sequence: str) -> str:
+def normalize(sequence: str) -> str:
     if not isinstance(sequence, str):
         raise TypeError("Sequence must be a string")
     return "".join(sequence.split()).upper()
 
 
-def normalize(sequence: str) -> str:
-    """Uppercase a sequence and strip all whitespace."""
-    return _normalize(sequence)
-
-
 def is_valid(sequence: str, kind: str = "dna") -> bool:
     """Return whether a sequence only contains valid bases for ``kind``."""
     kind = kind.lower()
-    if kind not in ("dna", "rna"):
+    if kind not in {"dna", "rna"}:
         raise ValueError("kind must be 'dna' or 'rna'")
     allowed = VALID_DNA if kind == "dna" else VALID_RNA
-    seq = _normalize(sequence)
+    seq = normalize(sequence)
     return bool(seq) and set(seq) <= allowed
 
 
 def validate(sequence: str, kind: str = "dna") -> str:
     """Return the normalized sequence, raising ``ValueError`` if invalid."""
+
     kind = kind.lower()
-    if kind not in ("dna", "rna"):
+    if kind not in {"dna", "rna"}:
         raise ValueError("kind must be 'dna' or 'rna'")
-    seq = _normalize(sequence)
+
+    seq = normalize(sequence)
+
     if not seq:
         raise ValueError("Sequence cannot be empty")
+
     allowed = VALID_DNA if kind == "dna" else VALID_RNA
     invalid = sorted(set(seq) - allowed)
+
     if invalid:
         raise ValueError(f"Invalid {kind.upper()} base(s): {', '.join(invalid)}")
     return seq
@@ -106,7 +106,7 @@ def validate(sequence: str, kind: str = "dna") -> str:
 
 def _as_rna(sequence: str, kind: str | None) -> str:
     """Return the sequence as RNA, auto-detecting DNA vs RNA when needed."""
-    seq = _normalize(sequence)
+    seq = normalize(sequence)
     if not seq:
         raise ValueError("Sequence cannot be empty")
     if kind is not None:
@@ -174,7 +174,7 @@ def translate(sequence: str, kind: str | None = None, to_stop: bool = False) -> 
 
 def gc_content(sequence: str) -> float:
     """Return the GC content of a sequence as a percentage (0–100)."""
-    seq = _normalize(sequence)
+    seq = normalize(sequence)
     if not seq:
         raise ValueError("Sequence cannot be empty")
     gc = sum(1 for base in seq if base in "GC")
@@ -183,7 +183,7 @@ def gc_content(sequence: str) -> float:
 
 def count_nucleotides(sequence: str) -> dict[str, int]:
     """Return a count of each character in the sequence."""
-    seq = _normalize(sequence)
+    seq = normalize(sequence)
     if not seq:
         raise ValueError("Sequence cannot be empty")
     return {base: seq.count(base) for base in sorted(set(seq))}
@@ -191,7 +191,7 @@ def count_nucleotides(sequence: str) -> dict[str, int]:
 
 def hamming_distance(first: str, second: str) -> int:
     """Return the number of positions at which two equal-length sequences differ."""
-    a, b = _normalize(first), _normalize(second)
+    a, b = normalize(first), normalize(second)
     if len(a) != len(b):
         raise ValueError("Sequences must be the same length for Hamming distance")
     return sum(x != y for x, y in zip(a, b))

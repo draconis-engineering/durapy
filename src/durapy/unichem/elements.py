@@ -25,8 +25,7 @@ NOBLE_GAS = "noble gas"
 LANTHANIDE = "lanthanide"
 ACTINIDE = "actinide"
 
-# Switch to set here?
-CATEGORIES = (
+CATEGORIES = {
     ALKALI,
     ALKALINE_EARTH,
     TRANSITION,
@@ -37,7 +36,7 @@ CATEGORIES = (
     NOBLE_GAS,
     LANTHANIDE,
     ACTINIDE,
-)
+}
 
 
 @dataclass(frozen=True, slots=True)

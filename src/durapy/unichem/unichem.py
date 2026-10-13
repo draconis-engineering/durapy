@@ -8,7 +8,7 @@ concentrations are in ``mol/L`` unless stated otherwise.
 from __future__ import annotations
 
 import math
-import re
+import re as regex
 from functools import reduce
 
 from ..shared.constants import GAS_CONSTANT
@@ -22,9 +22,9 @@ from .exceptions import (
 )
 
 # Separators used for hydrates, e.g. CuSO4·5H2O.
-_HYDRATE_SEPARATORS = re.compile(r"[·⋅*.．]")
-_TRAILING_STATE = re.compile(r"\((?:aq|s|l|g)\)$", re.IGNORECASE)
-_LEADING_COEFFICIENT = re.compile(r"^\d+")
+_HYDRATE_SEPARATORS = regex.compile(r"[·⋅*.．]")
+_TRAILING_STATE = regex.compile(r"\((?:aq|s|l|g)\)$", regex.IGNORECASE)
+_LEADING_COEFFICIENT = regex.compile(r"^\d+")
 _R = GAS_CONSTANT.value  # 8.314462618 J / (mol · K)
 
 # --------------------------------------------------------------------------- #
@@ -32,14 +32,14 @@ _R = GAS_CONSTANT.value  # 8.314462618 J / (mol · K)
 # --------------------------------------------------------------------------- #
 
 
-def _read_number(formula: str, index: int) -> tuple[int, int]:
+def _read_number(formula: str, idx: int) -> tuple[int, int]:
     """Read an optional integer at ``index``; defaults to 1 when absent."""
-    end = index
+    end = idx
     while end < len(formula) and formula[end].isdigit():
         end += 1
-    if end == index:
-        return 1, index
-    value = int(formula[index:end])
+    if end == idx:
+        return 1, idx
+    value = int(formula[idx:end])
     if value == 0:
         raise FormulaError("Stoichiometric subscripts must be positive")
     return value, end
@@ -105,13 +105,17 @@ def parse_formula(formula: str) -> dict[str, int]:
     >>> parse_formula("CuSO4·5H2O")
     {'Cu': 1, 'S': 1, 'O': 9, 'H': 10}
     """
+
     if not isinstance(formula, str):
         raise FormulaError("Formula must be a string")
+
     cleaned = formula.replace(" ", "")
+
     if not cleaned:
         raise FormulaError("Formula cannot be empty")
 
     total: dict[str, int] = {}
+
     for fragment in _HYDRATE_SEPARATORS.split(cleaned):
         if not fragment:
             raise FormulaError(f"Malformed hydrate in formula {formula!r}")
@@ -207,10 +211,12 @@ def _format_formula(counts: dict[str, int]) -> str:
 
 def _split_equation(equation: str) -> tuple[list[str], list[str]]:
     """Split an equation string into reactant and product species lists."""
+
     for arrow in ("->", "→", "=>", "="):
         if arrow in equation:
             left, _, right = equation.partition(arrow)
             break
+
     else:
         raise ReactionError(
             f"Equation {equation!r} must contain an arrow ('->' or '→')"
@@ -255,7 +261,8 @@ def balance_equation(equation: str) -> str:
         {sym for counts in parsed_reactants + parsed_products for sym in counts}
     )
 
-    matrix = []
+    matrix: list[list[int]] = []
+
     for sym in elements:
         row = [counts.get(sym, 0) for counts in parsed_reactants]
         row += [-counts.get(sym, 0) for counts in parsed_products]
@@ -265,32 +272,34 @@ def balance_equation(equation: str) -> str:
         raise ReactionError("Equation contains no elements")
 
     null_space = sympy.Matrix(matrix).nullspace()
+
     if not null_space:
         raise ReactionError(f"Equation {equation!r} cannot be balanced")
 
-    vector = null_space[0]
-    denominators = [sympy.denom(entry) for entry in vector]
+    vec = null_space[0]
+    denominators = [sympy.denom(entry) for entry in vec]
     multiplier = sympy.lcm(*denominators) if denominators else 1
-    integers = [int(entry * multiplier) for entry in vector]
+    ints = [int(entry * multiplier) for entry in vec]
 
-    divisor = reduce(math.gcd, (abs(value) for value in integers), 0)
-    integers = [value // divisor for value in integers]
-    if all(value <= 0 for value in integers):
-        integers = [-value for value in integers]
-    if any(value <= 0 for value in integers):
+    divisor = reduce(math.gcd, (abs(val) for val in ints), 0)
+    ints = [val // divisor for val in ints]
+
+    if all(value <= 0 for value in ints):
+        ints = [-value for value in ints]
+
+    if any(value <= 0 for value in ints):
         raise ReactionError(f"Equation {equation!r} has no positive integer balance")
 
     n_reactants = len(reactants)
 
-    def render(specie: str, coefficient: int) -> str:
-        return specie if coefficient == 1 else f"{coefficient} {specie}"
+    def render(specie: str, coeff: int) -> str:
+        return specie if coeff == 1 else f"{coeff} {specie}"
 
     left = " + ".join(
-        render(specie, coeff)
-        for specie, coeff in zip(reactants, integers[:n_reactants])
+        render(specie, coeff) for specie, coeff in zip(reactants, ints[:n_reactants])
     )
     right = " + ".join(
-        render(specie, coeff) for specie, coeff in zip(products, integers[n_reactants:])
+        render(specie, coeff) for specie, coeff in zip(products, ints[n_reactants:])
     )
     return f"{left} -> {right}"
 
@@ -328,9 +337,9 @@ def ideal_gas_law(
         )
 
     target = missing[0]
-    for key, value in values.items():
-        if key != target and value is not None and value <= 0:
-            raise ChemistryError(f"{key} must be positive when solving for {target}")
+    for k, v in values.items():
+        if k != target and v is not None and v <= 0:
+            raise ChemistryError(f"{k} must be positive when solving for {target}")
 
     if target == "P":
         assert T and n and V
@@ -386,9 +395,10 @@ def dilution(
             "Provide exactly three of c1, v1, c2, v2; missing: "
             + (", ".join(missing) or "none")
         )
-    for key, value in values.items():
-        if key != missing[0] and value is not None and value < 0:
-            raise SolutionError(f"{key} cannot be negative")
+
+    for k, v in values.items():
+        if k != missing[0] and v is not None and v < 0:
+            raise SolutionError(f"{k} cannot be negative")
 
     if missing[0] == "c1":
         assert c2 and v2 and v1
@@ -402,7 +412,7 @@ def dilution(
     else:
         assert c1 and v1 and c2
         v2 = c1 * v1 / c2
-    return (c1, v1, c2, v2)  # type: ignore[return-value]
+    return (c1, v1, c2, v2)
 
 
 def ph(concentration: float) -> float:
@@ -419,24 +429,24 @@ def poh(concentration: float) -> float:
     return -math.log10(concentration)
 
 
-def ph_from_poh(poh_value: float) -> float:
+def ph_from_poh(poh: float) -> float:
     """Convert pOH to pH at 25 °C (``pH + pOH = 14``)."""
-    return 14.0 - poh_value
+    return 14.0 - poh
 
 
-def poh_from_ph(ph_value: float) -> float:
+def poh_from_ph(ph: float) -> float:
     """Convert pH to pOH at 25 °C (``pH + pOH = 14``)."""
-    return 14.0 - ph_value
+    return 14.0 - ph
 
 
-def concentration_from_ph(ph_value: float) -> float:
+def concentration_from_ph(ph: float) -> float:
     """Return the H⁺ concentration from a pH value."""
-    return 10.0 ** (-ph_value)
+    return 10.0 ** (-ph)
 
 
-def concentration_from_poh(poh_value: float) -> float:
+def concentration_from_poh(poh: float) -> float:
     """Return the OH⁻ concentration from a pOH value."""
-    return 10.0 ** (-poh_value)
+    return 10.0 ** (-poh)
 
 
 def henderson_hasselbalch(
