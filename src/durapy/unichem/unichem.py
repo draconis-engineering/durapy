@@ -141,7 +141,7 @@ def molar_mass(formula: str) -> float:
 def mass_percent_composition(formula: str) -> dict[str, float]:
     """Return the mass percentage each element contributes to a formula."""
     counts = parse_formula(formula)
-    total = math.fsum(atomic_mass(sym) * count for sym, count in counts.items())
+    total = molar_mass(formula)
     return {
         sym: (atomic_mass(sym) * count) / total * 100.0 for sym, count in counts.items()
     }
@@ -182,6 +182,7 @@ def empirical_formula(amounts: dict[str, float]) -> str:
         raise FormulaError("Element amounts must be strictly positive")
 
     ratios = {sym: value / smallest for sym, value in amounts.items()}
+
     # Try scaling factors from 1 upward until all ratios are near-integers.
     for factor in range(1, 101):
         scaled = {sym: ratio * factor for sym, ratio in ratios.items()}
@@ -214,7 +215,7 @@ def _split_equation(equation: str) -> tuple[list[str], list[str]]:
 
     for arrow in ("->", "→", "=>", "="):
         if arrow in equation:
-            left, _, right = equation.partition(arrow)
+            l, _, r = equation.partition(arrow)
             break
 
     else:
@@ -230,7 +231,7 @@ def _split_equation(equation: str) -> tuple[list[str], list[str]]:
                 terms.append(term)
         return terms
 
-    reactants, products = species(left), species(right)
+    reactants, products = species(l), species(r)
     if not reactants or not products:
         raise ReactionError(f"Equation {equation!r} is missing reactants or products")
     return reactants, products
@@ -282,8 +283,8 @@ def balance_equation(equation: str) -> str:
     multiplier = math.lcm(*denominators) if denominators else 1
     ints = [int(entry * multiplier) for entry in vec]
 
-    divisor = reduce(math.gcd, (abs(val) for val in ints), 0)
-    ints = [val // divisor for val in ints]
+    div = reduce(math.gcd, (abs(val) for val in ints), 0)
+    ints = [val // div for val in ints]
 
     if all(value <= 0 for value in ints):
         ints = [-value for value in ints]
@@ -329,8 +330,8 @@ def ideal_gas_law(
     Exactly three of the four keyword arguments must be provided. Returns the
     complete ``(P, V, n, T)`` tuple in SI units (``Pa``, ``m³``, ``mol``, ``K``).
     """
-    values = {"P": P, "V": V, "n": n, "T": T}
-    missing = [key for key, value in values.items() if value is None]
+    vals = {"P": P, "V": V, "n": n, "T": T}
+    missing = [key for key, value in vals.items() if value is None]
     if len(missing) != 1:
         raise ChemistryError(
             "Provide exactly three of P, V, n, T; missing: "
@@ -338,7 +339,7 @@ def ideal_gas_law(
         )
 
     target = missing[0]
-    for k, v in values.items():
+    for k, v in vals.items():
         if k != target and v is not None and v <= 0:
             raise ChemistryError(f"{k} must be positive when solving for {target}")
 
@@ -371,11 +372,11 @@ def molarity(moles: float, volume_liters: float) -> float:
     return moles / volume_liters
 
 
-def moles_from_molarity(concentration: float, volume_liters: float) -> float:
+def moles_from_molarity(conc: float, volume_liters: float) -> float:
     """Return the amount of solute (mol) in a solution."""
-    if concentration < 0 or volume_liters < 0:
+    if conc < 0 or volume_liters < 0:
         raise SolutionError("Concentration and volume cannot be negative")
-    return concentration * volume_liters
+    return conc * volume_liters
 
 
 def dilution(
@@ -389,15 +390,15 @@ def dilution(
 
     Returns the complete ``(c1, v1, c2, v2)`` tuple.
     """
-    values = {"c1": c1, "v1": v1, "c2": c2, "v2": v2}
-    missing = [key for key, value in values.items() if value is None]
+    vals = {"c1": c1, "v1": v1, "c2": c2, "v2": v2}
+    missing = [key for key, value in vals.items() if value is None]
     if len(missing) != 1:
         raise SolutionError(
             "Provide exactly three of c1, v1, c2, v2; missing: "
             + (", ".join(missing) or "none")
         )
 
-    for k, v in values.items():
+    for k, v in vals.items():
         if k != missing[0] and v is not None and v < 0:
             raise SolutionError(f"{k} cannot be negative")
 
@@ -416,18 +417,18 @@ def dilution(
     return (c1, v1, c2, v2)
 
 
-def ph(concentration: float) -> float:
+def ph(conc: float) -> float:
     """Return the pH of a strong-acid solution from its H⁺ concentration."""
-    if concentration <= 0:
+    if conc <= 0:
         raise SolutionError("Concentration must be positive for pH")
-    return -math.log10(concentration)
+    return -math.log10(conc)
 
 
-def poh(concentration: float) -> float:
+def poh(conc: float) -> float:
     """Return the pOH of a strong-base solution from its OH⁻ concentration."""
-    if concentration <= 0:
+    if conc <= 0:
         raise SolutionError("Concentration must be positive for pOH")
-    return -math.log10(concentration)
+    return -math.log10(conc)
 
 
 def ph_from_poh(poh: float) -> float:
@@ -450,13 +451,11 @@ def concentration_from_poh(poh: float) -> float:
     return 10.0 ** (-poh)
 
 
-def henderson_hasselbalch(
-    pka: float, base_concentration: float, acid_concentration: float
-) -> float:
+def henderson_hasselbalch(pka: float, base_conc: float, acid_conc: float) -> float:
     """Return the pH of a buffer using the Henderson–Hasselbalch equation."""
-    if base_concentration <= 0 or acid_concentration <= 0:
+    if base_conc <= 0 or acid_conc <= 0:
         raise SolutionError("Buffer concentrations must be positive")
-    return pka + math.log10(base_concentration / acid_concentration)
+    return pka + math.log10(base_conc / acid_conc)
 
 
 __all__ = [

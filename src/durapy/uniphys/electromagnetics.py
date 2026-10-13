@@ -38,51 +38,51 @@ EM_SPEC_WAVLEN = {
 
 
 def spectrum_label(
-    λ: float,
+    wavelength: float,
     spectrum_map: dict[tuple[float, float], str | dict[tuple[float, float], str]],
 ) -> str:
     """Return the spectrum label (e.g. `Radio Wave` or `X-Ray`) by checking recursively for wavelength `λ` in `spectrum_map`."""
     for (low, high), value in spectrum_map.items():
-        if low <= λ < high:
+        if low <= wavelength < high:
             if isinstance(value, dict):
-                return spectrum_label(λ, dict(value))
+                return spectrum_label(wavelength, dict(value))
 
             return value
-    raise ValueError(f"Wavelength {λ!r} is out of range for this spectrum map")
+    raise ValueError(f"Wavelength {wavelength!r} is out of range for this spectrum map")
 
 
-def λ(hertz: float, in_nm: bool = False) -> Quantity:
+def wavelength(hertz: float, in_nm: bool = False) -> Quantity:
     """Return wavelength `λ` from `Hertz`. If in_nm, input Hz is assumed to produce nm output scaling."""
 
-    if hertz == 0:
-        raise ValueError("Frequency cannot be zero")
-    # λ = c / f  (meters)
+    if hertz <= 0:
+        raise ValueError("Frequency must be greater than zero")
+
     wav_m = float(C) / hertz
     if in_nm:
         wav_m *= 1e9
     return Quantity(wav_m, METER)
 
 
-def hz(λ: float, in_nm: bool = False) -> Quantity:
+def hz(wavelength: float, in_nm: bool = False) -> Quantity:
     """Return `Hertz` from wavelength `λ` (in meters, or nm if in_nm=True)."""
 
-    lam_m = λ * 1e-9 if in_nm else λ
+    lam_m = wavelength * 1e-9 if in_nm else wavelength
     if lam_m == 0:
         raise ValueError("Wavelength cannot be zero")
     return Quantity(float(C) / lam_m, HERTZ)
 
 
-def ems(λ: float) -> tuple[str, float, str]:
+def ems(wavelength: float) -> tuple[str, float, str]:
     """Get the part of the electromagnetic spectrum the wavelength `λ` sits in, as well as the hertz."""
-    label = spectrum_label(λ, EM_SPEC_WAVLEN)
-    hertz = float(hz(λ))
+    label = spectrum_label(wavelength, EM_SPEC_WAVLEN)
+    hertz = float(hz(wavelength))
 
     return label, hertz, f"{label} - {hertz} Hz"
 
 
-def photon_energy_λ(λ: float) -> Quantity:
+def photon_energy_λ(wavelength: float) -> Quantity:
     """Calculate the energy of a photon in joules with wavelength `λ` (in meters)."""
-    return Quantity(float(PLANCK) * float(hz(λ)), JOULE)
+    return Quantity(float(PLANCK) * float(hz(wavelength)), JOULE)
 
 
 def photon_energy_hz(Hz: float) -> Quantity:
@@ -90,9 +90,9 @@ def photon_energy_hz(Hz: float) -> Quantity:
     return Quantity(float(PLANCK) * Hz, JOULE)
 
 
-def photon_energy_ev_λ(λ: float) -> Quantity:
+def photon_energy_ev_λ(wavelength: float) -> Quantity:
     """Calculate the energy of a photon with wavelength `λ` in electron volts."""
-    return Quantity(float(photon_energy_λ(λ)) / 1.60218e-19, ELECTRONVOLT)
+    return Quantity(float(photon_energy_λ(wavelength)) / 1.60218e-19, ELECTRONVOLT)
 
 
 def photon_energy_ev_hz(Hz: float) -> Quantity:

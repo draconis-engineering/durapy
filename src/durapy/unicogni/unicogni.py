@@ -122,10 +122,10 @@ def mish(x: np.ndarray) -> np.ndarray:
 
 def d_mish(x: np.ndarray) -> np.ndarray:
     """Derivative of the Mish activation function."""
-    try:
-        ex = np.exp(x)
-    except OverflowError:
-        return np.ones_like(x)  # Becomes linear at large positive values
+    # Clip the exponent so exp(x) cannot overflow to inf (which yields nan,
+    # since np.exp on an array warns instead of raising OverflowError).
+    # For x > 20 the derivative is already 1 to within float precision.
+    ex = np.exp(np.minimum(x, 20.0))
 
     omega = 4.0 * (x + 1.0) + 4.0 * ex**2 + ex**3 + ex * (4.0 * x + 6.0)
     delta = 2.0 * ex + ex**2 + 2.0

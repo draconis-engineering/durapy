@@ -61,5 +61,6 @@ src/durapy/unipower/types/resistor.py
 src/durapy/unipower/types/transistor.py
 src/durapy/unisky/__init__.py
 src/durapy/unisky/unisky.py
+tests/test_regressions.py
 tests/test_unibio.py
 tests/test_unichem.py
