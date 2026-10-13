@@ -167,7 +167,9 @@ class Resistor:
 
     @property
     def color_code(self) -> tuple[str, str, str, str, str | None]:
-        assert self.c_1 and self.c_2 and self.c_3 and self.c_4
+        assert self.c_1 and self.c_2 and self.c_3 and self.c_4, (
+            "Can't retrieve resistor color codes that aren't set!"
+        )
         return self.c_1, self.c_2, self.c_3, self.c_4, self.c_5
 
     def power_dissipation(
@@ -184,7 +186,9 @@ class Resistor:
     def visualize(self) -> str:
         """Prints a ASCII representation of a resistor with the color code"""
 
-        assert self.c_1 and self.c_2 and self.c_3 and self.c_4
+        assert self.c_1 and self.c_2 and self.c_3 and self.c_4, (
+            "Can't visualize resistor when color codes aren't set!"
+        )
 
         def block(color: str):
             ansi = ANSI_COLORS.get(color.lower(), "\033[0m")
