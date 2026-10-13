@@ -1,7 +1,7 @@
-"""`UniFlight` source"""
+"""`UniSky` source"""
 
 from ..shared.color_system import color_text
-from ..shared.constants import MACH
+from ..shared.constants import EARTH_G, MACH
 from ..shared.numval_types import Quantity
 from ..shared.units import NEWTON, PASCAL
 
@@ -50,3 +50,32 @@ def lift_drag_equation(
 ) -> Quantity:
     """Lift/Drag equation calculator. Returns the lift/drag force in Newtons."""
     return Quantity(coeff * dynamic_pressure * ref_area, NEWTON)
+
+
+def reynolds_number(
+    velocity: float, chord_length: float, kinematic_viscosity: float
+) -> float:
+    """Calculates the dimensionless Reynolds Number to predict flow patterns."""
+    return (velocity * chord_length) / kinematic_viscosity
+
+
+def aspect_ratio(wingspan: float, wing_area: float) -> float:
+    """Calculates the wing aspect ratio (Span^2 / Area)."""
+    return (wingspan**2) / wing_area
+
+
+def wing_loading(weight_force: float, wing_area: float) -> float:
+    """Calculates wing loading (Force per unit area)."""
+    return weight_force / wing_area
+
+
+def glide_ratio(lift: float, drag: float) -> float:
+    """Calculates the glide ratio (L/D ratio)."""
+    return lift / drag
+
+
+def specific_impulse_by_thrust(
+    thrust: float, fuel_mass_flow_rate: float, g0: float = EARTH_G.value
+) -> float:
+    """Calculates specific impulse (Isp) in seconds using thrust and mass flow rate."""
+    return thrust / (fuel_mass_flow_rate * g0)
