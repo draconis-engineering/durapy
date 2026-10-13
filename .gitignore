@@ -6,3 +6,4 @@ venv/
 .venv/
 *.egg-info/
 *.pyc
+.python-version
