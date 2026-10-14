@@ -133,7 +133,7 @@ def _unwrap_quantity(q: Quantity) -> Quantity:
     if hasattr(q, "quantity") and hasattr(q, "name"):
         try:
             return q.quantity  # type: ignore
-        except (TypeError, AttributeError):
+        except TypeError, AttributeError:
             pass
     return q
 
@@ -203,7 +203,7 @@ class Quantity:
     def imagvalue(self) -> float:
         return self._value.imag
 
-    def _value_in(self, unit: Unit) -> float:
+    def _value_in(self, unit: Unit) -> float | complex:
         """Return this quantity's value expressed in ``unit`` (same dimension).
 
         The conversion uses each unit's ``scale``, defined as the factor that
