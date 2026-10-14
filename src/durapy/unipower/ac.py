@@ -55,7 +55,7 @@ def req_pos(name: str, value: float) -> None:
         raise ValueError(f"{name} must be positive")
 
 
-def req_geq_zero(name: str, value: float) -> None:
+def req_non_zero(name: str, value: float) -> None:
     """Require non-negative number"""
     if value < 0:
         raise ValueError(f"{name} cannot be negative")
@@ -71,7 +71,7 @@ def series_resistance(*resistances: float) -> Quantity:
     if not resistances:
         raise ValueError("at least one resistance is required")
     for r in resistances:
-        req_geq_zero("resistance", r)
+        req_non_zero("resistance", r)
     return Quantity(math.fsum(resistances), OHM)
 
 
@@ -80,7 +80,7 @@ def parallel_resistance(*resistances: float) -> Quantity:
     if not resistances:
         raise ValueError("at least one resistance is required")
     for r in resistances:
-        req_geq_zero("resistance", r)
+        req_non_zero("resistance", r)
     if any(r == 0 for r in resistances):
         return Quantity(0.0, OHM)
     return Quantity(1 / math.fsum(1 / r for r in resistances), OHM)
@@ -152,8 +152,8 @@ def impedance_rlc(
     Pass ``capacitance=None`` to omit the capacitive term.
     """
     req_pos("frequency", frequency)
-    req_geq_zero("resistance", resistance)
-    req_geq_zero("inductance", inductance)
+    req_non_zero("resistance", resistance)
+    req_non_zero("inductance", inductance)
     omega = 2 * PI.value * frequency
     reactance = omega * inductance
     if capacitance is not None:
@@ -218,8 +218,8 @@ def power_factor(phase_angle_degrees: float) -> float:
 
 def apparent_power(voltage_rms: float, current_rms: float) -> Quantity:
     """Apparent power ``S = Vrms·Irms`` in volt-amperes (reported as watts)."""
-    req_geq_zero("voltage_rms", voltage_rms)
-    req_geq_zero("current_rms", current_rms)
+    req_non_zero("voltage_rms", voltage_rms)
+    req_non_zero("current_rms", current_rms)
     return Quantity(voltage_rms * current_rms, WATT)
 
 
@@ -227,8 +227,8 @@ def real_power(
     voltage_rms: float, current_rms: float, phase_angle_degrees: float
 ) -> Quantity:
     """Active power ``P = Vrms·Irms·cos(φ)`` in watts."""
-    req_geq_zero("voltage_rms", voltage_rms)
-    req_geq_zero("current_rms", current_rms)
+    req_non_zero("voltage_rms", voltage_rms)
+    req_non_zero("current_rms", current_rms)
     return Quantity(
         voltage_rms * current_rms * math.cos(math.radians(phase_angle_degrees)), WATT
     )
@@ -238,8 +238,8 @@ def reactive_power(
     voltage_rms: float, current_rms: float, phase_angle_degrees: float
 ) -> Quantity:
     """Reactive power ``Q = Vrms·Irms·sin(φ)`` in volt-amperes reactive."""
-    req_geq_zero("voltage_rms", voltage_rms)
-    req_geq_zero("current_rms", current_rms)
+    req_non_zero("voltage_rms", voltage_rms)
+    req_non_zero("current_rms", current_rms)
     return Quantity(
         voltage_rms * current_rms * math.sin(math.radians(phase_angle_degrees)), WATT
     )
@@ -260,7 +260,7 @@ def rms(values: Iterable[float]) -> float:
 
 def rms_from_peak(peak: float) -> float:
     """RMS of a sinusoid from its peak amplitude (``peak / √2``)."""
-    req_geq_zero("peak", peak)
+    req_non_zero("peak", peak)
     return peak / math.sqrt(2)
 
 
@@ -313,14 +313,14 @@ def cutoff_frequency_rl(resistance: float, inductance: float) -> Quantity:
 
 def low_pass_magnitude(frequency: float, cutoff_frequency: float) -> float:
     """First-order low-pass gain magnitude at ``frequency``."""
-    req_geq_zero("frequency", frequency)
+    req_non_zero("frequency", frequency)
     req_pos("cutoff_frequency", cutoff_frequency)
     return 1 / math.sqrt(1 + (frequency / cutoff_frequency) ** 2)
 
 
 def high_pass_magnitude(frequency: float, cutoff_frequency: float) -> float:
     """First-order high-pass gain magnitude at ``frequency``."""
-    req_geq_zero("frequency", frequency)
+    req_non_zero("frequency", frequency)
     req_pos("cutoff_frequency", cutoff_frequency)
     ratio = frequency / cutoff_frequency
     return ratio / math.sqrt(1 + ratio**2)

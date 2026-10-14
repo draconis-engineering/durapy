@@ -25,7 +25,6 @@ VSBL_SPEC_WAVLEN: dict[tuple[float, float], str] = {
 }
 
 # Electromagnetic Spectrum Wavelengths (in nm, matching spectrum_label input)
-# Note: gap 1e6-1e7 previously left 1mm-1cm uncovered; now continuous.
 EM_SPEC_WAVLEN = {
     (0, 0.01): "Gamma-ray",
     (0.01, 10): "X-Ray",
@@ -57,7 +56,7 @@ def wavelength(hertz: float, in_nm: bool = False) -> Quantity:
     if hertz <= 0:
         raise ValueError("Frequency must be greater than zero")
 
-    wav_m = float(C) / hertz
+    wav_m = C.value / hertz
     if in_nm:
         wav_m *= 1e9
     return Quantity(wav_m, METER)
@@ -69,32 +68,32 @@ def hz(wavelength: float, in_nm: bool = False) -> Quantity:
     lam_m = wavelength * 1e-9 if in_nm else wavelength
     if lam_m == 0:
         raise ValueError("Wavelength cannot be zero")
-    return Quantity(float(C) / lam_m, HERTZ)
+    return Quantity(C.value / lam_m, HERTZ)
 
 
 def ems(wavelength: float) -> tuple[str, float, str]:
     """Get the part of the electromagnetic spectrum the wavelength `λ` sits in, as well as the hertz."""
     label = spectrum_label(wavelength, EM_SPEC_WAVLEN)
-    hertz = float(hz(wavelength))
+    hertz = hz(wavelength).value
 
     return label, hertz, f"{label} - {hertz} Hz"
 
 
 def photon_energy_λ(wavelength: float) -> Quantity:
     """Calculate the energy of a photon in joules with wavelength `λ` (in meters)."""
-    return Quantity(float(PLANCK) * float(hz(wavelength)), JOULE)
+    return Quantity(PLANCK.value * float(hz(wavelength)), JOULE)
 
 
 def photon_energy_hz(Hz: float) -> Quantity:
     """Calculate the energy of a photon in joules with frequency `Hz`."""
-    return Quantity(float(PLANCK) * Hz, JOULE)
+    return Quantity(PLANCK.value * Hz, JOULE)
 
 
 def photon_energy_ev_λ(wavelength: float) -> Quantity:
     """Calculate the energy of a photon with wavelength `λ` in electron volts."""
-    return Quantity(float(photon_energy_λ(wavelength)) / 1.60218e-19, ELECTRONVOLT)
+    return Quantity(photon_energy_λ(wavelength).value / 1.60218e-19, ELECTRONVOLT)
 
 
 def photon_energy_ev_hz(Hz: float) -> Quantity:
     """Calculate the energy of a photon with frequency `Hz` in electron volts."""
-    return Quantity(float(photon_energy_hz(Hz)) / 1.60218e-19, ELECTRONVOLT)
+    return Quantity(photon_energy_hz(Hz).value / 1.60218e-19, ELECTRONVOLT)

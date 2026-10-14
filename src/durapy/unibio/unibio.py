@@ -64,7 +64,7 @@ _PHOSPHATE_MASS = 79.975  # removed from a free 5' position
 
 
 # --------------------------------------------------------------------------- #
-# Normalization / validation
+# Normalization / validation                                                  #
 # --------------------------------------------------------------------------- #
 
 
@@ -269,11 +269,11 @@ def find_orfs(
     def scan(nucleotides: str, strand: str, reverse: bool) -> None:
         rna = nucleotides.replace("T", "U")
         for frame in range(3):
-            index = frame
-            while index + 3 <= len(rna):
-                codon = rna[index : index + 3]
+            idx = frame
+            while idx + 3 <= len(rna):
+                codon = rna[idx : idx + 3]
                 if codon == START_CODON:
-                    cursor = index
+                    cursor = idx
                     protein: list[str] = []
                     while cursor + 3 <= len(rna):
                         current = rna[cursor : cursor + 3]
@@ -282,13 +282,13 @@ def find_orfs(
                             break
                         protein.append(CODON_TABLE.get(current, "X"))
                     if len(protein) >= min_amino_acids:
-                        start, end = index, cursor
+                        start, end = idx, cursor
                         if reverse:
-                            start, end = len(seq) - end, len(seq) - index
+                            start, end = len(seq) - end, len(seq) - idx
                         results.append(ORF(start, end, frame, strand, "".join(protein)))
-                    index = cursor
+                    idx = cursor
                 else:
-                    index += 3
+                    idx += 3
 
     scan(seq, "+", False)
     if both_strands:

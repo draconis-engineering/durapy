@@ -36,7 +36,7 @@ ANSI_COLORS: dict[str, str] = {
 
 
 def color_text(
-    text: object,
+    text: str,
     color: str | None,
     bold: bool = False,
     underline: bool = False,
@@ -44,10 +44,11 @@ def color_text(
 ) -> str:
     """Returns the given text in the given color using `ANSI` escape codes. If the color is not found, it returns the text without coloring."""
 
-    if color is None or color.lower() not in ANSI_COLORS:
-        return str(text)
-
     text = str(text)
+
+    if color is None or color.lower() not in ANSI_COLORS:
+        return text
+
     ansi = ANSI_COLORS.get(color.lower(), "\033[0m")
 
     if bold:

@@ -24,14 +24,14 @@ def gear_ratio(driving_teeth: int, driven_teeth: int) -> str:
         return f"{ratio} - Same Speed - Same Torque"
 
 
-def angular_velocity_r(RPM: float) -> Quantity:
+def angular_velocity_r(rpm: float) -> Quantity:
     """Returns angular velocity from RPM in radians/s ( ω = RPM * 2π / 60 )"""
-    return Quantity(RPM * float(PI) * 2 / 60, RADIAN)
+    return Quantity(rpm * PI.value * 2 / 60, RADIAN)
 
 
-def angular_velocity_d(RPM: float) -> Quantity:
+def angular_velocity_d(rpm: float) -> Quantity:
     """Returns angular velocity from RPM in degrees/s ( 360 deg per revolution )"""
-    return Quantity(RPM * 360 / 60, DEGREE)
+    return Quantity(rpm * 360 / 60, DEGREE)
 
 
 def kinetic_energy(mass: float, vel: float) -> Quantity:
@@ -45,4 +45,4 @@ def potential_energy(mass: float, height: float, g: float = EARTH_G.value) -> Qu
 
 
 def einstein_mass_energy_equivalence(mass: float) -> Quantity:
-    return Quantity(mass * float(C) ** 2, JOULE)
+    return Quantity(mass * C.value**2, JOULE)
