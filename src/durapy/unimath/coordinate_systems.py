@@ -18,6 +18,12 @@ class Cartesian1D(_BaseCoordinate):
         super().__init__(unit=unit, dims=1)
         self.x = x
 
+    def distance_to_origo(self) -> float:
+        return abs(self.x)
+
+    # Backwards compat for typo
+    distance_to_origin = distance_to_origo
+
 
 class Cartesian2D(_BaseCoordinate):
     """The 2-dimensional Cartesian coordinate system."""
@@ -35,7 +41,7 @@ class Cartesian2D(_BaseCoordinate):
     def distance_to_origo(self) -> float:
         return math.hypot(self.x, self.y)
 
-    # Keep backwards compat for typo
+    # Backwards compat for typo
     distance_to_origin = distance_to_origo
 
 
@@ -67,6 +73,9 @@ class Cartesian3D(_BaseCoordinate):
     def distance_to_origo(self) -> float:
         return math.hypot(self.x, self.y, self.z)
 
+    # Backwards compat for typo
+    distance_to_origin = distance_to_origo
+
 
 class Polar(_BaseCoordinate):
     """The polar coordinate system."""
@@ -85,7 +94,6 @@ class Polar(_BaseCoordinate):
         return self.r
 
     # Backwards compat for typo
-    distanse_to_origo = distance_to_origo
     distance_to_origin = distance_to_origo
 
 
@@ -114,6 +122,9 @@ class Spherical(_BaseCoordinate):
     def distance_to_origo(self) -> float:
         return self.r
 
+    # Backwards compat for typo
+    distance_to_origin = distance_to_origo
+
 
 class Cylindrical(_BaseCoordinate):
     """The cylindrical coordinate system."""
@@ -140,4 +151,5 @@ class Cylindrical(_BaseCoordinate):
     def distance_to_origo(self) -> float:
         return math.hypot(self.r, self.z)
 
+    # Backwards compat for typo
     distance_to_origin = distance_to_origo

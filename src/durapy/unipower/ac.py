@@ -12,6 +12,7 @@ import cmath
 import math
 from collections.abc import Iterable
 
+from ..shared.constants import PI
 from ..shared.numval_types import Quantity
 from ..shared.units import FARAD, HENRY, HERTZ, OHM, WATT
 
@@ -48,12 +49,14 @@ __all__ = [
 ]
 
 
-def _require_positive(name: str, value: float) -> None:
+def req_pos(name: str, value: float) -> None:
+    """Require positive number"""
     if value <= 0:
         raise ValueError(f"{name} must be positive")
 
 
-def _require_non_negative(name: str, value: float) -> None:
+def req_geq_zero(name: str, value: float) -> None:
+    """Require non-negative number"""
     if value < 0:
         raise ValueError(f"{name} cannot be negative")
 
@@ -68,7 +71,7 @@ def series_resistance(*resistances: float) -> Quantity:
     if not resistances:
         raise ValueError("at least one resistance is required")
     for r in resistances:
-        _require_non_negative("resistance", r)
+        req_geq_zero("resistance", r)
     return Quantity(math.fsum(resistances), OHM)
 
 
@@ -77,7 +80,7 @@ def parallel_resistance(*resistances: float) -> Quantity:
     if not resistances:
         raise ValueError("at least one resistance is required")
     for r in resistances:
-        _require_non_negative("resistance", r)
+        req_geq_zero("resistance", r)
     if any(r == 0 for r in resistances):
         return Quantity(0.0, OHM)
     return Quantity(1 / math.fsum(1 / r for r in resistances), OHM)
@@ -88,7 +91,7 @@ def series_capacitance(*capacitances: float) -> Quantity:
     if not capacitances:
         raise ValueError("at least one capacitance is required")
     for c in capacitances:
-        _require_positive("capacitance", c)
+        req_pos("capacitance", c)
     return Quantity(1 / math.fsum(1 / c for c in capacitances), FARAD)
 
 
@@ -97,7 +100,7 @@ def parallel_capacitance(*capacitances: float) -> Quantity:
     if not capacitances:
         raise ValueError("at least one capacitance is required")
     for c in capacitances:
-        _require_positive("capacitance", c)
+        req_pos("capacitance", c)
     return Quantity(math.fsum(capacitances), FARAD)
 
 
@@ -106,7 +109,7 @@ def series_inductance(*inductances: float) -> Quantity:
     if not inductances:
         raise ValueError("at least one inductance is required")
     for l in inductances:
-        _require_positive("inductance", l)
+        req_pos("inductance", l)
     return Quantity(math.fsum(inductances), HENRY)
 
 
@@ -115,7 +118,7 @@ def parallel_inductance(*inductances: float) -> Quantity:
     if not inductances:
         raise ValueError("at least one inductance is required")
     for l in inductances:
-        _require_positive("inductance", l)
+        req_pos("inductance", l)
     return Quantity(1 / math.fsum(1 / l for l in inductances), HENRY)
 
 
@@ -126,16 +129,16 @@ def parallel_inductance(*inductances: float) -> Quantity:
 
 def capacitive_reactance(frequency: float, capacitance: float) -> Quantity:
     """Capacitive reactance ``Xc = 1 / (2π·f·C)`` in ohms."""
-    _require_positive("frequency", frequency)
-    _require_positive("capacitance", capacitance)
-    return Quantity(1 / (2 * math.pi * frequency * capacitance), OHM)
+    req_pos("frequency", frequency)
+    req_pos("capacitance", capacitance)
+    return Quantity(1 / (2 * PI * frequency * capacitance), OHM)
 
 
 def inductive_reactance(frequency: float, inductance: float) -> Quantity:
     """Inductive reactance ``Xʟ = 2π·f·L`` in ohms."""
-    _require_positive("frequency", frequency)
-    _require_positive("inductance", inductance)
-    return Quantity(2 * math.pi * frequency * inductance, OHM)
+    req_pos("frequency", frequency)
+    req_pos("inductance", inductance)
+    return Quantity(2 * PI * frequency * inductance, OHM)
 
 
 def impedance_rlc(
@@ -148,13 +151,13 @@ def impedance_rlc(
 
     Pass ``capacitance=None`` to omit the capacitive term.
     """
-    _require_positive("frequency", frequency)
-    _require_non_negative("resistance", resistance)
-    _require_non_negative("inductance", inductance)
-    omega = 2 * math.pi * frequency
+    req_pos("frequency", frequency)
+    req_geq_zero("resistance", resistance)
+    req_geq_zero("inductance", inductance)
+    omega = 2 * PI.value * frequency
     reactance = omega * inductance
     if capacitance is not None:
-        _require_positive("capacitance", capacitance)
+        req_pos("capacitance", capacitance)
         reactance -= 1 / (omega * capacitance)
     return complex(resistance, reactance)
 
@@ -171,18 +174,18 @@ def impedance_magnitude_phase(impedance: complex) -> tuple[float, float]:
 
 def resonant_frequency(inductance: float, capacitance: float) -> Quantity:
     """LC resonant frequency ``f = 1 / (2π·√(L·C))`` in hertz."""
-    _require_positive("inductance", inductance)
-    _require_positive("capacitance", capacitance)
-    return Quantity(1 / (2 * math.pi * math.sqrt(inductance * capacitance)), HERTZ)
+    req_pos("inductance", inductance)
+    req_pos("capacitance", capacitance)
+    return Quantity(1 / (2 * PI * math.sqrt(inductance * capacitance)), HERTZ)
 
 
 def series_quality_factor(
     resistance: float, inductance: float, capacitance: float
 ) -> float:
     """Series RLC quality factor ``Q = (1/R)·√(L/C)``."""
-    _require_positive("resistance", resistance)
-    _require_positive("inductance", inductance)
-    _require_positive("capacitance", capacitance)
+    req_pos("resistance", resistance)
+    req_pos("inductance", inductance)
+    req_pos("capacitance", capacitance)
     return (1 / resistance) * math.sqrt(inductance / capacitance)
 
 
@@ -190,16 +193,16 @@ def parallel_quality_factor(
     resistance: float, inductance: float, capacitance: float
 ) -> float:
     """Parallel RLC quality factor ``Q = R·√(C/L)``."""
-    _require_positive("resistance", resistance)
-    _require_positive("inductance", inductance)
-    _require_positive("capacitance", capacitance)
+    req_pos("resistance", resistance)
+    req_pos("inductance", inductance)
+    req_pos("capacitance", capacitance)
     return resistance * math.sqrt(capacitance / inductance)
 
 
 def bandwidth(center_frequency: float, quality_factor: float) -> Quantity:
     """Half-power bandwidth ``BW = f0 / Q`` in hertz."""
-    _require_positive("center_frequency", center_frequency)
-    _require_positive("quality_factor", quality_factor)
+    req_pos("center_frequency", center_frequency)
+    req_pos("quality_factor", quality_factor)
     return Quantity(center_frequency / quality_factor, HERTZ)
 
 
@@ -215,8 +218,8 @@ def power_factor(phase_angle_degrees: float) -> float:
 
 def apparent_power(voltage_rms: float, current_rms: float) -> Quantity:
     """Apparent power ``S = Vrms·Irms`` in volt-amperes (reported as watts)."""
-    _require_non_negative("voltage_rms", voltage_rms)
-    _require_non_negative("current_rms", current_rms)
+    req_geq_zero("voltage_rms", voltage_rms)
+    req_geq_zero("current_rms", current_rms)
     return Quantity(voltage_rms * current_rms, WATT)
 
 
@@ -224,8 +227,8 @@ def real_power(
     voltage_rms: float, current_rms: float, phase_angle_degrees: float
 ) -> Quantity:
     """Active power ``P = Vrms·Irms·cos(φ)`` in watts."""
-    _require_non_negative("voltage_rms", voltage_rms)
-    _require_non_negative("current_rms", current_rms)
+    req_geq_zero("voltage_rms", voltage_rms)
+    req_geq_zero("current_rms", current_rms)
     return Quantity(
         voltage_rms * current_rms * math.cos(math.radians(phase_angle_degrees)), WATT
     )
@@ -235,8 +238,8 @@ def reactive_power(
     voltage_rms: float, current_rms: float, phase_angle_degrees: float
 ) -> Quantity:
     """Reactive power ``Q = Vrms·Irms·sin(φ)`` in volt-amperes reactive."""
-    _require_non_negative("voltage_rms", voltage_rms)
-    _require_non_negative("current_rms", current_rms)
+    req_geq_zero("voltage_rms", voltage_rms)
+    req_geq_zero("current_rms", current_rms)
     return Quantity(
         voltage_rms * current_rms * math.sin(math.radians(phase_angle_degrees)), WATT
     )
@@ -257,19 +260,19 @@ def rms(values: Iterable[float]) -> float:
 
 def rms_from_peak(peak: float) -> float:
     """RMS of a sinusoid from its peak amplitude (``peak / √2``)."""
-    _require_non_negative("peak", peak)
+    req_geq_zero("peak", peak)
     return peak / math.sqrt(2)
 
 
 def decibels_power(ratio: float) -> float:
     """Power ratio to decibels (``10·log10(ratio)``)."""
-    _require_positive("ratio", ratio)
+    req_pos("ratio", ratio)
     return 10 * math.log10(ratio)
 
 
 def decibels_amplitude(ratio: float) -> float:
     """Amplitude/voltage ratio to decibels (``20·log10(ratio)``)."""
-    _require_positive("ratio", ratio)
+    req_pos("ratio", ratio)
     return 20 * math.log10(ratio)
 
 
@@ -285,7 +288,7 @@ def dbm_to_watts(power_dbm: float) -> Quantity:
 
 def watts_to_dbm(power_watts: float) -> float:
     """Power in watts to dBm."""
-    _require_positive("power_watts", power_watts)
+    req_pos("power_watts", power_watts)
     return 10 * math.log10(power_watts * 1000)
 
 
@@ -296,28 +299,28 @@ def watts_to_dbm(power_watts: float) -> float:
 
 def cutoff_frequency_rc(resistance: float, capacitance: float) -> Quantity:
     """-3 dB cut-off of an RC filter ``fc = 1 / (2π·R·C)`` in hertz."""
-    _require_positive("resistance", resistance)
-    _require_positive("capacitance", capacitance)
-    return Quantity(1 / (2 * math.pi * resistance * capacitance), HERTZ)
+    req_pos("resistance", resistance)
+    req_pos("capacitance", capacitance)
+    return Quantity(1 / (2 * PI * resistance * capacitance), HERTZ)
 
 
 def cutoff_frequency_rl(resistance: float, inductance: float) -> Quantity:
     """-3 dB cut-off of an RL filter ``fc = R / (2π·L)`` in hertz."""
-    _require_positive("resistance", resistance)
-    _require_positive("inductance", inductance)
-    return Quantity(resistance / (2 * math.pi * inductance), HERTZ)
+    req_pos("resistance", resistance)
+    req_pos("inductance", inductance)
+    return Quantity(resistance / (2 * PI * inductance), HERTZ)
 
 
 def low_pass_magnitude(frequency: float, cutoff_frequency: float) -> float:
     """First-order low-pass gain magnitude at ``frequency``."""
-    _require_non_negative("frequency", frequency)
-    _require_positive("cutoff_frequency", cutoff_frequency)
+    req_geq_zero("frequency", frequency)
+    req_pos("cutoff_frequency", cutoff_frequency)
     return 1 / math.sqrt(1 + (frequency / cutoff_frequency) ** 2)
 
 
 def high_pass_magnitude(frequency: float, cutoff_frequency: float) -> float:
     """First-order high-pass gain magnitude at ``frequency``."""
-    _require_non_negative("frequency", frequency)
-    _require_positive("cutoff_frequency", cutoff_frequency)
+    req_geq_zero("frequency", frequency)
+    req_pos("cutoff_frequency", cutoff_frequency)
     ratio = frequency / cutoff_frequency
     return ratio / math.sqrt(1 + ratio**2)

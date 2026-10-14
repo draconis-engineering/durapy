@@ -52,6 +52,9 @@ Homepage = "https://github.com/draconis-engineering/durapy"
 Repository = "https://github.com/draconis-engineering/durapy"
 Issues = "https://github.com/draconis-engineering/durapy/issues"
 
+[tool.ruff]
+target-version = "py315"
+
 [tool.setuptools]
 package-dir = {"" = "src"}
 include-package-data = true

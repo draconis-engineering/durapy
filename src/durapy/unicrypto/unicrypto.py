@@ -1,7 +1,12 @@
 """`UniCrypto` source"""
 
 
-def binary_encrypt(plaintext: str) -> str:
+# ====================================== #
+# -------- Encode/Decode Utils --------- #
+# ====================================== #
+
+
+def binary_encode(plaintext: str) -> str:
     """Encode text as space-separated 8-bit binary bytes using UTF-8.
 
     This is a reversible encoding, not encryption. Any Unicode input (including
@@ -12,8 +17,10 @@ def binary_encrypt(plaintext: str) -> str:
     return " ".join(format(byte, "08b") for byte in data)
 
 
-def binary_decrypt(binary: str) -> str:
+def binary_decrypt(binary: str, *, is_space_separated: bool = True) -> str:
     """Decode space-separated 8-bit binary bytes back to text using UTF-8."""
+    if not is_space_separated:
+        binary = " ".join(binary[i : i + 8] for i in range(0, len(binary), 8))
     try:
         data = bytes(int(chunk, 2) for chunk in binary.split())
     except ValueError as exc:
@@ -21,8 +28,8 @@ def binary_decrypt(binary: str) -> str:
     return data.decode()
 
 
-def ceasar_encrypt(plaintext: str, key: int) -> str:
-    """Ceasar encryption"""
+def ceasar_encode(plaintext: str, key: int) -> str:
+    """Ceasar cipher encoding"""
     cipher = ""
     for char in plaintext:
         if char.isalpha():
@@ -35,8 +42,8 @@ def ceasar_encrypt(plaintext: str, key: int) -> str:
     return cipher
 
 
-def ceasar_decrypt(cipher: str, key: int) -> str:
-    """Ceasar decryption"""
+def ceasar_decode(cipher: str, key: int) -> str:
+    """Ceasar cipher decoding"""
     plaintext = ""
     for char in cipher:
         if char.isalpha():
@@ -49,8 +56,8 @@ def ceasar_decrypt(cipher: str, key: int) -> str:
     return plaintext
 
 
-def vigenere_encrypt(plaintext: str, key: str) -> str:
-    """Vigenêre encryption"""
+def vigenere_encode(plaintext: str, key: str) -> str:
+    """Vigenêre encoding"""
     if not key or not key.isalpha():
         raise ValueError("Key must be non-empty alphabetic string")
     cipher = ""
@@ -66,10 +73,12 @@ def vigenere_encrypt(plaintext: str, key: str) -> str:
     return cipher
 
 
-def vigenere_decrypt(cipher: str, key: str) -> str:
-    """Vigenêre decryption"""
+def vigenere_decode(cipher: str, key: str) -> str:
+    """Vigenêre cipher decoding"""
+
     if not key or not key.isalpha():
         raise ValueError("Key must be non-empty alphabetic string")
+
     plaintext = ""
     key = key.lower()
     key_idx = 0
@@ -93,13 +102,17 @@ def vigenere_decrypt(cipher: str, key: str) -> str:
     return plaintext
 
 
-def railfence_encrypt(plaintext: str, key: int) -> str:
-    """Railfence encryption"""
+def railfence_encode(plaintext: str, key: int) -> str:
+    """Railfence cipher encoding"""
+
     key = int(key)
+
     if key <= 1:
         raise ValueError("Railfence key must be >= 2")
+
     if key > len(plaintext):
         return plaintext
+
     pos, direction = 0, 1
     rows: list[list[str]] = [[] for _ in range(key)]
 
@@ -113,13 +126,17 @@ def railfence_encrypt(plaintext: str, key: int) -> str:
     return "".join(["".join(row) for row in rows])
 
 
-def railfence_decrypt(cipher: str, key: int) -> str:
-    """Railfence decryption"""
+def railfence_decode(cipher: str, key: int) -> str:
+    """Railfence cipher decoding"""
+
     key = int(key)
+
     if key <= 1:
         raise ValueError("Railfence key must be >= 2")
+
     if key > len(cipher):
         return cipher
+
     pattern: list[int] = []
     rows: list[list[str]] = []
     pos, idx, direction = 0, 0, 1
@@ -146,13 +163,18 @@ def railfence_decrypt(cipher: str, key: int) -> str:
     return plaintext
 
 
+# ====================================== #
+# -------- Encrypt/Decrypt Utils ------- #
+# ====================================== #
+
+
 def otp_encrypt(plaintext: str, key: str) -> str:
     """One Time Pad encryption.
 
     The key must be at least as long as the UTF-8 encoding of the plaintext.
-    The output is space-separated 8-bit binary of the XOR stream. Note that
-    this is only information-theoretically secure when the key is truly random,
-    used once, and kept secret.
+    The output is space-separated 8-bit binary of the XOR stream.
+
+    Note that this is only information-theoretically secure when the key is truly random, used once, and kept secret.
     """
     text = plaintext.encode()
     key_bytes = key.encode()

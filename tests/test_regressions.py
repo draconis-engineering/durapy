@@ -13,15 +13,14 @@ from durapy.shared.numval_types import Quantity
 from durapy.shared.units import DEGREE, METER, RADIAN, SECOND
 from durapy.unicogni.unicogni import cross_entropy_loss, d_mish, mish
 from durapy.unicrypto.unicrypto import (
-    binary_decrypt,
-    binary_encrypt,
+    binary_decode,
+    binary_encode,
     otp_decrypt,
     otp_encrypt,
-    vigenere_decrypt,
-    vigenere_encrypt,
+    vigenere_decode,
+    vigenere_encode,
 )
 from durapy.unimath.linalg import Matrix
-
 
 # --------------------------------------------------------------------------- #
 # Matrix scalar operations must accept ints (not only floats)
@@ -78,14 +77,14 @@ def test_cross_entropy_shape_mismatch_raises():
 
 @pytest.mark.parametrize("text", ["", "Hi", "café ☕", "日本語", "emoji 😀🎉"])
 def test_binary_round_trip_unicode(text):
-    assert binary_decrypt(binary_encrypt(text)) == text
+    assert binary_decode(binary_encode(text)) == text
 
 
 def test_binary_decrypt_rejects_garbage():
     with pytest.raises(ValueError):
-        binary_decrypt("2 3 4")
+        binary_decode("2 3 4")
     with pytest.raises(ValueError):
-        binary_decrypt("111111111")  # 9 bits -> out of byte range
+        binary_decode("111111111")  # 9 bits -> out of byte range
 
 
 @pytest.mark.parametrize("text", ["", "Attack at dawn", "café ☕", "emoji 😀"])
@@ -106,14 +105,14 @@ def test_otp_short_key_raises():
 
 def test_vigenere_empty_key_raises():
     with pytest.raises(ValueError):
-        vigenere_decrypt("abc", "")
+        vigenere_decode("abc", "")
     with pytest.raises(ValueError):
-        vigenere_decrypt("abc", "123")
+        vigenere_decode("abc", "123")
 
 
 def test_vigenere_round_trip():
     message = "Hello, World!"
-    assert vigenere_decrypt(vigenere_encrypt(message, "Key"), "Key") == message
+    assert vigenere_decode(vigenere_encode(message, "Key"), "Key") == message
 
 
 # --------------------------------------------------------------------------- #

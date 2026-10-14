@@ -77,13 +77,19 @@ def reverse_cosine_rule(
 
     return (
         math.degrees(
-            math.acos(_clamp_cos((len_B**2 + len_C**2 - len_A**2) / (2 * len_B * len_C)))
+            math.acos(
+                _clamp_cos((len_B**2 + len_C**2 - len_A**2) / (2 * len_B * len_C))
+            )
         ),  # AngleA
         math.degrees(
-            math.acos(_clamp_cos((len_C**2 + len_A**2 - len_B**2) / (2 * len_C * len_A)))
+            math.acos(
+                _clamp_cos((len_C**2 + len_A**2 - len_B**2) / (2 * len_C * len_A))
+            )
         ),  # AngleB
         math.degrees(
-            math.acos(_clamp_cos((len_A**2 + len_B**2 - len_C**2) / (2 * len_A * len_B)))
+            math.acos(
+                _clamp_cos((len_A**2 + len_B**2 - len_C**2) / (2 * len_A * len_B))
+            )
         ),  # AngleC
     )
 
@@ -99,7 +105,7 @@ def tangent_formula(f_1: str, f_2: str) -> list[str]:
 
     slope_eq = sympy.Eq(df1, df2)
     tan_points = sympy.solve(slope_eq, x)
-    tangents = []
+    tangents: list[str] = []
 
     for idx, point in enumerate(tan_points, 1):
         string = f"Tangent {idx} - point: {point} - y: {f1.subs(x, point)} - slope: {df1.subs(x, point)}"

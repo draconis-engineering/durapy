@@ -5,27 +5,27 @@ UniCrypto includes a range of cryptography methods, for both encryption and decr
 """
 
 from .unicrypto import (
-    binary_decrypt,
-    binary_encrypt,
-    ceasar_decrypt,
-    ceasar_encrypt,
+    binary_decode,
+    binary_encode,
+    ceasar_decode,
+    ceasar_encode,
     otp_decrypt,
     otp_encrypt,
-    railfence_decrypt,
-    railfence_encrypt,
-    vigenere_decrypt,
-    vigenere_encrypt,
+    railfence_decode,
+    railfence_encode,
+    vigenere_decode,
+    vigenere_encode,
 )
 
 __all__ = [
-    "binary_decrypt",
-    "binary_encrypt",
-    "ceasar_decrypt",
-    "ceasar_encrypt",
+    "binary_decode",
+    "binary_encode",
+    "ceasar_decode",
+    "ceasar_encode",
     "otp_decrypt",
     "otp_encrypt",
-    "railfence_decrypt",
-    "railfence_encrypt",
-    "vigenere_decrypt",
-    "vigenere_encrypt",
+    "railfence_decode",
+    "railfence_encode",
+    "vigenere_decode",
+    "vigenere_encode",
 ]
