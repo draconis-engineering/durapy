@@ -5,12 +5,6 @@ This module contains all the physical constants used in the `DuraPy` library, su
 The constants are stored as instances of the `Constant` class, which includes the value, unit, and name of the constant.
 """
 
-# Alpha - A α, Beta - B β,    Gamma - Γ γ,   Delta - Δ δ,   Epsilon - E ε, Zeta - Z ζ, Eta - H η,     Theta - Θ θ,
-# Iota - I ι,  Kappa - K κ,   Lambda - Λ λ,  Mu - M μ,      Nu - N ν,      Xi - Ξ ξ,   Omicron - O ο, Pi - Π π,
-# Rho - P ρ,   Sigma - Σ σ ς, Tau - T τ,     Ypsilon - Y υ, Phi - Φ φ,     Chi - X χ,  Psi - Ψ ψ,     Omega - Ω ω
-
-# Order: Length, Mass, Time, Electric Charge, Thermodynamic Temperature, Amount of Substance, Luminous Intensity
-
 from fractions import Fraction
 
 from ..shared.numval_types import Constant, Quantity
@@ -84,7 +78,7 @@ F_4, F_3, F_2, F_1, F0, F1, F2, F3, F4 = (
 # Mathematical/Dimensionless Constants
 E = Constant(Quantity(2.718281828459045, _NUM), "Eulers Number")
 PI = Constant(Quantity(3.141592653589793, _NUM), "Pi - π")
-TAU = Constant(Quantity(PI.value * 2, _NUM), "Archimedes' Constant")
+TAU = Constant(Quantity(PI * 2, _NUM), "Archimedes' Constant")
 INF = Constant(Quantity(float("inf"), _NUM), "Positive Infinity")
 NINF = Constant(Quantity(float("-inf"), _NUM), "Negative Infinity")
 IMAG = Constant(Quantity(1j, _NUM), "Imaginary Unit - sqrt(-1)")
@@ -93,15 +87,15 @@ EULMAS = Constant(Quantity(0.5772156649015329, _NUM), "The Euler-Mascheroni Cons
 FSTRUCT = Constant(Quantity(7.2973525693e-03, _NUM), "Fine-Structure Constant")
 
 # Length Constants - L
-PLANCKL = Constant(Quantity(1.616255e-35, _METER), "Planck Length")
 BOHR_R = Constant(Quantity(5.291772109e-11, _METER), "The Bohr Radius")
 EARTH_R = Constant(Quantity(6.371e6, _METER), "Radius of the Earth")
 ASTUNIT = Constant(Quantity(1.496e11, _METER), "Astronomical Unit")
+PLANCKL = Constant(Quantity(1.616255e-35, _METER), "Planck Length")
 MOON_R = Constant(Quantity(1.737e6, _METER), "Radius of the Moon")
 SUN_R = Constant(Quantity(6.957e8, _METER), "Radius of the Sun")
 MARS_R = Constant(Quantity(3.390e6, _METER), "Radius of Mars")
-LIGHTYR = Constant(Quantity(9.461e15, _METER), "Light year")
 PARSEC = Constant(Quantity(3.085677581e16, _METER), "Parsec")
+LIGHTYR = Constant(Quantity(9.461e15, _METER), "Light year")
 
 # Mass Constants - M
 ELECTRON_M = Constant(Quantity(9.1093837015e-31, _KILOGRAM), "Electron Mass")
