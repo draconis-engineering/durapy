@@ -71,13 +71,15 @@ def clip_int(val: int, lower: int, upper: int) -> int:
 
 def validate_hex(hexcode: str) -> str:
     """Validates a hexstring for colors. If invalid, returns `#000000`"""
+
     if not isinstance(hexcode, str):
         return "#000000"
-    hexcode = hexcode.strip()
-    hexcode = hexcode.removeprefix("#")
+
+    hexcode = hexcode.strip().removeprefix("#")
+    hexchars = "abcdef0123456789"
+
     if len(hexcode) != 6:
         return "#000000"
-    hexchars = "abcdef0123456789"
     if any(c.lower() not in hexchars for c in hexcode):
         return "#000000"
     return "#" + hexcode.lower()
