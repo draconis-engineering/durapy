@@ -107,8 +107,7 @@ def validate(sequence: str, kind: str = "dna") -> str:
 def _as_rna(sequence: str, kind: str | None) -> str:
     """Return the sequence as RNA, auto-detecting DNA vs RNA when needed."""
     seq = normalize(sequence)
-    if not seq:
-        raise ValueError("Sequence cannot be empty")
+
     if kind is not None:
         kind = kind.lower()
         if kind == "dna":
