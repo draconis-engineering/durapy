@@ -31,6 +31,7 @@ except ImportError:
     def matvecmul(a: np.ndarray, b: np.ndarray) -> np.ndarray:  # type: ignore
         return np.matmul(a, b)
 
+
 EPSILON = 1e-9
 
 Real = int | float
@@ -97,11 +98,9 @@ class Vector:
     def __iter__(self):
         return iter(self.components)
 
-    
     def __repr__(self) -> str:
         return f"Vector({self.components!r})"
 
-    
     def __str__(self) -> str:
         return str(self.components).replace(",", "")
 
@@ -114,7 +113,6 @@ class Vector:
     def __neg__(self) -> Vector:
         return Vector([-(component) for component in self.components])
 
-    
     def __eq__(self, value: object) -> bool:
         if isinstance(value, Vector):
             return self.components == value.components and self.shape == value.shape
@@ -176,7 +174,9 @@ class Vector:
     @overload
     def __mul__(self, other: Vector) -> float: ...
     def __mul__(self, other: object) -> Vector | float:
-        if isinstance(other, (int, float, complex)):  # scalar multiplication (broadcast)
+        if isinstance(
+            other, (int, float, complex)
+        ):  # scalar multiplication (broadcast)
             return Vector(
                 [other * self.components[i] for i in range(len(self.components))]
             )
@@ -383,11 +383,9 @@ class Matrix:
     def __iter__(self):
         return iter(self._array)
 
-    
     def __repr__(self) -> str:
         return f"Matrix({self._array!r})"
 
-    
     def __str__(self) -> str:
         return_str = ""
         for row in self:
@@ -409,7 +407,6 @@ class Matrix:
     def __abs__(self) -> float:
         return math.sqrt(sum(cell * cell for row in self._array for cell in row))
 
-    
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Matrix):
             return (
@@ -888,7 +885,10 @@ class Matrix:
         """Returns True if the matrix raised to some power becomes a zero matrix."""
         if not self.is_square():
             raise ValueError("Matrix must be square to be nilpotent.")
-        return all(abs(value) < EPSILON for value in self.eigen[0]) and abs(self.det) < EPSILON
+        return (
+            all(abs(value) < EPSILON for value in self.eigen[0])
+            and abs(self.det) < EPSILON
+        )
 
     def is_idempotent(self) -> bool:
         """Returns True if the matrix multiplied by itself equals itself: `A^2` = `A`."""

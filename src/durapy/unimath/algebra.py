@@ -111,12 +111,14 @@ def quadratic_factorized(a: float, b: float, c: float) -> str:
         sqrtD = math.sqrt(D)
         x1 = (-b - sqrtD) / (2 * a)
         x2 = (-b + sqrtD) / (2 * a)
+
         # Use (x - x1) form; handle sign correctly
         def factor_str(root: float) -> str:
             if root < 0:
                 return f"(x + {-root})"
             else:
                 return f"(x - {root})"
+
         return f"{a}{factor_str(x1)}{factor_str(x2)}"
 
     elif D == 0:
