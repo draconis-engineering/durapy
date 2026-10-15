@@ -133,7 +133,7 @@ def _unwrap_quantity(q: Quantity) -> Quantity:
     if hasattr(q, "quantity") and hasattr(q, "name"):
         try:
             return q.quantity  # type: ignore
-        except TypeError, AttributeError:
+        except (TypeError, AttributeError):
             pass
     return q
 
