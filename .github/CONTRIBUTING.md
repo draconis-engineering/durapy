@@ -1,4 +1,4 @@
-# Contributing to Project Name
+# Contributing to DuraPy
 
 Thank you for taking the time to contribute! We welcome contributions of all kinds, including bug fixes, new features, documentation updates, and feedback.
 
@@ -9,15 +9,18 @@ By participating in this project, you agree to abide by our [Code of Conduct](CO
 ## How Can I Contribute?
 
 ### Reporting Bugs
-* Check the **Issues** tab to ensure the bug hasn't already been reported.
-* If it is a new bug, open an issue using the bug report template.
-* Provide a clear description, steps to reproduce, and your environment setup.
+
+- Check the **Issues** tab to ensure the bug hasn't already been reported.
+- If it is a new bug, open an issue using the bug report template.
+- Provide a clear description, steps to reproduce, and your environment setup.
 
 ### Suggesting Enhancements
-* Open an issue outlining your proposed change.
-* Explain the use case and why this enhancement would be valuable to the community.
+
+- Open an issue outlining your proposed change.
+- Explain the use case and why this enhancement would be valuable to the community.
 
 ### Submitting Pull Requests (PRs)
+
 1. **Fork the Repository:** Create your own copy of the repository on your account.
 2. **Create a Branch:** Use a descriptive branch name (e.g., `feature/add-login` or `fix/typo-in-readme`).
 3. **Keep it Focused:** Make sure your PR addresses a single issue or feature.
@@ -41,6 +44,7 @@ uv sync
 ## Commit Message Guidelines
 
 We recommend using clear and descriptive commit messages. Following the **Conventional Commits** specification is highly encouraged:
-* `feat: add user authentication`
-* `fix: resolve crash on startup`
-* `docs: update setup instructions`
+
+- `feat: add user authentication`
+- `fix: resolve crash on startup`
+- `docs: update setup instructions`
