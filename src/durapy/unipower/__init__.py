@@ -38,6 +38,7 @@ from .ac import (
 from .exceptions import CircuitError, InvalidColors
 from .types import (
     BANDS,
+    IC,
     MULTIPLIERS,
     TOLERANCES,
     Capacitor,
@@ -46,7 +47,6 @@ from .types import (
     Diode,
     Element,
     Fuse,
-    IC,
     Inductor,
     Oscillator,
     Potentiometer,
