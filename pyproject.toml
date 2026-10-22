@@ -11,40 +11,40 @@ requires-python = ">=3.11"
 license = { file = "LICENSE" }
 
 authors = [
-    { name = "Simon Stordal Amundgård", email = "stordalamundgard@gmail.com" }
+	{ name = "Simon Stordal Amundgård", email = "stordalamundgard@gmail.com" },
 ]
 
 keywords = [
-    "engineering",
-    "utilities",
-    "framework",
-    "draconis",
-    "science",
-    "python",
-    "stem",
-    "math",
-    "cli",
+	"engineering",
+	"utilities",
+	"framework",
+	"draconis",
+	"science",
+	"python",
+	"stem",
+	"math",
+	"cli",
 ]
 
 classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.14",
-    "Operating System :: OS Independent"
+	"Development Status :: 3 - Alpha",
+	"Intended Audience :: Developers",
+	"License :: OSI Approved :: GPLv3 License",
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python :: 3.11",
+	"Programming Language :: Python :: 3.12",
+	"Programming Language :: Python :: 3.13",
+	"Programming Language :: Python :: 3.14",
+	"Operating System :: OS Independent",
 ]
 
 dependencies = [
-    "questionary",
-    "prompt_toolkit",
-    "numpy",
-    "sympy",
-    "scipy",
-    "rich"
+	"questionary",
+	"prompt_toolkit",
+	"numpy",
+	"sympy",
+	"scipy",
+	"rich",
 ]
 
 [project.urls]
@@ -56,7 +56,7 @@ Issues = "https://github.com/draconis-engineering/durapy/issues"
 target-version = "py311"
 
 [tool.setuptools]
-package-dir = {"" = "src"}
+package-dir = { "" = "src" }
 include-package-data = true
 
 [tool.setuptools.packages.find]
