@@ -1,9 +1,9 @@
 """DuraPy package entrypoint."""
 
 from . import (
-    uniCLI,
     unibio,
     unichem,
+    uniCLI,
     unicogni,
     unicrypto,
     unimath,
@@ -38,4 +38,4 @@ __all__ = [
     "units",
 ]
 
-__version__ = "1.0.1.0"
+__version__ = "1.0.1.1"
