@@ -20,13 +20,13 @@ F_4, F_3, F_2, F_1, F0, F1, F2, F3, F4 = (
 NUMDIM = Dimension((F0, F0, F0, F0, F0, F0, F0))
 
 NUMERICAL = Unit("NUM", NUMDIM)  # N/A
-METER = Unit("M", Dimension((F1, F0, F0, F0, F0, F0, F0)))  # L
-KILOGRAM = Unit("KG", Dimension((F0, F1, F0, F0, F0, F0, F0)))  # M
-SECOND = Unit("S", Dimension((F0, F0, F1, F0, F0, F0, F0)))  # T
-AMPERE = Unit("A", Dimension((F0, F0, F0, F1, F0, F0, F0)))  # I
-KELVIN = Unit("K", Dimension((F0, F0, F0, F0, F1, F0, F0)))  # Θ
-MOLE = Unit("MOL", Dimension((F0, F0, F0, F0, F0, F1, F0)))  # N
-CANDELA = Unit("CD", Dimension((F0, F0, F0, F0, F0, F0, F1)))  # J
+METER = Unit("M", Dimension((F1, F0, F0, F0, F0, F0, F0)), scale=1)  # L
+KILOGRAM = Unit("KG", Dimension((F0, F1, F0, F0, F0, F0, F0)), scale=1)  # M
+SECOND = Unit("S", Dimension((F0, F0, F1, F0, F0, F0, F0)), scale=1)  # T
+AMPERE = Unit("A", Dimension((F0, F0, F0, F1, F0, F0, F0)), scale=1)  # I
+KELVIN = Unit("K", Dimension((F0, F0, F0, F0, F1, F0, F0)), scale=1)  # Θ
+MOLE = Unit("MOL", Dimension((F0, F0, F0, F0, F0, F1, F0)), scale=1)  # N
+CANDELA = Unit("CD", Dimension((F0, F0, F0, F0, F0, F0, F1)), scale=1)  # J
 
 PASCAL = Unit("Pa", Dimension((F_1, F1, F_2, F0, F0, F0, F0)))  # M / (L * T^2)
 PSI = Unit("psi", Dimension((F_1, F1, F_2, F0, F0, F0, F0)))  # M / (L * T^2)
@@ -55,5 +55,6 @@ HERTZ = Unit("Hz", Dimension((F0, F0, F_1, F0, F0, F0, F0)))  # 1 / T
 RADIAN = Unit("rad", NUMDIM, scale=1)
 DEGREE = Unit("deg", NUMDIM, scale=0.01745329251)
 
+DECIBEL = Unit("dB", NUMDIM, scale=1)
 # Derived units
 MPS = METER / SECOND  # L / T

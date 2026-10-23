@@ -3,8 +3,8 @@
 import math
 
 from ..shared.constants import C
-from ..shared.numval_types import Quantity
-from ..shared.units import JOULE, NUMERICAL
+from ..shared.numval_types import Dimension, Quantity, Unit
+from ..shared.units import F0, F_1, HERTZ, JOULE, NUMERICAL, SECOND
 
 
 def radioactive_decay(
@@ -14,23 +14,23 @@ def radioactive_decay(
     return Quantity(initial_quantity * math.exp(-decay_const * time), NUMERICAL)
 
 
-def half_life(decay_const: float) -> float:
+def half_life(decay_const: float) -> Quantity:
     """Returns the half-life of a radioactive substance based on its decay constant."""
     if decay_const == 0:
         raise ValueError("decay_const cannot be zero")
-    return math.log(2) / decay_const
+    return Quantity(math.log(2) / decay_const, SECOND)
 
 
-def activity(quantity: float, decay_const: float) -> float:
+def activity(quantity: float, decay_const: float) -> Quantity:
     """Returns the activity of a radioactive substance based on its quantity and decay constant."""
-    return decay_const * quantity
+    return Quantity(decay_const * quantity, HERTZ)
 
 
-def mean_lifetime(decay_const: float) -> float:
+def mean_lifetime(decay_const: float) -> Quantity:
     """Returns the mean lifetime of a radioactive substance based on its decay constant."""
     if decay_const == 0:
         raise ValueError("decay_const cannot be zero")
-    return 1 / decay_const
+    return Quantity(1 / decay_const, SECOND)
 
 
 def binding_energy(mass_defect: float) -> Quantity:
@@ -43,16 +43,16 @@ def mass_defect(proton_mass: float, neutron_mass: float, nucleus_mass: float) ->
     return (proton_mass + neutron_mass) - nucleus_mass
 
 
-def decay_constant(half_life: float) -> float:
+def decay_constant(half_life: float) -> Quantity:
     """Returns the decay constant of a radioactive substance based on its half-life."""
     if half_life == 0:
         raise ValueError("half_life cannot be zero")
-    return math.log(2) / half_life
+    return Quantity(math.log(2) / half_life, Unit("1/S", Dimension((F0, F0, F_1, F0, F0, F0, F0))))
 
 
-def decay_rate(initial_quantity: float, decay_const: float) -> float:
+def decay_rate(initial_quantity: float, decay_const: float) -> Quantity:
     """Returns the decay rate of a radioactive substance based on its initial quantity and decay constant."""
-    return decay_const * initial_quantity
+    return Quantity(decay_const * initial_quantity, HERTZ)
 
 
 def decay_energy(mass_defect: float) -> Quantity:

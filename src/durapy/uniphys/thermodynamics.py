@@ -5,7 +5,7 @@ from ..shared.numval_types import Quantity
 from ..shared.units import JOULE, KELVIN, PASCAL
 
 
-def work(force: float, distance: float) -> float:
+def work(force: float, distance: float) -> Quantity:
     """
     Calculate the work done given force and distance.
 
@@ -16,9 +16,9 @@ def work(force: float, distance: float) -> float:
 
     Returns
     -------
-        float: The work done (in joules).
+        Quantity: The work done (in joules).
     """
-    return force * distance
+    return Quantity(force * distance, JOULE)
 
 
 def entropy(heat: float, temperature: float) -> Quantity:
@@ -40,7 +40,7 @@ def entropy(heat: float, temperature: float) -> Quantity:
     return Quantity(heat / temperature, JOULE / KELVIN)
 
 
-def heat_capacity(mass: float, specific_heat: float) -> float:
+def heat_capacity(mass: float, specific_heat: float) -> Quantity:
     """
     Calculates the heat capacity of a substance given its mass and specific heat.
 
@@ -51,9 +51,9 @@ def heat_capacity(mass: float, specific_heat: float) -> float:
 
     Returns
     -------
-        float: The heat capacity (in joules per kelvin).
+        Quantity: The heat capacity (in joules per kelvin).
     """
-    return mass * specific_heat
+    return Quantity(mass * specific_heat, JOULE / KELVIN)
 
 
 def ideal_gas_law(
@@ -97,7 +97,7 @@ def ideal_gas_law(
     return P, V, n, T
 
 
-def internal_energy(heat: float, work: float) -> float:
+def internal_energy(heat: float, work: float) -> Quantity:
     """
     Calculate the change in internal energy given heat and work.
 
@@ -108,12 +108,12 @@ def internal_energy(heat: float, work: float) -> float:
 
     Returns
     -------
-        float: The change in internal energy (in joules).
+        Quantity: The change in internal energy (in joules).
     """
-    return heat + work
+    return Quantity(heat + work, JOULE)
 
 
-def gibbs_free_energy(enthalpy: float, entropy: float, temperature: float) -> float:
+def gibbs_free_energy(enthalpy: float, entropy: float, temperature: float) -> Quantity:
     """
     Calculate the Gibbs free energy given enthalpy, entropy, and temperature.
 
@@ -125,9 +125,9 @@ def gibbs_free_energy(enthalpy: float, entropy: float, temperature: float) -> fl
 
     Returns
     -------
-        float: The Gibbs free energy (in joules).
+        Quantity: The Gibbs free energy (in joules).
     """
-    return enthalpy - temperature * entropy
+    return Quantity(enthalpy - temperature * entropy, JOULE)
 
 
 def carnot_efficiency(temperature_hot: float, temperature_cold: float) -> float:
@@ -154,7 +154,7 @@ def clausius_clapeyron(
     latent_heat: float,
     specific_volume_liquid: float,
     specific_volume_vapor: float,
-) -> float:
+) -> Quantity:
     """
     Calculate the slope of the phase boundary using the Clausius-Clapeyron equation.
 
@@ -167,16 +167,18 @@ def clausius_clapeyron(
 
     Returns
     -------
-        float: The slope of the phase boundary (in pascals per kelvin).
+        Quantity: The slope of the phase boundary (in pascals per kelvin).
     """
-    return (latent_heat) / (
-        temperature * (specific_volume_vapor - specific_volume_liquid)
+    return Quantity(
+        (latent_heat)
+        / (temperature * (specific_volume_vapor - specific_volume_liquid)),
+        PASCAL / KELVIN,
     )
 
 
 def helmholtz_free_energy(
     internal_energy: float, temperature: float, entropy: float
-) -> float:
+) -> Quantity:
     """
     Calculate the Helmholtz free energy given internal energy, temperature, and entropy.
 
@@ -188,9 +190,9 @@ def helmholtz_free_energy(
 
     Returns
     -------
-        float: The Helmholtz free energy (in joules).
+        Quantity: The Helmholtz free energy (in joules).
     """
-    return internal_energy - temperature * entropy
+    return Quantity(internal_energy - temperature * entropy, JOULE)
 
 
 def van_der_waals_pressure(

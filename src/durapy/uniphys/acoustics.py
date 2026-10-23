@@ -3,43 +3,47 @@
 import math
 
 from ..shared.constants import GAS_CONSTANT, MACH
+from ..shared.numval_types import Quantity
+from ..shared.units import DECIBEL, HERTZ, METER, SECOND
 
 
-def sound_speed(temp: float, γ: float = 1.4, molar_mass: float = 0.02897) -> float:
+def sound_speed(temp: float, γ: float = 1.4, molar_mass: float = 0.02897) -> Quantity:
     """Calculate the speed of sound in a gas given the temperature, adiabatic index (gamma), and molar mass."""
-    return math.sqrt((γ * GAS_CONSTANT.value * temp) / molar_mass)
+    return Quantity(math.sqrt((γ * GAS_CONSTANT * temp) / molar_mass), METER / SECOND)
 
 
-def sound_pressure_level(pressure: float, reference_pressure: float = 20e-6) -> float:
+def sound_pressure_level(
+    pressure: float, reference_pressure: float = 20e-6
+) -> Quantity:
     """Calculate the sound pressure level (SPL) in decibels (dB) given the pressure and reference pressure."""
-    return 20 * math.log10(pressure / reference_pressure)
+    return Quantity(20 * math.log10(pressure / reference_pressure), DECIBEL)
 
 
-def intensity_level(intensity: float, reference_intensity: float = 1e-12) -> float:
+def intensity_level(intensity: float, reference_intensity: float = 1e-12) -> Quantity:
     """Calculate the intensity level in decibels (dB) given the intensity and reference intensity."""
-    return 10 * math.log10(intensity / reference_intensity)
+    return Quantity(10 * math.log10(intensity / reference_intensity), DECIBEL)
 
 
 def frequency_from_wavelength(
     wavelength: float, speed_of_sound: float = MACH.value
-) -> float:
+) -> Quantity:
     """Calculate the frequency of a sound wave given its wavelength and the speed of sound."""
-    return speed_of_sound / wavelength
+    return Quantity(speed_of_sound / wavelength, HERTZ)
 
 
-def wavelength_from_frequency(freq: float, speed_of_sound: float = MACH.value) -> float:
-    """Calculate the wavelength of a sound wave given its frequency and the speed of sound."""
-    return speed_of_sound / freq
+def wavelength_from_frequency(freq: float, speed_of_sound: float = MACH.value) -> Quantity:
+    """Calculate the wavelength of a sound wave given its frequency and speed of sound."""
+    return Quantity(speed_of_sound / freq, METER)
 
 
-def decibel_to_intensity(dB: float, reference_intensity: float = 1e-12) -> float:
+def decibel_to_intensity(decibel: float, reference_intensity: float = 1e-12) -> float:
     """Convert a sound level in decibels (dB) to intensity given a reference intensity."""
-    return reference_intensity * (10 ** (dB / 10))
+    return reference_intensity * (10 ** (decibel / 10))
 
 
-def decibel_to_pressure(dB: float, reference_pressure: float = 20e-6) -> float:
+def decibel_to_pressure(decibel: float, reference_pressure: float = 20e-6) -> float:
     """Convert a sound level in decibels (dB) to pressure given a reference pressure."""
-    return reference_pressure * (10 ** (dB / 20))
+    return reference_pressure * (10 ** (decibel / 20))
 
 
 def intensity_to_decibel(intensity: float, reference_intensity: float = 1e-12) -> float:
