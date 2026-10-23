@@ -2,7 +2,7 @@
 
 from ..shared.constants import GAS_CONSTANT
 from ..shared.numval_types import Quantity
-from ..shared.units import JOULE, KELVIN, MOLE, PASCAL
+from ..shared.units import JOULE, KELVIN, PASCAL
 
 
 def work(force: float, distance: float) -> float:
@@ -56,21 +56,45 @@ def heat_capacity(mass: float, specific_heat: float) -> float:
     return mass * specific_heat
 
 
-def ideal_gas_law(pressure: float, volume: float, temperature: float) -> Quantity:
-    """
-    Calculate the number of moles of an ideal gas given pressure, volume, and temperature.
+def ideal_gas_law(
+    *,
+    P: float | None = None,
+    V: float | None = None,
+    n: float | None = None,
+    T: float | None = None,
+    R: float = GAS_CONSTANT.value,
+) -> tuple[float, float, float, float]:
+    """Solve ``P·V = n·R·T`` for the single missing term.
 
-    Parameters
-    ----------
-        pressure (float): The pressure of the gas (in pascals).
-        volume (float): The volume of the gas (in cubic meters).
-        temperature (float): The absolute temperature of the gas (in kelvin).
+    Provide exactly three of ``P`` (Pa), ``V`` (m³), ``n`` (mol) and ``T`` (K).
+    Returns the complete ``(P, V, n, T)`` tuple in SI units.
 
-    Returns
-    -------
-        float: The number of moles of the gas.
+    This is the canonical implementation; ``unisky`` and ``unichem`` provide
+    thin wrappers around it with domain-specific return types.
     """
-    return Quantity((pressure * volume) / (GAS_CONSTANT * temperature), MOLE)
+    vals: dict[str, float | None] = {"P": P, "V": V, "n": n, "T": T}
+    missing = [key for key, value in vals.items() if value is None]
+    if len(missing) != 1:
+        raise ValueError(
+            "Provide exactly three of P, V, n, T; missing: "
+            + (", ".join(missing) or "none")
+        )
+
+    target = missing[0]
+    if target == "P":
+        assert V is not None and n is not None and T is not None
+        P = n * R * T / V
+    elif target == "V":
+        assert P is not None and n is not None and T is not None
+        V = n * R * T / P
+    elif target == "n":
+        assert P is not None and V is not None and T is not None
+        n = P * V / (R * T)
+    else:
+        assert P is not None and V is not None and n is not None
+        T = P * V / (n * R)
+
+    return P, V, n, T
 
 
 def internal_energy(heat: float, work: float) -> float:

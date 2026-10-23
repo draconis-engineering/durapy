@@ -11,7 +11,7 @@ import math
 import re as regex
 from functools import reduce
 
-from ..shared.constants import GAS_CONSTANT
+from ..uniphys.thermodynamics import ideal_gas_law as _ideal_gas_law
 from .elements import ELEMENTS_BY_SYMBOL, atomic_mass
 from .exceptions import (
     ChemistryError,
@@ -25,7 +25,6 @@ from .exceptions import (
 _HYDRATE_SEPARATORS = regex.compile(r"[·⋅*.．]")
 _TRAILING_STATE = regex.compile(r"\((?:aq|s|l|g)\)$", regex.IGNORECASE)
 _LEADING_COEFFICIENT = regex.compile(r"^\d+")
-_R = GAS_CONSTANT.value  # 8.314462618 J / (mol · K)
 
 # Valid equation separator arrows
 _VALID_ARROWS = {"->", "→", "=>", "="}
@@ -346,19 +345,7 @@ def ideal_gas_law(
         if k != target and v is not None and v <= 0:
             raise ChemistryError(f"{k} must be positive when solving for {target}")
 
-    if target == "P":
-        assert T and n and V
-        P = n * _R * T / V
-    elif target == "V":
-        assert T and n and P
-        V = n * _R * T / P
-    elif target == "n":
-        assert T and V and P
-        n = P * V / (_R * T)
-    else:
-        assert V and n and P
-        T = P * V / (n * _R)
-    return (P, V, n, T)
+    return _ideal_gas_law(P=P, V=V, n=n, T=T)
 
 
 # --------------------------------------------------------------------------- #
