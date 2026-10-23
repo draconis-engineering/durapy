@@ -27,6 +27,9 @@ _TRAILING_STATE = regex.compile(r"\((?:aq|s|l|g)\)$", regex.IGNORECASE)
 _LEADING_COEFFICIENT = regex.compile(r"^\d+")
 _R = GAS_CONSTANT.value  # 8.314462618 J / (mol · K)
 
+# Valid equation separator arrows
+_VALID_ARROWS = {"->", "→", "=>", "="}
+
 # --------------------------------------------------------------------------- #
 # Formula parsing
 # --------------------------------------------------------------------------- #
@@ -213,7 +216,7 @@ def _format_formula(counts: dict[str, int]) -> str:
 def _split_equation(equation: str) -> tuple[list[str], list[str]]:
     """Split an equation string into reactant and product species lists."""
 
-    for arrow in ("->", "→", "=>", "="):
+    for arrow in _VALID_ARROWS:
         if arrow in equation:
             l, _, r = equation.partition(arrow)
             break
@@ -402,6 +405,8 @@ def dilution(
         if k != missing[0] and v is not None and v < 0:
             raise SolutionError(f"{k} cannot be negative")
 
+    # These assert-statements are only used to satisfy BPR since
+    # only one variable can possibly be missing at the same time.
     if missing[0] == "c1":
         assert c2 and v2 and v1
         c1 = c2 * v2 / v1

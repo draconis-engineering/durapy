@@ -47,9 +47,9 @@ def console_confirm(
             .lower()
             .strip()
         )
-        if user_input in ["y", "ye", "yes"]:
+        if user_input in {"y", "ye", "yes"}:
             return True
-        elif user_input in ["n", "no"]:
+        elif user_input in {"n", "no"}:
             return False
         else:
             print(

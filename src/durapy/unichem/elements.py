@@ -216,7 +216,9 @@ def element(query: int | str) -> Element:
     UnknownElementError
         If no element matches ``query``.
     """
-    if isinstance(query, bool):  # bool is a subclass of int; reject it explicitly
+
+    # bool is a subclass of int; reject it explicitly
+    if isinstance(query, bool):
         raise UnknownElementError("Element query must be an int or str, not bool")
     if isinstance(query, int):
         try:
