@@ -6,7 +6,6 @@ import pytest
 
 from durapy import unichem
 
-
 # --------------------------------------------------------------------------- #
 # Elements
 # --------------------------------------------------------------------------- #
@@ -24,7 +23,9 @@ def test_element_lookup_by_number_symbol_and_name():
 
 def test_element_table_is_complete_and_reversible():
     assert len(unichem.ELEMENTS) == 118
-    assert [element.atomic_number for element in unichem.ELEMENTS] == list(range(1, 119))
+    assert [element.atomic_number for element in unichem.ELEMENTS] == list(
+        range(1, 119)
+    )
     for element in unichem.ELEMENTS:
         assert unichem.ELEMENTS_BY_SYMBOL[element.symbol] is element
         assert unichem.ELEMENTS_BY_NUMBER[element.atomic_number] is element
@@ -45,7 +46,9 @@ def test_element_grouping():
     noble_gases = [element.symbol for element in unichem.elements_by_group(18)]
     assert noble_gases[0] == "He" and noble_gases[-1] == "Og"
     assert len(unichem.elements_by_period(1)) == 2
-    assert "Fe" in [element.symbol for element in unichem.elements_by_category(unichem.TRANSITION)]
+    assert "Fe" in [
+        element.symbol for element in unichem.elements_by_category(unichem.TRANSITION)
+    ]
     with pytest.raises(unichem.UnknownElementError):
         unichem.elements_by_category("plasma")
 
@@ -153,8 +156,7 @@ def test_balance_equation_is_conserved(equation):
 def test_balance_equation_specific_results():
     assert unichem.balance_equation("H2 + O2 -> H2O") == "2 H2 + O2 -> 2 H2O"
     assert (
-        unichem.balance_equation("CH4 + O2 -> CO2 + H2O")
-        == "CH4 + 2 O2 -> CO2 + 2 H2O"
+        unichem.balance_equation("CH4 + O2 -> CO2 + H2O") == "CH4 + 2 O2 -> CO2 + 2 H2O"
     )
     assert unichem.balance_equation("Fe + O2 -> Fe2O3") == "4 Fe + 3 O2 -> 2 Fe2O3"
 

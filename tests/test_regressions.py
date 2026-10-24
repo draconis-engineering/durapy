@@ -140,11 +140,11 @@ def test_quantity_comparison_across_compatible_units():
 
 def test_quantity_incompatible_units_raise():
     with pytest.raises(UnitError):
-        Quantity(1, METER) + Quantity(1, SECOND)
+        _ = Quantity(1, METER) + Quantity(1, SECOND)
     with pytest.raises(UnitError):
         Quantity(1, METER).to(SECOND)
     with pytest.raises(UnitError):
-        Quantity(1, METER) < Quantity(1, SECOND)
+        _ = Quantity(1, METER) < Quantity(1, SECOND)
 
 
 # --------------------------------------------------------------------------- #

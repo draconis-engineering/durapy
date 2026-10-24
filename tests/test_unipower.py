@@ -6,12 +6,12 @@ import math
 import pytest
 
 from durapy.unipower import (
+    IC,
     Capacitor,
     Circuit,
     CircuitError,
     Diode,
     Fuse,
-    IC,
     Inductor,
     Oscillator,
     Potentiometer,
@@ -49,7 +49,6 @@ from durapy.unipower import (
 )
 from durapy.unipower.types.circuit import Element
 
-
 # --------------------------------------------------------------------------- #
 # Component models
 # --------------------------------------------------------------------------- #
@@ -61,7 +60,9 @@ def test_capacitor_physics():
     assert cap.energy(5.0).value == pytest.approx(25.0)
     assert cap.time_constant(10.0).value == pytest.approx(20.0)
     assert cap.reactance(1000.0).value == pytest.approx(1 / (2 * math.pi * 1000 * 2))
-    assert cap.impedance(1000.0) == pytest.approx(complex(0, -1 / (2 * math.pi * 1000 * 2)))
+    assert cap.impedance(1000.0) == pytest.approx(
+        complex(0, -1 / (2 * math.pi * 1000 * 2))
+    )
     assert cap.is_within_rating(24.0)
     assert not cap.is_within_rating(26.0)
 
@@ -125,7 +126,9 @@ def test_potentiometer_model():
     assert pot.bottom_resistance().value == pytest.approx(5000.0)
     assert pot.top_resistance().value == pytest.approx(5000.0)
     assert pot.wiper_voltage(0.0, 10.0).value == pytest.approx(5.0)
-    assert Potentiometer(10000.0, 0.25).wiper_voltage(0.0, 10.0).value == pytest.approx(2.5)
+    assert Potentiometer(10000.0, 0.25).wiper_voltage(0.0, 10.0).value == pytest.approx(
+        2.5
+    )
     with pytest.raises(ValueError):
         Potentiometer(1000.0, 1.5)
 
