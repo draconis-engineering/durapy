@@ -56,5 +56,3 @@ RADIAN = Unit("rad", NUMDIM, scale=1)
 DEGREE = Unit("deg", NUMDIM, scale=0.01745329251)
 
 DECIBEL = Unit("dB", NUMDIM, scale=1)
-# Derived units
-MPS = METER / SECOND  # L / T

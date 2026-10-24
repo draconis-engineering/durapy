@@ -51,7 +51,7 @@ class Dimension:
 class Unit:
     symbol: str
     dimension: Dimension
-    scale: float = 1.0
+    scale: float = 1
 
     def __neg__(self) -> Unit:
         return Unit(

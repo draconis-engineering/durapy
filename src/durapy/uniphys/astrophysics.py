@@ -4,7 +4,7 @@ import math
 
 from ..shared.constants import EARTH_M, EARTH_R, HUBBLE, PI, UNI_G, C
 from ..shared.numval_types import Quantity
-from ..shared.units import METER, MPS, NEWTON, SECOND, G
+from ..shared.units import METER, NEWTON, SECOND, G
 
 
 def schwarzschild_radius(m: float) -> Quantity:
@@ -31,7 +31,7 @@ def orbital_period(semi_major_axis: float, M: float, m: float) -> Quantity:
 def orbital_velocity(
     orbital_radius: float = EARTH_R.value, mass: float = EARTH_M.value
 ) -> Quantity:
-    return Quantity(math.sqrt(UNI_G.value * mass / orbital_radius), MPS)
+    return Quantity(math.sqrt(UNI_G.value * mass / orbital_radius), METER / SECOND)
 
 
 def escape_velocity(
@@ -39,7 +39,9 @@ def escape_velocity(
 ) -> Quantity:
     if radius <= 0 or mass <= 0:
         raise ValueError("Radius and mass must be greater than zero")
-    return Quantity(math.sqrt(2) * float(orbital_velocity(radius, mass)), MPS)
+    return Quantity(
+        math.sqrt(2) * float(orbital_velocity(radius, mass)), METER / SECOND
+    )
 
 
 def newtonian_gravitation(mass1: float, mass2: float, distance: float) -> Quantity:
@@ -64,12 +66,12 @@ def tsiolkovsky_rocket_equation(
         raise ValueError("Exhaust velocity is relativistic")
 
     if final_mass > initial_mass:
-        return Quantity(0.0, MPS)
+        return Quantity(0.0, METER / SECOND)
 
-    return Quantity((exhaust_vel * math.log(initial_mass / final_mass)), MPS)
+    return Quantity((exhaust_vel * math.log(initial_mass / final_mass)), METER / SECOND)
 
 
 def hubbles_law(distance: float) -> Quantity:
     if distance <= 0:
         raise ValueError("Distance must be greater than zero")
-    return Quantity(float(HUBBLE) * distance, MPS)
+    return Quantity(float(HUBBLE) * distance, METER / SECOND)

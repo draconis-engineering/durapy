@@ -1,7 +1,7 @@
 """
 `DuraPy` `UniSky` module.
 
-This module provides a collection of functions and classes for performing calculations and simulations related to flight dynamics, aerodynamics, and propulsion.
+This module provides resources for performing calculations and simulations related to flight dynamics, aerodynamics, and propulsion.
 """
 
 from .unisky import (
