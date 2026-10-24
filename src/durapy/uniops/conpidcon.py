@@ -18,9 +18,11 @@ class ContinuousPIDController:
         self.prev_error: float = 0
         self.prev_time: float = time.time()
 
-    def update(self, measured_value: float) -> float:
+    def update(self, measured_value: float, dt: float | None = None) -> float:
         now = time.time()
-        dt = now - self.prev_time
+
+        if not dt:
+            dt = now - self.prev_time
 
         error = self.setpoint - measured_value
 
