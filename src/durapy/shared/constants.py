@@ -36,9 +36,6 @@ from .units import (
     MOLE as _MOLE,
 )
 from .units import (
-    MPS as _MPS,
-)
-from .units import (
     NEWTON as _NEWTON,
 )
 from .units import (
@@ -128,8 +125,8 @@ MARS_G = Constant(Quantity(3.71, _G), "Surface Gravity of Mars")
 SUN_G = Constant(Quantity(274, _G), "Surface Gravity of the Sun")
 
 # Speed Constants - L / T
-C = Constant(Quantity(299792458, _MPS), "Speed of Light")
-MACH = Constant(Quantity(343, _MPS), "Speed of Sound at sea level")
+C = Constant(Quantity(299792458, _METER / _SECOND), "Speed of Light")
+MACH = Constant(Quantity(343, _METER / _SECOND), "Speed of Sound at sea level")
 
 # Energy Constants
 PLANCK = Constant(Quantity(6.62607015e-34, _JOULE * _SECOND), "Planck's Constant")
@@ -180,7 +177,8 @@ RYDBERG = Constant(
     Quantity(10973731.56816, _METER**-1), "Rydberg Constant"
 )  # Limiting value of the highest wavenumber of any photon that can be emitted from an atom.
 HUBBLE = Constant(
-    Quantity(70000, _MPS) / Quantity(3.085677581e22, _METER), "Hubble Constant"
+    Quantity(70000, _METER / _SECOND) / Quantity(3.085677581e22, _METER),
+    "Hubble Constant",
 )  # ~70 km/s/Mpc = 2.2685e-18 s^-1 ; value kept as Quantity(70km/s / Mpc) for historical compatibility
 WIEN = Constant(
     Quantity(2.897771955e-03, _METER * _KELVIN), "Wien Displacement Constant"

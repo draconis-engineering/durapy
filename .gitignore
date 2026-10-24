@@ -7,3 +7,4 @@ venv/
 *.egg-info/
 *.pyc
 .python-version
+.improve.md
