@@ -30,6 +30,11 @@ def binary_decode(binary: str, *, is_space_separated: bool = True) -> str:
 
 def ceasar_encode(plaintext: str, key: int) -> str:
     """Ceasar cipher encoding"""
+
+    # Explicitly deny bool key (subclass of integer)
+    if not isinstance(key, int) or isinstance(key, bool):
+        raise TypeError("Railfence key must be an integer")
+
     cipher = ""
     for char in plaintext:
         if char.isalpha():
@@ -44,6 +49,11 @@ def ceasar_encode(plaintext: str, key: int) -> str:
 
 def ceasar_decode(cipher: str, key: int) -> str:
     """Ceasar cipher decoding"""
+
+    # Explicitly deny bool key (subclass of integer)
+    if not isinstance(key, int) or isinstance(key, bool):
+        raise TypeError("Railfence key must be an integer")
+
     plaintext = ""
     for char in cipher:
         if char.isalpha():
@@ -105,7 +115,9 @@ def vigenere_decode(cipher: str, key: str) -> str:
 def railfence_encode(plaintext: str, key: int) -> str:
     """Railfence cipher encoding"""
 
-    key = int(key)
+    # Explicitly deny bool key (subclass of integer)
+    if not isinstance(key, int) or isinstance(key, bool):
+        raise TypeError("Railfence key must be an integer")
 
     if key <= 1:
         raise ValueError("Railfence key must be >= 2")
@@ -129,7 +141,9 @@ def railfence_encode(plaintext: str, key: int) -> str:
 def railfence_decode(cipher: str, key: int) -> str:
     """Railfence cipher decoding"""
 
-    key = int(key)
+    # Explicitly deny bool key (subclass of integer)
+    if not isinstance(key, int) or isinstance(key, bool):
+        raise TypeError("Railfence key must be an integer")
 
     if key <= 1:
         raise ValueError("Railfence key must be >= 2")

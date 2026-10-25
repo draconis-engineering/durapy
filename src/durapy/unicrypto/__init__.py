@@ -1,7 +1,7 @@
 """
 The `DuraPy` `UniCrypto` module.
 
-UniCrypto includes a range of cryptography methods, for both encryption and decryption.
+UniCrypto includes a range of cryptography methods, for encryption/decryption, encoding/decoding and hashing.
 """
 
 from .unicrypto import (
