@@ -3,7 +3,6 @@
 from . import (
     algebra,
     geometry,
-    linalg,
     num_theory,
     trigonometry,
 )
@@ -25,7 +24,6 @@ __all__ = [
     "Spherical",
     "algebra",
     "geometry",
-    "linalg",
     "num_theory",
     "trigonometry",
 ]
