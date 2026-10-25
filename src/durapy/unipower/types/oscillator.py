@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from ...shared.numval_types import Quantity
 from ...shared.units import HERTZ, SECOND
 
-WAVEFORMS = ("sine", "square", "triangle", "sawtooth")
+WAVEFORMS = {"sine", "square", "triangle", "sawtooth"}
 
 
 @dataclass(frozen=True)
