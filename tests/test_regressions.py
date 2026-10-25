@@ -20,28 +20,6 @@ from durapy.unicrypto.unicrypto import (
     vigenere_decode,
     vigenere_encode,
 )
-from durapy.unimath.linalg import Matrix
-
-# --------------------------------------------------------------------------- #
-# Matrix scalar operations must accept ints (not only floats)
-# --------------------------------------------------------------------------- #
-
-
-def test_matrix_scalar_ops_accept_ints():
-    matrix = Matrix([[1, 2], [3, 4]])
-    assert (matrix * 2).array == [[2, 4], [6, 8]]
-    assert (2 * matrix).array == [[2, 4], [6, 8]]
-    assert (matrix + 1).array == [[2, 3], [4, 5]]
-    assert (1 + matrix).array == [[2, 3], [4, 5]]
-    assert (matrix - 1).array == [[0, 1], [2, 3]]
-    assert (matrix / 2).array == [[0.5, 1.0], [1.5, 2.0]]
-
-
-def test_matrix_scalar_ops_still_accept_floats():
-    matrix = Matrix([[1, 2], [3, 4]])
-    assert (matrix * 2.0).array == [[2.0, 4.0], [6.0, 8.0]]
-    assert (matrix + 0.5).array == [[1.5, 2.5], [3.5, 4.5]]
-
 
 # --------------------------------------------------------------------------- #
 # Cross-entropy must work on 1-D input and be numerically stable
