@@ -25,13 +25,15 @@ def intensity_level(intensity: float, reference_intensity: float = 1e-12) -> Qua
 
 
 def frequency_from_wavelength(
-    wavelength: float, speed_of_sound: float = MACH.value
+    wavelength: float, speed_of_sound: float | Quantity = MACH
 ) -> Quantity:
     """Calculate the frequency of a sound wave given its wavelength and the speed of sound."""
     return Quantity(speed_of_sound / wavelength, HERTZ)
 
 
-def wavelength_from_frequency(freq: float, speed_of_sound: float = MACH.value) -> Quantity:
+def wavelength_from_frequency(
+    freq: float, speed_of_sound: float | Quantity = MACH
+) -> Quantity:
     """Calculate the wavelength of a sound wave given its frequency and speed of sound."""
     return Quantity(speed_of_sound / freq, METER)
 

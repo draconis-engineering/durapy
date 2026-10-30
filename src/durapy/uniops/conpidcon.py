@@ -1,40 +1,52 @@
-"""UniCon Continuous PID Controller algorithm"""
+"""UniOps Continuous PID Controller algorithm"""
 
 import time
 
 
 class ContinuousPIDController:
-    """A Continuous PID Controller algorithm"""
+    def __init__(self, kp, ki, kd, setpoint=0.0, output_limits=(None, None)):
+        self.kp = kp
+        self.ki = ki
+        self.kd = kd
+        self.setpoint = setpoint
+        self.min_output, self.max_output = output_limits
+        self._integral = 0.0
+        self._last_error = None
+        self._last_time = None
 
-    def __init__(
-        self, kp: float = 0, ki: float = 0, kd: float = 0, setpoint: int = 0
-    ) -> None:
-        self.kp: float = kp
-        self.ki: float = ki
-        self.kd: float = kd
-        self.setpoint: int = setpoint
+    def reset(self):
+        self._integral = 0.0
+        self._last_error = None
+        self._last_time = None
 
-        self.integral: float = 0
-        self.prev_error: float = 0
-        self.prev_time: float = time.time()
+    def update(self, current_value, current_time=None):
+        now = current_time if current_time is not None else time.time()
+        if self._last_time is None:
+            self._last_time = now
+            self._last_error = self.setpoint - current_value
+            return 0.0
 
-    def update(self, measured_value: float, dt: float | None = None) -> float:
-        now = time.time()
+        dt = now - self._last_time
+        if dt <= 0.0:
+            dt = 1e-6
 
-        if not dt:
-            dt = now - self.prev_time
+        error = self.setpoint - current_value
+        p_term = self.kp * error
+        self._integral += error * dt
+        i_term = self.ki * self._integral
+        derivative = (error - self._last_error) / dt
+        d_term = self.kd * derivative
+        output = p_term + i_term + d_term
 
-        error = self.setpoint - measured_value
+        if self.max_output is not None and output > self.max_output:
+            if self.ki != 0:
+                self._integral -= error * dt
+            output = self.max_output
+        elif self.min_output is not None and output < self.min_output:
+            if self.ki != 0:
+                self._integral -= error * dt
+            output = self.min_output
 
-        p = self.kp * error
-
-        self.integral += error * dt
-        i = self.ki * self.integral
-
-        derivative = (error - self.prev_error) / dt if dt > 0 else 0
-        d = self.kd * derivative
-
-        self.prev_error = error
-        self.prev_time = now
-
-        return p + i + d
+        self._last_error = error
+        self._last_time = now
+        return output
