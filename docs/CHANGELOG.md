@@ -1,5 +1,36 @@
 # DURAPY CHANGELOG
 
+## 1.0.1.3 — 30.10.2026
+
+### Security
+
+- Replaced `sympy.sympify` on user-supplied expressions with a restricted,
+  whitelisted parser (`unimath._parsing.parse_expression`), closing an
+  arbitrary-code-execution hole in `algebra.derivative` and
+  `trigonometry.tangent_formula`.
+- Removed the `shell=True` subprocess call from `uniCLI.clear_terminal`; it now
+  uses Rich's console clearing.
+
+### Changed
+
+- Removed the in-tree `unimath.linalg` module; use NumPy or DracoLIX for linear
+  algebra. Examples and docs were updated accordingly.
+- Physics helpers consolidated into `uniphys`; `unisky` keeps its domain API.
+- Many functions now return `Quantity` objects.
+- Switched the project license to GPL-3.0.
+
+### Added
+
+- Bernoulli, perfect-gas and rocket-thrust equations.
+- New landing-page README, expanded runnable examples, and a pytest suite
+  (136 tests).
+- `SECURITY.md` and `CONTRIBUTING.md`.
+
+### Fixed
+
+- Assorted bug fixes (unit conversions, PID `dt`, numerical value types,
+  naming and typing).
+
 ## 1.0.1.0 — 13.10.2026
 
 ### Added
