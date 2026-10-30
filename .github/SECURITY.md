@@ -4,9 +4,10 @@
 
 Please use the table below to check if the version of the project you are using is currently supported with security updates.
 
-| Version | Supported |
-| ------- | --------- |
-| any     | [x]       |
+| Version | Supported          |
+| ------- | ------------------ |
+| 1.0.x   | :white_check_mark: |
+| < 1.0   | :x:                |
 
 ## Reporting a Vulnerability
 

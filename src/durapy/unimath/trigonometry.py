@@ -4,6 +4,7 @@ import math
 
 import sympy
 
+from ._parsing import parse_expression
 from .geometry import herons_formula
 
 
@@ -98,8 +99,8 @@ def tangent_formula(f_1: str, f_2: str) -> list[str]:
     """Returns the tangent(s) between two functions by finding the points where the derivatives are equal and then calculating the slope of the tangent line at those points."""
 
     x: sympy.Symbol = sympy.symbols("x")
-    f1 = sympy.sympify(f_1)
-    f2 = sympy.sympify(f_2)
+    f1 = parse_expression(f_1)
+    f2 = parse_expression(f_2)
     df1 = sympy.diff(f1, x)
     df2 = sympy.diff(f2, x)
 

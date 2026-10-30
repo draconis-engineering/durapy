@@ -4,6 +4,8 @@ import math
 
 import sympy
 
+from ._parsing import parse_expression
+
 
 def slope(x1: float, y1: float, x2: float, y2: float) -> float:
     """Returns the slope of a line from two points `(x1, y1)` and `(x2, y2)`"""
@@ -20,7 +22,7 @@ def distance(x1: float, y1: float, x2: float, y2: float) -> float:
 def derivative(func: str, x: float | None = None, h: float = 1e-5):
     """Returns `f'(x)` symbolic if `x` is None, else numerical derivative at x."""
     x_sym = sympy.symbols("x")
-    f = sympy.sympify(func)
+    f = parse_expression(func)
 
     if x is None:
         return sympy.diff(f, x_sym)
@@ -139,7 +141,7 @@ def cubic_vertex(
 ) -> list[tuple[float, sympy.Basic]]:
     """Returns the vertices (aka the minimum/maximum points) of a cubic function in the form of `(x, y)`."""
     x = sympy.symbols("x")
-    f = sympy.sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
+    f = a * x**3 + b * x**2 + c * x + d
     dif = sympy.diff(f, x)
     crit_points = sympy.solve(dif, x)
     vertices: list[tuple[float, sympy.Basic]] = []
@@ -166,14 +168,14 @@ def cubic_num_roots(a: float, b: float, c: float, d: float) -> int:
 def cubic_solutions(a: float, b: float, c: float, d: float) -> list[float]:
     """Returns the roots of a cubic function in a tuple."""
     x = sympy.symbols("x")
-    f = sympy.sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
+    f = a * x**3 + b * x**2 + c * x + d
     return sympy.solve(f, x)
 
 
 def cubic_zeros(a: float, b: float, c: float, d: float) -> list[float]:
     """Returns the x-values where the cubic function crosses the x-axis."""
     x = sympy.symbols("x")
-    f = sympy.sympify(f"{a}*x**3 + {b}*x**2 + {c}*x + {d}")
+    f = a * x**3 + b * x**2 + c * x + d
     return sympy.solve(f, x)
 
 

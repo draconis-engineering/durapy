@@ -25,4 +25,4 @@ PYTHONPATH=src python examples/unimath/01_vectors_matrices.py
 
 - Many physics functions now return `Quantity` objects from `durapy.shared.numval_types`. You can access `.value` or convert as needed.
 - `uniphys.thermodynamics.ideal_gas_law` and `uniphys.fluid_dynamics` are the canonical implementations; `unisky` and `unichem` provide thin wrappers.
-- For linear algebra, DuraPy is migrating toward DracoLIX, but the current `unimath.linalg` API still works for most use cases.
+- For linear algebra, use NumPy or the separate [DracoLIX](https://github.com/draconis-engineering/DracoLIX) project; DuraPy no longer ships `unimath.linalg`.

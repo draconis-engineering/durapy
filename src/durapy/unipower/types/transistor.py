@@ -72,6 +72,7 @@ class Transistor:
             and abs(collector_current) > self.max_collector_current
         ):
             return False
-        if self.max_power is not None and abs(vce * collector_current) > self.max_power:
-            return False
-        return True
+        return not (
+            self.max_power is not None
+            and abs(vce * collector_current) > self.max_power
+        )

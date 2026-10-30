@@ -7,3 +7,12 @@ venv/
 *.pyc
 .python-version
 .improve.md
+
+# Caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Build artifacts
+build/
+dist/

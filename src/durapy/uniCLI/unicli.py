@@ -1,9 +1,8 @@
 """`UniCLI` source"""
 
-import os
-import subprocess
 from types import TracebackType
 
+from rich.console import Console as RichConsole
 from rich.progress import Progress, SpinnerColumn, TaskID, TextColumn
 
 from ..shared.color_system import color_text
@@ -11,7 +10,7 @@ from ..shared.color_system import color_text
 
 def clear_terminal() -> None:
     """Clear the terminal screen."""
-    _ = subprocess.run(["cls" if os.name == "nt" else "clear"], shell=True, check=False)
+    RichConsole().clear()
 
 
 def console_msg(

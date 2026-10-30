@@ -187,7 +187,7 @@ def test_percent_yield():
 
 
 def test_ideal_gas_law_solves_each_variable():
-    pressure, volume, amount, temperature = unichem.ideal_gas_law(
+    _pressure, _volume, amount, _temperature = unichem.ideal_gas_law(
         P=101325.0, V=0.022414, T=273.15
     )
     assert amount == pytest.approx(1.0, abs=1e-3)
@@ -216,7 +216,7 @@ def test_molarity_and_dilution():
     assert unichem.molarity(0.5, 1.0) == pytest.approx(0.5)
     assert unichem.moles_from_molarity(0.5, 2.0) == pytest.approx(1.0)
 
-    c1, v1, c2, v2 = unichem.dilution(c1=2.0, c2=0.5, v2=100.0)
+    _c1, v1, _c2, _v2 = unichem.dilution(c1=2.0, c2=0.5, v2=100.0)
     assert v1 == pytest.approx(25.0)
     with pytest.raises(unichem.SolutionError):
         unichem.dilution(c1=2.0, c2=0.5)

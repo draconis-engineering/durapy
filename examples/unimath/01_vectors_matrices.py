@@ -1,22 +1,24 @@
 """DuraPy Examples - UniMath basics"""
 
-from durapy.unimath import linalg, num_theory
-from durapy.shared.constants import PI
+import numpy as np
 
-# Vectors
-v1 = linalg.Vector([1, 2, 3])
-v2 = linalg.Vector([4, 5, 6])
+from durapy.shared.constants import PI
+from durapy.unimath import num_theory
+
+# Vectors (NumPy)
+v1 = np.array([1, 2, 3])
+v2 = np.array([4, 5, 6])
 print("v1 + v2 =", v1 + v2)
-print("v1 . v2 (dot) =", v1 * v2)
+print("v1 . v2 (dot) =", v1 @ v2)
 print("3 * v1 =", 3 * v1)
 
-# Matrices
-A = linalg.Matrix([[1, 2], [3, 4]])
-B = linalg.Matrix([[5, 6], [7, 8]])
+# Matrices (NumPy)
+A = np.array([[1, 2], [3, 4]])
+B = np.array([[5, 6], [7, 8]])
 print("\nA =", A)
 print("A * B =", A @ B)
 print("A^T =", A.T)
-print("det(A) =", A.det)
+print("det(A) =", np.linalg.det(A))
 
 # Constants / number theory
 print("\npi =", PI)

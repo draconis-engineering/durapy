@@ -37,13 +37,12 @@ pip install -e .
 ### Usage
 
 ```python
-from durapy.unimath import linalg
+from durapy.unimath import algebra
 from durapy.uniphys import mechanics, thermodynamics
 from durapy.unisky import mach_number, reynolds_number
 
-# Linear algebra
-A = linalg.Matrix([[1, 2], [3, 4]])
-print("det(A) =", A.det)
+# Algebra
+print("Slope:", algebra.slope(0, 0, 2, 4))
 
 # Physics (returns Quantity objects)
 print("Torque:", mechanics.torque(0.3, 50))
@@ -62,7 +61,7 @@ More examples can be found in [`examples/`](examples/).
 | Module | Purpose |
 | --- | --- |
 | `durapy.shared` | Core primitives: `Quantity`, `Unit`, `Dimension`, `Constant`, color systems, exceptions |
-| `durapy.unimath` | Linear algebra (with DracoLIX backend), algebra, geometry, coordinate systems, number theory, trigonometry |
+| `durapy.unimath` | Algebra, geometry, coordinate systems, number theory, trigonometry |
 | `durapy.uniphys` | Physics: mechanics, thermodynamics, fluid dynamics, acoustics, electromagnetics, astrophysics, nuclear, quantum |
 | `durapy.unisky` | Aerospace/spaceflight: aerodynamics, propulsion, gas laws, Bernoulli, rocket equations (built on `uniphys`) |
 | `durapy.unichem` | Chemistry: periodic table, formula parsing/molar mass, stoichiometry, balancing, acid/base, gas laws |

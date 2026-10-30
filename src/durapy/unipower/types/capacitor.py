@@ -6,7 +6,7 @@ import math
 from dataclasses import dataclass
 
 from ...shared.numval_types import Quantity
-from ...shared.units import COULOMB, FARAD, JOULE, OHM, SECOND
+from ...shared.units import COULOMB, JOULE, OHM, SECOND
 
 
 @dataclass(frozen=True)
