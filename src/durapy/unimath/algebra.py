@@ -5,6 +5,7 @@ import math
 import sympy
 
 from ._parsing import parse_expression
+from .coordinate_systems import Cartesian2D, Cartesian3D
 
 
 def slope(x1: float, y1: float, x2: float, y2: float) -> float:
@@ -14,12 +15,38 @@ def slope(x1: float, y1: float, x2: float, y2: float) -> float:
     return (y2 - y1) / (x2 - x1)
 
 
-def distance(x1: float, y1: float, x2: float, y2: float) -> float:
+def slope_from_points(*, a: Cartesian2D, b: Cartesian2D):
+    """Return the slope between two 2D-cartesian points `a` and `b`"""
+    return slope(a.x, a.y, b.x, b.y)
+
+
+def distance2D(x1: float, y1: float, x2: float, y2: float) -> float:
     """Return the distance between two points `(x1, y1)` and `(x2, y2)`"""
     return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 
 
-def derivative(func: str, x: float | None = None, h: float = 1e-5):
+def distance2D_from_points(*, a: Cartesian2D, b: Cartesian2D):
+    """Return the distance between two 2D-cartesian points `a` and `b`"""
+    return distance2D(a.x, a.y, b.x, b.y)
+
+
+def distance3D(
+    x1: float,
+    y1: float,
+    z1: float,
+    x2: float,
+    y2: float,
+    z2: float,
+) -> float:
+    """Returns the euclidian distance between 2 3D-points"""
+    return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2)
+
+
+def distance3D_from_points(*, a: Cartesian3D, b: Cartesian3D) -> float:
+    return distance3D(a.x, a.y, a.z, b.x, b.y, b.z)
+
+
+def derivative(func: str, *, x: float | None = None, h: float = 1e-5):
     """Returns `f'(x)` symbolic if `x` is None, else numerical derivative at x."""
     x_sym = sympy.symbols("x")
     f = parse_expression(func)
@@ -31,15 +58,13 @@ def derivative(func: str, x: float | None = None, h: float = 1e-5):
         return float((f.subs(x_sym, x + h) - f.subs(x_sym, x - h)) / (2 * h))  # type: ignore
 
 
-def line_intersection(
-    m1: float, b1: float, m2: float, b2: float
-) -> tuple[float, float]:
+def line_intersection(m1: float, b1: float, m2: float, b2: float) -> Cartesian2D:
     """Return the point of intersection of two lines in the form of `(x, y)`"""
     if m1 == m2:
         raise ValueError("Lines are parallel (m1 == m2), no unique intersection")
     x = (b2 - b1) / (m1 - m2)
     y = m1 * x + b1
-    return (x, y)
+    return Cartesian2D(x, y)
 
 
 def line_from_points(x1: float, y1: float, x2: float, y2: float) -> tuple[float, float]:
@@ -51,14 +76,19 @@ def line_from_points(x1: float, y1: float, x2: float, y2: float) -> tuple[float,
     return (m, b)
 
 
-def linear_zero(m: float, b: float) -> float:
+def line_from_cartesian_points(*, a: Cartesian2D, b: Cartesian2D):
+    """Returns `m`, `b` as parts of the equation `y = mx + b` from the two given points `(x1, y1)` and `(x2, y2)`."""
+    return line_from_points(a.x, a.y, b.x, b.y)
+
+
+def linear_zero(*, m: float, b: float) -> float:
     """Find the x-value where the line `y = mx + b` crosses the x-axis"""
     if m == 0:
         raise ValueError("No zero crossing for horizontal line (m == 0)")
     return -b / m
 
 
-def linear_evaluation(m: float, b: float, x: float) -> float:
+def linear_evaluation(*, m: float, b: float, x: float) -> float:
     """Evaluates the linear function `y = mx + b` at `x` and returns the result."""
     return m * x + b
 
@@ -106,21 +136,21 @@ def quadratic_factorized(a: float, b: float, c: float) -> str:
 
     D = b**2 - 4 * a * c
 
+    # Helper for displaying correct terms
     def sign(x: float) -> str:
         return "-" if x < 0 else "+"
+
+    # Use (x - x1) form; handle sign correctly
+    def factor_str(root: float) -> str:
+        if root < 0:
+            return f"(x + {-root})"
+        else:
+            return f"(x - {root})"
 
     if D > 0:
         sqrtD = math.sqrt(D)
         x1 = (-b - sqrtD) / (2 * a)
         x2 = (-b + sqrtD) / (2 * a)
-
-        # Use (x - x1) form; handle sign correctly
-        def factor_str(root: float) -> str:
-            if root < 0:
-                return f"(x + {-root})"
-            else:
-                return f"(x - {root})"
-
         return f"{a}{factor_str(x1)}{factor_str(x2)}"
 
     elif D == 0:
@@ -198,3 +228,29 @@ def cubic_evaluation_bruteforce(
         x += step
 
     return roots
+
+
+__all__ = [
+    "cubic_evaluation",
+    "cubic_evaluation_bruteforce",
+    "cubic_num_roots",
+    "cubic_solutions",
+    "cubic_vertex",
+    "cubic_zeros",
+    "derivative",
+    "distance2D",
+    "distance2D_from_points",
+    "distance3D",
+    "distance3D_from_points",
+    "line_from_cartesian_points",
+    "line_from_points",
+    "line_intersection",
+    "linear_evaluation",
+    "linear_zero",
+    "quadratic_evaluation",
+    "quadratic_num_roots",
+    "quadratic_solutions",
+    "quadratic_vertex",
+    "slope",
+    "slope_from_points",
+]

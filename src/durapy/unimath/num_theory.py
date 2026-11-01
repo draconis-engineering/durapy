@@ -15,17 +15,17 @@ def lovelace(
     return x, y
 
 
-def fibonacci_integer(fib_idx: int) -> int:
+def fibonacci_integer(n: int) -> int:
     """Fibonacci integer generator that returns the Fibonacci integer at the given index."""
 
-    if fib_idx < 2 or not isinstance(fib_idx, int):
+    if n < 2 or not isinstance(n, int):
         raise ValueError(
             "fibonacci_integer does not take integers less than 2 or floats/strings!"
         )
 
     fib0, fib1, fib2 = 0, 1, 1
 
-    for _ in range(fib_idx - 1):
+    for _ in range(n - 1):
         fib2 = fib0 + fib1
         fib0, fib1 = fib1, fib2
 

@@ -6,15 +6,15 @@ import math
 
 
 class _BaseCoordinate:
-    def __init__(self, unit: str, dims: int):
-        self.unit = unit
+    def __init__(self, dims: int, unit: str):
         self.dims = dims
+        self.unit = unit
 
 
 class Cartesian1D(_BaseCoordinate):
     """The 1-dimensional Cartesian coordinate system. (aka. the number line)"""
 
-    def __init__(self, unit: str, x: float):
+    def __init__(self, x: float, unit: str = "unitless"):
         super().__init__(unit=unit, dims=1)
         self.x = x
 
@@ -28,8 +28,8 @@ class Cartesian1D(_BaseCoordinate):
 class Cartesian2D(_BaseCoordinate):
     """The 2-dimensional Cartesian coordinate system."""
 
-    def __init__(self, unit: str, x: float, y: float) -> None:
-        super().__init__(unit=unit, dims=2)
+    def __init__(self, x: float, y: float, unit: str = "unitless") -> None:
+        super().__init__(dims=2, unit=unit)
         self.x = x
         self.y = y
 
@@ -48,7 +48,7 @@ class Cartesian2D(_BaseCoordinate):
 class Cartesian3D(_BaseCoordinate):
     """The 3-dimensional Cartesian coordinate system."""
 
-    def __init__(self, unit: str, x: float, y: float, z: float) -> None:
+    def __init__(self, x: float, y: float, z: float, unit: str = "unitless") -> None:
         super().__init__(unit=unit, dims=3)
         self.x = x
         self.y = y
@@ -80,7 +80,7 @@ class Cartesian3D(_BaseCoordinate):
 class Polar(_BaseCoordinate):
     """The polar coordinate system."""
 
-    def __init__(self, unit: str, r: float, θ: float) -> None:
+    def __init__(self, r: float, θ: float, unit: str = "unitless") -> None:
         super().__init__(unit=unit, dims=2)
         self.r = r
         self.θ = θ
@@ -100,7 +100,7 @@ class Polar(_BaseCoordinate):
 class Spherical(_BaseCoordinate):
     """The spherical coordinate system."""
 
-    def __init__(self, unit: str, r: float, θ: float, φ: float) -> None:
+    def __init__(self, r: float, θ: float, φ: float, unit: str = "unitless") -> None:
         super().__init__(unit=unit, dims=3)
         self.r = r
         self.θ = θ
@@ -129,7 +129,7 @@ class Spherical(_BaseCoordinate):
 class Cylindrical(_BaseCoordinate):
     """The cylindrical coordinate system."""
 
-    def __init__(self, unit: str, r: float, θ: float, z: float) -> None:
+    def __init__(self, r: float, θ: float, z: float, unit: str = "unitless") -> None:
         super().__init__(unit=unit, dims=3)
         self.r = r
         self.θ = θ
