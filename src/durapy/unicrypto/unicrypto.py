@@ -11,7 +11,7 @@ def binary_encode(plaintext: str) -> str:
 
     This is a reversible encoding, not encryption. Any Unicode input (including
     characters outside the ASCII range) round-trips correctly through
-    :func:`binary_decrypt`.
+    :func:`binary_decode`.
     """
     data = plaintext.encode()
     return " ".join(format(byte, "08b") for byte in data)
@@ -67,7 +67,7 @@ def ceasar_decode(cipher: str, key: int) -> str:
 
 
 def vigenere_encode(plaintext: str, key: str) -> str:
-    """Vigenêre encoding"""
+    """Vigenêre cipher encoding"""
     if not key or not key.isalpha():
         raise ValueError("Key must be non-empty alphabetic string")
     cipher = ""
