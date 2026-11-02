@@ -384,7 +384,7 @@ def test_circuit_validation():
     with pytest.raises(ValueError):
         circuit.add_resistor(1, 0, 0.0)
     with pytest.raises(ValueError):
-        Circuit(ground=-1)
+        Circuit(-1)
 
 
 def test_solution_rejects_foreign_element():
