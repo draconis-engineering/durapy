@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass
 
+from ...shared.constants import PI
 from ...shared.numval_types import Quantity
 from ...shared.units import COULOMB, JOULE, OHM, SECOND
 
@@ -35,33 +35,33 @@ class Capacitor:
         if self.esr < 0:
             raise ValueError("esr cannot be negative")
 
-    def charge(self, voltage: float) -> Quantity:
+    def charge(self, voltage: float, /) -> Quantity:
         """Charge stored at ``voltage`` in coulombs (Q = C·V)."""
         return Quantity(self.capacitance * voltage, COULOMB)
 
-    def energy(self, voltage: float) -> Quantity:
+    def energy(self, voltage: float, /) -> Quantity:
         """Energy stored at ``voltage`` in joules (E = ½·C·V²)."""
         return Quantity(0.5 * self.capacitance * voltage**2, JOULE)
 
-    def time_constant(self, resistance: float) -> Quantity:
+    def time_constant(self, resistance: float, /) -> Quantity:
         """RC time constant with the given series ``resistance`` (τ = R·C)."""
         if resistance < 0:
             raise ValueError("resistance cannot be negative")
         return Quantity(resistance * self.capacitance, SECOND)
 
-    def reactance(self, frequency: float) -> Quantity:
+    def reactance(self, frequency: float, /) -> Quantity:
         """Capacitive reactance at ``frequency`` in hertz (Xc = 1 / (2π·f·C))."""
         if frequency <= 0:
             raise ValueError("frequency must be positive")
-        return Quantity(1 / (2 * math.pi * frequency * self.capacitance), OHM)
+        return Quantity(1 / (2 * PI * frequency * self.capacitance), OHM)
 
-    def impedance(self, frequency: float) -> complex:
+    def impedance(self, frequency: float, /) -> complex:
         """Complex impedance at ``frequency`` (Z = -j / (2π·f·C))."""
         if frequency <= 0:
             raise ValueError("frequency must be positive")
-        return complex(0.0, -1 / (2 * math.pi * frequency * self.capacitance))
+        return complex(0.0, -1 / (2 * PI * frequency * self.capacitance))
 
-    def is_within_rating(self, voltage: float) -> bool:
+    def is_within_rating(self, voltage: float, /) -> bool:
         """Whether ``voltage`` stays within the working voltage rating."""
         if self.voltage_rating is None:
             return True

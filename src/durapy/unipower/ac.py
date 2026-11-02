@@ -49,13 +49,13 @@ __all__ = [
 ]
 
 
-def req_pos(name: str, value: float) -> None:
+def req_pos(name: str, value: float, /) -> None:
     """Require positive number"""
     if value <= 0:
         raise ValueError(f"{name} must be positive")
 
 
-def req_non_zero(name: str, value: float) -> None:
+def req_non_zero(name: str, value: float, /) -> None:
     """Require non-negative number"""
     if value < 0:
         raise ValueError(f"{name} cannot be negative")

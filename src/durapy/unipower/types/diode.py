@@ -5,7 +5,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 
-from ...shared.constants import BOLTZMANN
+from ...shared.constants import BOLTZMANN, INF
 from ...shared.numval_types import Quantity
 from ...shared.units import WATT
 
@@ -59,7 +59,7 @@ class Diode:
         vt = self.thermal_voltage(temperature) * self.ideality
         exponent = voltage / vt
         if exponent > 700:  # exp overflow guard
-            return math.inf
+            return INF.value
         return self.saturation_current * math.expm1(exponent)
 
     def forward_current(
@@ -80,7 +80,7 @@ class Diode:
         if voltage < self.forward_voltage:
             return self.shockley_current(voltage, temperature)
         if forward_resistance == 0:
-            return math.inf
+            return INF.value
         return (voltage - self.forward_voltage) / forward_resistance
 
     def is_forward_biased(self, voltage: float) -> bool:
@@ -93,7 +93,9 @@ class Diode:
             return False
         return voltage <= -self.breakdown_voltage
 
-    def power_dissipation(self, current: float, voltage: float | None = None) -> Quantity:
+    def power_dissipation(
+        self, current: float, voltage: float | None = None
+    ) -> Quantity:
         """Power dissipated in watts (``P = V·I``).
 
         If ``voltage`` is omitted the nominal ``forward_voltage`` is used.

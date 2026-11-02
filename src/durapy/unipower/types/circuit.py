@@ -25,11 +25,12 @@ Example
 
 from __future__ import annotations
 
-import math
 from dataclasses import dataclass, field
 
-import numpy as np
+import dracolix as dx
+import numpy as np  # REMOVE
 
+from ...shared.constants import PI
 from ...shared.numval_types import Quantity
 from ...shared.units import AMPERE, OHM, VOLT
 from ..exceptions import CircuitError
@@ -67,15 +68,15 @@ class CircuitSolution:
     node_voltages: dict[int, complex]
     element_currents: dict[int, complex] = field(default_factory=dict)
 
-    def voltage_phasor(self, node: int) -> complex:
+    def voltage_phasor(self, node: int, /) -> complex:
         """Complex node voltage (V); the imaginary part is 0 for DC."""
         return self.node_voltages.get(node, 0j)
 
-    def voltage(self, node: int) -> Quantity:
+    def voltage(self, node: int, /) -> Quantity:
         """Node voltage as a :class:`Quantity` in volts."""
         return Quantity(self.voltage_phasor(node), VOLT)
 
-    def current_phasor(self, element: Element) -> complex:
+    def current_phasor(self, element: Element, /) -> complex:
         """Complex current through ``element`` in amperes.
 
         The sign follows the element's ``n1 -> n2`` direction.
@@ -83,11 +84,9 @@ class CircuitSolution:
         try:
             return self.element_currents[id(element)]
         except KeyError as exc:
-            raise CircuitError(
-                "Element does not belong to the solved circuit"
-            ) from exc
+            raise CircuitError("Element does not belong to the solved circuit") from exc
 
-    def current(self, element: Element) -> Quantity:
+    def current(self, element: Element, /) -> Quantity:
         """Current through ``element`` as a :class:`Quantity` in amperes."""
         return Quantity(self.current_phasor(element), AMPERE)
 
@@ -99,9 +98,10 @@ class CircuitSolution:
 class Circuit:
     """A linear circuit that can be solved with modified nodal analysis."""
 
-    def __init__(self, ground: int = 0) -> None:
+    def __init__(self, ground: int = 0, /) -> None:
         if not isinstance(ground, int) or isinstance(ground, bool) or ground < 0:
             raise ValueError("ground must be a non-negative integer")
+
         self._ground = ground
         self._elements: list[Element] = []
 
@@ -188,9 +188,8 @@ class Circuit:
             return self.add_capacitor(n1, n2, component.capacitance, label)
         if isinstance(component, Inductor):
             return self.add_inductor(n1, n2, component.inductance, label)
-        raise TypeError(
-            f"Cannot add a {type(component).__name__} to a linear circuit"
-        )
+
+        raise TypeError(f"Cannot add a {type(component).__name__} to a linear circuit")
 
     # ------------------------------------------------------------------ #
     # Solving
@@ -198,9 +197,11 @@ class Circuit:
 
     def _node_map(self) -> dict[int, int]:
         nodes: set[int] = set()
+
         for element in self._elements:
             nodes.add(element.n1)
             nodes.add(element.n2)
+
         nodes.discard(self._ground)
         return {node: i for i, node in enumerate(sorted(nodes))}
 
@@ -213,8 +214,10 @@ class Circuit:
             for e in self._elements
             if e.kind == "V" or (e.kind == "L" and omega is None)
         ]
+
         vs_slot = {id(e): n + k for k, e in enumerate(vsources)}
         size = n + len(vsources)
+
         if size == 0:
             raise CircuitError("Circuit has no elements to solve")
 
@@ -244,10 +247,12 @@ class Circuit:
         for element in self._elements:
             if element.kind == "R":
                 stamp_admittance(element.n1, element.n2, 1.0 / element.value)
+
             elif element.kind == "C":
                 if omega is None:
                     continue  # open circuit in DC
                 stamp_admittance(element.n1, element.n2, 1j * omega * element.value)
+
             elif element.kind == "L":
                 if omega is None:
                     stamp_voltage_source(element, vs_slot[id(element)], 0j)
@@ -255,8 +260,10 @@ class Circuit:
                     stamp_admittance(
                         element.n1, element.n2, 1.0 / (1j * omega * element.value)
                     )
+
             elif element.kind == "V":
                 stamp_voltage_source(element, vs_slot[id(element)], element.value)
+
             elif element.kind == "I":
                 ia, ib = index.get(element.n1), index.get(element.n2)
                 if ia is not None:
@@ -266,6 +273,7 @@ class Circuit:
 
         try:
             solution = np.linalg.solve(matrix, rhs)
+
         except np.linalg.LinAlgError as exc:
             raise CircuitError(
                 "Circuit is singular: check for floating nodes or a missing "
@@ -273,6 +281,7 @@ class Circuit:
             ) from exc
 
         node_voltages: dict[int, complex] = {self._ground: 0j}
+
         for node, i in index.items():
             node_voltages[node] = complex(solution[i])
 
@@ -280,6 +289,7 @@ class Circuit:
             return node_voltages.get(node, 0j)
 
         currents: dict[int, complex] = {}
+
         for element in self._elements:
             drop = node_voltage(element.n1) - node_voltage(element.n2)
             if element.kind == "R":
@@ -309,7 +319,7 @@ class Circuit:
         """Solve the circuit at ``frequency`` hertz (phasor/steady-state)."""
         if frequency <= 0:
             raise ValueError("frequency must be positive")
-        return self._solve(2 * math.pi * frequency)
+        return self._solve(2 * PI.value * frequency)
 
     def equivalent_resistance(self, n1: int, n2: int) -> Quantity:
         """DC resistance seen between ``n1`` and ``n2`` (Thevenin, no sources).
@@ -320,7 +330,7 @@ class Circuit:
         self._validate_nodes(n1, n2)
         if n1 == n2:
             raise ValueError("n1 and n2 must be different nodes")
-        probe = Circuit(ground=n2)
+        probe = Circuit(n2)
         probe._elements = list(self._elements)
         probe.add_current_source(n1, n2, 1.0)
         solution = probe.solve_dc()

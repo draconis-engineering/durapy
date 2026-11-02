@@ -5,6 +5,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 
+from ...shared.constants import PI
 from ...shared.numval_types import Quantity
 from ...shared.units import HERTZ, SECOND
 
@@ -41,12 +42,12 @@ class Oscillator:
 
     def angular_frequency(self) -> Quantity:
         """Angular frequency in hertz-equivalent (ω = 2π·f)."""
-        return Quantity(2 * math.pi * self.frequency, HERTZ)
+        return Quantity(2 * PI * self.frequency, HERTZ)
 
     def value_at(self, time: float) -> float:
         """Instantaneous signal value at ``time`` seconds."""
         phase = (self.frequency * time) % 1.0
-        angle = 2 * math.pi * phase
+        angle = 2 * PI.value * phase
         if self.waveform == "sine":
             return self.amplitude * math.sin(angle)
         if self.waveform == "square":

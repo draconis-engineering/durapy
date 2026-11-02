@@ -4,12 +4,12 @@ import math
 
 from ..shared.constants import PI
 from ..shared.numval_types import Quantity
-from ..shared.units import FARAD, OHM, SECOND, VOLT, WATT
+from ..shared.units import AMPERE, FARAD, OHM, SECOND, VOLT, WATT
 
 
 def ohms_law(
     v: float | None = None, i: float | None = None, r: float | None = None
-) -> tuple[float, float, float]:
+) -> tuple[Quantity, Quantity, Quantity]:
     """Ohms Law calculation for voltage, current, and resistivity. Returns: (V, I, R)"""
 
     # Find missing parameters
@@ -34,7 +34,7 @@ def ohms_law(
     elif r is None:
         r = v / i
 
-    return v, i, r
+    return Quantity(v, VOLT), Quantity(i, AMPERE), Quantity(r, OHM)
 
 
 def volt_divider(v_in: float, r_1: float, r_2: float) -> Quantity:
