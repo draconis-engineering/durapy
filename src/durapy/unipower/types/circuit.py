@@ -27,7 +27,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-import dracolix as dx
 import numpy as np  # REMOVE
 
 from ...shared.constants import PI
