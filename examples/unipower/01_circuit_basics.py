@@ -2,14 +2,14 @@
 
 from durapy.unipower import (
     ohms_law,
-    volt_divider,
     power_dissipation,
     rc_time_constant,
+    volt_divider,
 )
 
 # Ohm's law
 V, I, R = ohms_law(v=9, r=1000)
-print(f"Ohm's law: V={V} V, I={I*1000:.1f} mA, R={R} Ω")
+print(f"Ohm's law: V={V} V, I={I * 1000:.1f} mA, R={R} Ω")
 
 # Power
 P = power_dissipation(v=12, r=10)

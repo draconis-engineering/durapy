@@ -5,7 +5,16 @@ from durapy.unichem.elements import ELEMENTS_BY_SYMBOL
 
 # Periodic table
 H = ELEMENTS_BY_SYMBOL["H"]
-print("Element:", H.symbol, H.name, "Z=", H.atomic_number, "Molar mass:", H.atomic_mass, "g/mol")
+print(
+    "Element:",
+    H.symbol,
+    H.name,
+    "Z=",
+    H.atomic_number,
+    "Molar mass:",
+    H.atomic_mass,
+    "g/mol",
+)
 
 # Formula parsing & molar mass
 water = unichem.parse_formula("H2O")

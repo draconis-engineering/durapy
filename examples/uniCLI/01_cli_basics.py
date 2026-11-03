@@ -1,6 +1,6 @@
 """DuraPy Examples - UniCLI basics"""
 
-from durapy.uniCLI import console_print, console_msg, clear_terminal, Console
+from durapy.uniCLI import Console, console_msg, console_print
 
 # Simple colored messages
 print(console_msg("System", "green", "Initialization complete", "white"))
