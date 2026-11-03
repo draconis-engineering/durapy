@@ -27,7 +27,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-import numpy as np  # REMOVE
+import numpy as np  # Replace with dracolix once complex number support is added
 
 from ...shared.constants import PI
 from ...shared.numval_types import Quantity
