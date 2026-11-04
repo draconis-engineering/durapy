@@ -47,6 +47,9 @@ dependencies = [
 	"rich",
 ]
 
+[project.scripts]
+durapy = "durapy.uniCLI.repl:main"
+
 [project.urls]
 Homepage = "https://github.com/draconis-engineering/durapy"
 Repository = "https://github.com/draconis-engineering/durapy"

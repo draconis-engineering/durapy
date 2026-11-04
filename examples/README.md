@@ -20,6 +20,7 @@ PYTHONPATH=src python examples/unimath/01_vectors_matrices.py
 | `unipower/01_circuit_basics.py` | Ohm's law, power, voltage dividers, components, RC circuits |
 | `uniops/01_pid_control.py` | PID controller usage and kinematics module overview |
 | `uniCLI/01_cli_basics.py` | Console helpers and progress bars |
+| `uniCLI/02_repl.py` | Interactive REPL with autocomplete and last-call memory |
 
 ## Tips
 

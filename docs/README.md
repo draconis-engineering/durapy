@@ -28,7 +28,7 @@ DuraPy is composed of several submodules, each providing a specific set of funct
     - Constants, Numerical Value types, and Unit modules, for scientific calculations
     - Exceptions - Custom exception classes for error handling
 
-- UniCLI - a command-line interface framework for making CLI tools
+- UniCLI - a command-line interface framework for making CLI tools, including an interactive `durapy` REPL with autocomplete and last-call memory
 - UniBio - Bioinformatics primitives for DNA/RNA/protein work
     - Sequence validation, normalization, and IUPAC ambiguity handling
     - Complement, reverse complement, transcription and translation

@@ -56,6 +56,41 @@ print("Re:", reynolds_number(60, 1.5, 1.5e-5))
 
 More examples can be found in [`examples/`](examples/).
 
+### Interactive REPL
+
+DuraPy ships with a shell for exploring the API from a terminal:
+
+```bash
+durapy
+```
+
+Or, without installing the console script:
+
+```bash
+python -m durapy.uniCLI.repl
+```
+
+Inside the shell, functions can be called Python-style or shell-style:
+
+```text
+durapy> mach_number 340
+Ratio: 0.991... - SUBSONIC
+durapy> :again 680
+Ratio: 1.982... - SUPERSONIC
+durapy> last(680)
+Ratio: 1.982... - SUPERSONIC
+durapy> thermodynamics.ideal_gas_law V=0.022414 n=1.0 T=273.15
+(101324.86, 0.022414, 1.0, 273.15)
+```
+
+- **Tab completion** for modules, functions, aliases, and keyword arguments
+- **Persistent history** in `~/.durapy/history`, with inline suggestions
+- **Last-call memory** through `last(...)`, `_fn`, `_`, and `:again`
+- **Introspection** with `:doc`, `:src`, `:list`, and `:modules`
+- Python statements are supported too, so `x = slope(0, 0, 2, 4)` works
+
+Type `:help` inside the shell for the full command list.
+
 ## Module Overview
 
 | Module | Purpose |
