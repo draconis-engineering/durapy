@@ -11,7 +11,8 @@ def torque(moment_arm_distance: float, force: float) -> Quantity:
     return Quantity((moment_arm_distance * force), NEWTONMETER)
 
 
-def gear_ratio(driving_teeth: int, driven_teeth: int) -> str:
+# Pos-only because of the names being easily mixed up
+def gear_ratio(*, driving_teeth: int, driven_teeth: int) -> str:
     """Returns the gear ratio from the driving gear's teeth count and the driven gear's teeth count."""
     if driving_teeth == 0:
         raise ValueError("driving_teeth cannot be zero")
@@ -46,5 +47,16 @@ def potential_energy(
     return Quantity(mass * g * height, JOULE)
 
 
-def einstein_mass_energy_equivalence(mass: float, /) -> Quantity:
+def einstein_mass_energy_equivalence(mass: float) -> Quantity:
     return Quantity(mass * C.value**2, JOULE)
+
+
+__all__ = [
+    "angular_velocity_degrees",
+    "angular_velocity_radians",
+    "einstein_mass_energy_equivalence",
+    "gear_ratio",
+    "kinetic_energy",
+    "potential_energy",
+    "torque",
+]

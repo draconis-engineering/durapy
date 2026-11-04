@@ -169,6 +169,10 @@ def clausius_clapeyron(
     -------
         Quantity: The slope of the phase boundary (in pascals per kelvin).
     """
+
+    if temperature < 0:
+        raise ValueError("Temperature cant be negative (kelvin scale)")
+
     return Quantity(
         (latent_heat)
         / (temperature * (specific_volume_vapor - specific_volume_liquid)),

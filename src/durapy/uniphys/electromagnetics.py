@@ -6,7 +6,7 @@ from ..shared.numval_types import Quantity
 from ..shared.units import ELECTRONVOLT, HERTZ, JOULE, METER
 
 # Ultraviolet Spectrum Wavelengths
-UV_SPEC_WAVLEN: dict[tuple[float, float], str] = {
+UV_SPECTRUM_WAVELENGTHS: dict[tuple[float, float], str] = {
     (10, 13.5): f"{color_text('EUV', 'Violet')}",
     (13.5, 100): f"{color_text('DUV', 'Violet')}",
     (100, 280): f"{color_text('UVC', 'Violet')}",
@@ -15,7 +15,7 @@ UV_SPEC_WAVLEN: dict[tuple[float, float], str] = {
 }
 
 # Visible Spectrum Wavelengths
-VSBL_SPEC_WAVLEN: dict[tuple[float, float], str] = {
+VISIBLE_SPECTRUM_WAVELENGTHS: dict[tuple[float, float], str] = {
     (390, 450): f"{color_text('Violet', 'violet')}",
     (450, 495): f"{color_text('Blue', 'blue')}",
     (495, 570): f"{color_text('Green', 'green')}",
@@ -25,11 +25,11 @@ VSBL_SPEC_WAVLEN: dict[tuple[float, float], str] = {
 }
 
 # Electromagnetic Spectrum Wavelengths (in nm, matching spectrum_label input)
-EM_SPEC_WAVLEN = {
+EM_SPECTRUM_WAVELENGTHS = {
     (0, 0.01): "Gamma-ray",
     (0.01, 10): "X-Ray",
-    (10, 390): UV_SPEC_WAVLEN,
-    (390, 700): VSBL_SPEC_WAVLEN,
+    (10, 390): UV_SPECTRUM_WAVELENGTHS,
+    (390, 700): VISIBLE_SPECTRUM_WAVELENGTHS,
     (700, 1e6): "Infrared Light",
     (1e6, 1e10): "Micro Wave",
     (1e10, INF.value): "Radio Wave",
@@ -50,7 +50,7 @@ def spectrum_label(
     raise ValueError(f"Wavelength {wavelength!r} is out of range for this spectrum map")
 
 
-def wavelength(hertz: float, in_nm: bool = False) -> Quantity:
+def wavelength(hertz: float, *, in_nm: bool = False) -> Quantity:
     """Return wavelength `λ` from `Hertz`. If in_nm, input Hz is assumed to produce nm output scaling."""
 
     if hertz <= 0:
@@ -73,29 +73,44 @@ def hertz(wavelength: float, *, in_nm: bool = False) -> Quantity:
 
 def ems(wavelength: float) -> tuple[str, float, str]:
     """Get the part of the electromagnetic spectrum the wavelength `λ` sits in, as well as the hertz."""
-    label = spectrum_label(wavelength, EM_SPEC_WAVLEN)
+    label = spectrum_label(wavelength, EM_SPECTRUM_WAVELENGTHS)
     hz = hertz(wavelength).value
 
     return label, hz, f"{label} - {hz} Hz"
 
 
-def photon_energy_from_wavelength(wavelength: float) -> Quantity:
+def photon_energy_from_wavelength(wavelength: float, /) -> Quantity:
     """Calculate the energy of a photon in joules with wavelength `λ` (in meters)."""
     return Quantity(PLANCK.value * float(hertz(wavelength)), JOULE)
 
 
-def photon_energy_hz(hz: float) -> Quantity:
+def photon_energy_from_hz(hz: float, /) -> Quantity:
     """Calculate the energy of a photon in joules with frequency `Hz`."""
     return Quantity(PLANCK.value * hz, JOULE)
 
 
-def photon_energy_ev_from_wavelength(wavelength: float) -> Quantity:
+def photon_energy_ev_from_wavelength(wavelength: float, /) -> Quantity:
     """Calculate the energy of a photon with wavelength `λ` in electron volts."""
     return Quantity(
         photon_energy_from_wavelength(wavelength).value / 1.60218e-19, ELECTRONVOLT
     )
 
 
-def photon_energy_ev_hz(hz: float) -> Quantity:
+def photon_energy_ev_from_hz(hz: float, /) -> Quantity:
     """Calculate the energy of a photon with frequency `Hz` in electron volts."""
-    return Quantity(photon_energy_hz(hz).value / 1.60218e-19, ELECTRONVOLT)
+    return Quantity(photon_energy_from_hz(hz).value / 1.60218e-19, ELECTRONVOLT)
+
+
+__all__ = [
+    "EM_SPECTRUM_WAVELENGTHS",
+    "UV_SPECTRUM_WAVELENGTHS",
+    "VISIBLE_SPECTRUM_WAVELENGTHS",
+    "ems",
+    "hertz",
+    "photon_energy_ev_from_hz",
+    "photon_energy_ev_from_wavelength",
+    "photon_energy_from_hz",
+    "photon_energy_from_wavelength",
+    "spectrum_label",
+    "wavelength",
+]

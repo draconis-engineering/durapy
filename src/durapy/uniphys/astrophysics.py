@@ -14,7 +14,7 @@ def schwarzschild_radius(m: float) -> Quantity:
     return Quantity((2 * UNI_G.value * m) / (float(C) ** 2), METER)
 
 
-def redshift(λobs: float, λrest: float) -> Quantity:
+def redshift(*, λobs: float, λrest: float) -> Quantity:
     from ..shared.units import NUMERICAL
 
     if λrest == 0:
@@ -22,7 +22,7 @@ def redshift(λobs: float, λrest: float) -> Quantity:
     return Quantity((λobs - λrest) / λrest, NUMERICAL)
 
 
-def orbital_period(semi_major_axis: float, M: float, m: float) -> Quantity:
+def orbital_period(semi_major_axis: float, *, M: float, m: float) -> Quantity:
     return Quantity(
         2 * PI.value * math.sqrt(semi_major_axis**3 / (UNI_G.value * (M + m))), SECOND
     )
@@ -44,7 +44,7 @@ def escape_velocity(
     return Quantity(math.sqrt(2) * orbital_velocity(radius, mass), METER / SECOND)
 
 
-def newtonian_gravitation(mass1: float, mass2: float, distance: float) -> Quantity:
+def newtonian_gravitation(*, mass1: float, mass2: float, distance: float) -> Quantity:
     if distance <= 0:
         raise ValueError("Distance must be greater than zero")
     if mass1 <= 0 or mass2 <= 0:
@@ -59,7 +59,7 @@ def surface_gravity(mass: float, radius: float) -> Quantity:
 
 
 def tsiolkovsky_rocket_equation(
-    exhaust_vel: float, initial_mass: float, final_mass: float
+    *, exhaust_vel: float, initial_mass: float, final_mass: float
 ) -> Quantity:
 
     if exhaust_vel >= C.value:
@@ -75,3 +75,15 @@ def hubbles_law(distance: float) -> Quantity:
     if distance <= 0:
         raise ValueError("Distance must be greater than zero")
     return Quantity(float(HUBBLE) * distance, METER / SECOND)
+
+
+__all__ = [
+    "escape_velocity",
+    "newtonian_gravitation",
+    "orbital_period",
+    "orbital_velocity",
+    "redshift",
+    "schwarzschild_radius",
+    "surface_gravity",
+    "tsiolkovsky_rocket_equation",
+]
