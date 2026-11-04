@@ -31,6 +31,8 @@ def orbital_period(semi_major_axis: float, M: float, m: float) -> Quantity:
 def orbital_velocity(
     orbital_radius: float = EARTH_R.value, mass: float = EARTH_M.value
 ) -> Quantity:
+    if orbital_radius <= 0 or mass <= 0:
+        raise ValueError("Radius and mass must be greater than zero")
     return Quantity(math.sqrt(UNI_G.value * mass / orbital_radius), METER / SECOND)
 
 
@@ -39,9 +41,7 @@ def escape_velocity(
 ) -> Quantity:
     if radius <= 0 or mass <= 0:
         raise ValueError("Radius and mass must be greater than zero")
-    return Quantity(
-        math.sqrt(2) * float(orbital_velocity(radius, mass)), METER / SECOND
-    )
+    return Quantity(math.sqrt(2) * orbital_velocity(radius, mass), METER / SECOND)
 
 
 def newtonian_gravitation(mass1: float, mass2: float, distance: float) -> Quantity:
@@ -68,7 +68,7 @@ def tsiolkovsky_rocket_equation(
     if final_mass > initial_mass:
         return Quantity(0.0, METER / SECOND)
 
-    return Quantity((exhaust_vel * math.log(initial_mass / final_mass)), METER / SECOND)
+    return Quantity(exhaust_vel * math.log(initial_mass / final_mass), METER / SECOND)
 
 
 def hubbles_law(distance: float) -> Quantity:

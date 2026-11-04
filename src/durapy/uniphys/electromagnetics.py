@@ -62,7 +62,7 @@ def wavelength(hertz: float, in_nm: bool = False) -> Quantity:
     return Quantity(wav_m, METER)
 
 
-def hz(wavelength: float, in_nm: bool = False) -> Quantity:
+def hertz(wavelength: float, *, in_nm: bool = False) -> Quantity:
     """Return `Hertz` from wavelength `λ` (in meters, or nm if in_nm=True)."""
 
     lam_m = wavelength * 1e-9 if in_nm else wavelength
@@ -74,26 +74,28 @@ def hz(wavelength: float, in_nm: bool = False) -> Quantity:
 def ems(wavelength: float) -> tuple[str, float, str]:
     """Get the part of the electromagnetic spectrum the wavelength `λ` sits in, as well as the hertz."""
     label = spectrum_label(wavelength, EM_SPEC_WAVLEN)
-    hertz = hz(wavelength).value
+    hz = hertz(wavelength).value
 
-    return label, hertz, f"{label} - {hertz} Hz"
+    return label, hz, f"{label} - {hz} Hz"
 
 
-def photon_energy_λ(wavelength: float) -> Quantity:
+def photon_energy_from_wavelength(wavelength: float) -> Quantity:
     """Calculate the energy of a photon in joules with wavelength `λ` (in meters)."""
-    return Quantity(PLANCK.value * float(hz(wavelength)), JOULE)
+    return Quantity(PLANCK.value * float(hertz(wavelength)), JOULE)
 
 
-def photon_energy_hz(Hz: float) -> Quantity:
+def photon_energy_hz(hz: float) -> Quantity:
     """Calculate the energy of a photon in joules with frequency `Hz`."""
-    return Quantity(PLANCK.value * Hz, JOULE)
+    return Quantity(PLANCK.value * hz, JOULE)
 
 
-def photon_energy_ev_λ(wavelength: float) -> Quantity:
+def photon_energy_ev_from_wavelength(wavelength: float) -> Quantity:
     """Calculate the energy of a photon with wavelength `λ` in electron volts."""
-    return Quantity(photon_energy_λ(wavelength).value / 1.60218e-19, ELECTRONVOLT)
+    return Quantity(
+        photon_energy_from_wavelength(wavelength).value / 1.60218e-19, ELECTRONVOLT
+    )
 
 
-def photon_energy_ev_hz(Hz: float) -> Quantity:
+def photon_energy_ev_hz(hz: float) -> Quantity:
     """Calculate the energy of a photon with frequency `Hz` in electron volts."""
-    return Quantity(photon_energy_hz(Hz).value / 1.60218e-19, ELECTRONVOLT)
+    return Quantity(photon_energy_hz(hz).value / 1.60218e-19, ELECTRONVOLT)

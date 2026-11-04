@@ -97,7 +97,7 @@ def ideal_gas_law(
     return P, V, n, T
 
 
-def internal_energy(heat: float, work: float) -> Quantity:
+def internal_energy(heat: float, work: float, /) -> Quantity:
     """
     Calculate the change in internal energy given heat and work.
 
@@ -130,7 +130,7 @@ def gibbs_free_energy(enthalpy: float, entropy: float, temperature: float) -> Qu
     return Quantity(enthalpy - temperature * entropy, JOULE)
 
 
-def carnot_efficiency(temperature_hot: float, temperature_cold: float) -> float:
+def carnot_efficiency(temperature_hot: float, temperature_cold: float, /) -> float:
     """
     Calculate the efficiency of a Carnot engine given the temperatures of the hot and cold reservoirs.
 
@@ -196,7 +196,7 @@ def helmholtz_free_energy(
 
 
 def van_der_waals_pressure(
-    n: float, vol: float, temp: float, a: float, b: float
+    *, n: float, vol: float, temp: float, a: float, b: float
 ) -> Quantity:
     """
     Calculate the pressure of a real gas using the Van der Waals equation.

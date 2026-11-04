@@ -28,6 +28,8 @@ KELVIN = Unit("K", Dimension((F0, F0, F0, F0, F1, F0, F0)), scale=1)  # Θ
 MOLE = Unit("MOL", Dimension((F0, F0, F0, F0, F0, F1, F0)), scale=1)  # N
 CANDELA = Unit("CD", Dimension((F0, F0, F0, F0, F0, F0, F1)), scale=1)  # J
 
+INVSEC = Unit("1/S", Dimension((F0, F0, F_1, F0, F0, F0, F0)))
+
 PASCAL = Unit("Pa", Dimension((F_1, F1, F_2, F0, F0, F0, F0)))  # M / (L * T^2)
 PSI = Unit("psi", Dimension((F_1, F1, F_2, F0, F0, F0, F0)))  # M / (L * T^2)
 BAR = Unit("bar", Dimension((F_1, F1, F_2, F0, F0, F0, F0)))  # M / (L * T^2)

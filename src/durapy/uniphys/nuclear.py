@@ -3,8 +3,8 @@
 import math
 
 from ..shared.constants import C
-from ..shared.numval_types import Dimension, Quantity, Unit
-from ..shared.units import F0, F_1, HERTZ, JOULE, NUMERICAL, SECOND
+from ..shared.numval_types import Quantity
+from ..shared.units import HERTZ, JOULE, NUMERICAL, SECOND
 
 
 def radioactive_decay(
@@ -45,9 +45,11 @@ def mass_defect(proton_mass: float, neutron_mass: float, nucleus_mass: float) ->
 
 def decay_constant(half_life: float) -> Quantity:
     """Returns the decay constant of a radioactive substance based on its half-life."""
+    from ..shared.units import INVSEC
+
     if half_life == 0:
         raise ValueError("half_life cannot be zero")
-    return Quantity(math.log(2) / half_life, Unit("1/S", Dimension((F0, F0, F_1, F0, F0, F0, F0))))
+    return Quantity(math.log(2) / half_life, INVSEC)
 
 
 def decay_rate(initial_quantity: float, decay_const: float) -> Quantity:
