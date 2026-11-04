@@ -24,10 +24,11 @@ import math
 import re
 import shlex
 import sys
+from collections.abc import Callable, Iterable, Iterator, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from types import ModuleType
-from typing import Any, Callable, Iterable, Iterator, Sequence
+from typing import Any
 
 from prompt_toolkit import PromptSession
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
@@ -216,7 +217,7 @@ class ReplRegistry:
                 continue
             try:
                 obj = getattr(module, name)
-            except Exception:
+            except Exception:  # noqa: BLE001 S112
                 continue
 
             qualified = f"{prefix}.{name}"
@@ -239,9 +240,7 @@ class ReplRegistry:
             if origin and not origin.startswith("durapy"):
                 continue
 
-            self.entries.setdefault(
-                qualified, Entry(qualified, obj, kind, module_name)
-            )
+            self.entries.setdefault(qualified, Entry(qualified, obj, kind, module_name))
 
     def resolve(self, name: str) -> Entry:
         """Resolve a bare, qualified, or unambiguous name."""
@@ -502,14 +501,14 @@ class DuraPyREPL:
                 raise _NotPython from exc
 
             try:
-                exec(compile(statement, "<durapy>", "exec"), self.namespace)
-            except Exception as exc:
+                exec(compile(statement, "<durapy>", "exec"), self.namespace)  # noqa: S102
+            except Exception as exc:  # noqa: BLE001
                 self._show_error(exc)
             return None
 
         try:
             result = eval(compile(tree, "<durapy>", "eval"), self.namespace)
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             self._show_error(exc)
             return None
 
@@ -537,7 +536,7 @@ class DuraPyREPL:
             self._show_error(exc)
             self._print_signature(entry)
             return None
-        except Exception as exc:
+        except Exception as exc:  # noqa: BLE001
             self._show_error(exc)
             return None
 
@@ -729,9 +728,7 @@ class DuraPyREPL:
             (
                 entry
                 for entry in self.registry.entries.values()
-                if not prefix
-                or entry.module == prefix
-                or entry.name.startswith(prefix)
+                if not prefix or entry.module == prefix or entry.name.startswith(prefix)
             ),
             key=lambda entry: entry.name,
         )
@@ -770,9 +767,7 @@ class DuraPyREPL:
         except (OSError, TypeError) as exc:
             self._show_error(exc)
             return
-        self.console.print(
-            Syntax(source, "python", theme="monokai", line_numbers=True)
-        )
+        self.console.print(Syntax(source, "python", theme="monokai", line_numbers=True))
 
     def _cmd_last(self, _: str = "") -> None:
         if self._last is None:
