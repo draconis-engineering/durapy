@@ -258,38 +258,38 @@ def rms(values: Iterable[float]) -> float:
     return math.sqrt(math.fsum(v * v for v in samples) / len(samples))
 
 
-def rms_from_peak(peak: float) -> float:
+def rms_from_peak(peak: float, /) -> float:
     """RMS of a sinusoid from its peak amplitude (``peak / √2``)."""
     req_non_zero("peak", peak)
     return peak / math.sqrt(2)
 
 
-def decibels_power(ratio: float) -> float:
+def decibels_power(ratio: float, /) -> float:
     """Power ratio to decibels (``10·log10(ratio)``)."""
     req_pos("ratio", ratio)
     return 10 * math.log10(ratio)
 
 
-def decibels_amplitude(ratio: float) -> float:
+def decibels_amplitude(ratio: float, /) -> float:
     """Amplitude/voltage ratio to decibels (``20·log10(ratio)``)."""
     req_pos("ratio", ratio)
     return 20 * math.log10(ratio)
 
 
-def from_decibels(decibel: float, *, amplitude: bool = False) -> float:
+def from_decibels(decibel: float, /, *, amplitude: bool = False) -> float:
     """Convert decibels back to a ratio (power by default)."""
     return 10 ** (decibel / (20 if amplitude else 10))
 
 
-def dbm_to_watts(power_dbm: float) -> Quantity:
+def dbm_to_watts(dbm: float, /) -> Quantity:
     """Power in dBm to watts (0 dBm = 1 mW)."""
-    return Quantity(10 ** (power_dbm / 10) / 1000, WATT)
+    return Quantity(10 ** (dbm / 10) / 1000, WATT)
 
 
-def watts_to_dbm(power_watts: float) -> float:
+def watts_to_dbm(watts: float, /) -> float:
     """Power in watts to dBm."""
-    req_pos("power_watts", power_watts)
-    return 10 * math.log10(power_watts * 1000)
+    req_pos("power_watts", watts)
+    return 10 * math.log10(watts * 1000)
 
 
 # --------------------------------------------------------------------------- #

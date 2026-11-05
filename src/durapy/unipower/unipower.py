@@ -8,7 +8,7 @@ from ..shared.units import AMPERE, FARAD, OHM, SECOND, VOLT, WATT
 
 
 def ohms_law(
-    v: float | None = None, i: float | None = None, r: float | None = None
+    *, v: float | None = None, i: float | None = None, r: float | None = None
 ) -> tuple[Quantity, Quantity, Quantity]:
     """Ohms Law calculation for voltage, current, and resistivity. Returns: (V, I, R)"""
 
@@ -37,7 +37,7 @@ def ohms_law(
     return Quantity(v, VOLT), Quantity(i, AMPERE), Quantity(r, OHM)
 
 
-def volt_divider(v_in: float, r_1: float, r_2: float) -> Quantity:
+def volt_divider(*, v_in: float, r_1: float, r_2: float) -> Quantity:
     """Calculates the output voltage of a voltage divider from input voltage and the two resistances."""
     return Quantity((v_in * (r_2 / (r_1 + r_2))), VOLT)
 
@@ -53,7 +53,7 @@ def inductor_impedance(hertz: float, inductance: float) -> Quantity:
 
 
 def power_dissipation(
-    v: float | None = None, i: float | None = None, r: float | None = None
+    *, v: float | None = None, i: float | None = None, r: float | None = None
 ) -> Quantity:
     """Calculates power dissipation from voltage, current and resistance. If all three parameters are given, it checks for consistency between the three formulas P = I^2 * R, P = V^2 / R and P = V * I."""
 
@@ -102,7 +102,7 @@ def power_dissipation(
                 return Quantity(math.fsum([P1, P2, P3]) / 3, WATT)
 
 
-def total_esr(caps: list[tuple[float, float, float]], connection: str) -> Quantity:
+def total_esr(caps: list[tuple[float, float, float]], *, connection: str) -> Quantity:
     """Calculates total ESR of a list of capacitors based on their connection type. Caps are in the format (capacitance, voltage, esr) for now."""
     if connection == "series":
         return Quantity(math.fsum(cap[2] for cap in caps), OHM)
@@ -123,7 +123,7 @@ def total_esr(caps: list[tuple[float, float, float]], connection: str) -> Quanti
 
 
 def total_capacitance(
-    caps: list[tuple[float, float, float]], connection: str
+    caps: list[tuple[float, float, float]], *, connection: str
 ) -> tuple[
     Quantity, Quantity, Quantity
 ]:  ### caps (capacitance, voltage, esr) (for now)
@@ -135,7 +135,7 @@ def total_capacitance(
         return (
             Quantity(total_capacitance, FARAD),
             Quantity(volt_limit, VOLT),
-            Quantity(total_esr(caps, connection), OHM),
+            Quantity(total_esr(caps, connection=connection), OHM),
         )
 
     if connection == "series":
@@ -144,7 +144,7 @@ def total_capacitance(
         return (
             Quantity(total_capacitance, FARAD),
             Quantity(volt_limit, VOLT),
-            Quantity(total_esr(caps, connection), OHM),
+            Quantity(total_esr(caps, connection=connection), OHM),
         )
 
     raise ValueError("Connection type must be 'parallel' or 'series'")
