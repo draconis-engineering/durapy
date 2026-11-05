@@ -76,7 +76,7 @@ def wing_loading(weight_force: float, wing_area: float) -> float:
     return weight_force / wing_area
 
 
-def glide_ratio(lift: float, drag: float) -> float:
+def glide_ratio(*, lift: float, drag: float) -> float:
     """Calculates the glide ratio (L/D ratio)."""
     return lift / drag
 
