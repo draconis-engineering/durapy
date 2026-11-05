@@ -6,7 +6,7 @@
 # ====================================== #
 
 
-def binary_encode(plaintext: str) -> str:
+def binary_encode(plaintext: str, /) -> str:
     """Encode text as space-separated 8-bit binary bytes using UTF-8.
 
     This is a reversible encoding, not encryption. Any Unicode input (including
@@ -17,7 +17,7 @@ def binary_encode(plaintext: str) -> str:
     return " ".join(format(byte, "08b") for byte in data)
 
 
-def binary_decode(binary: str, *, is_space_separated: bool = True) -> str:
+def binary_decode(binary: str, /, *, is_space_separated: bool = True) -> str:
     """Decode space-separated 8-bit binary bytes back to text using UTF-8."""
     if not is_space_separated:
         binary = " ".join(binary[i : i + 8] for i in range(0, len(binary), 8))
