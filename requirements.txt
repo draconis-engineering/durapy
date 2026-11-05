@@ -1,5 +1,6 @@
 prompt_toolkit
 questionary
+dracolix
 numpy
 sympy
 scipy
