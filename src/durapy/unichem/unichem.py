@@ -8,7 +8,7 @@ concentrations are in ``mol/L`` unless stated otherwise.
 from __future__ import annotations
 
 import math
-import re as regex
+import re
 from functools import reduce
 
 from ..uniphys.thermodynamics import ideal_gas_law as _ideal_gas_law
@@ -22,9 +22,9 @@ from .exceptions import (
 )
 
 # Separators used for hydrates, e.g. CuSO4·5H2O.
-_HYDRATE_SEPARATORS = regex.compile(r"[·⋅*.．]")
-_TRAILING_STATE = regex.compile(r"\((?:aq|s|l|g)\)$", regex.IGNORECASE)
-_LEADING_COEFFICIENT = regex.compile(r"^\d+")
+_HYDRATE_SEPARATORS = re.compile(r"[·⋅*.．]")
+_TRAILING_STATE = re.compile(r"\((?:aq|s|l|g)\)$", re.IGNORECASE)
+_LEADING_COEFFICIENT = re.compile(r"^\d+")
 
 # Valid equation separator arrows
 _VALID_ARROWS = {"->", "→", "=>", "="}
@@ -212,7 +212,7 @@ def _format_formula(counts: dict[str, int]) -> str:
 # --------------------------------------------------------------------------- #
 
 
-def _split_equation(equation: str) -> tuple[list[str], list[str]]:
+def _split_equation(equation: str, /) -> tuple[list[str], list[str]]:
     """Split an equation string into reactant and product species lists."""
 
     for arrow in _VALID_ARROWS:
@@ -239,7 +239,7 @@ def _split_equation(equation: str) -> tuple[list[str], list[str]]:
     return reactants, products
 
 
-def balance_equation(equation: str) -> str:
+def balance_equation(equation: str, /) -> str:
     """Balance a chemical equation and return it with integer coefficients.
 
     Any coefficients already present in the input are ignored. State labels
@@ -409,36 +409,36 @@ def dilution(
     return (c1, v1, c2, v2)
 
 
-def ph(conc: float) -> float:
+def ph(conc: float, /) -> float:
     """Return the pH of a strong-acid solution from its H⁺ concentration."""
     if conc <= 0:
         raise SolutionError("Concentration must be positive for pH")
     return -math.log10(conc)
 
 
-def poh(conc: float) -> float:
+def poh(conc: float, /) -> float:
     """Return the pOH of a strong-base solution from its OH⁻ concentration."""
     if conc <= 0:
         raise SolutionError("Concentration must be positive for pOH")
     return -math.log10(conc)
 
 
-def ph_from_poh(poh: float) -> float:
+def ph_from_poh(poh: float, /) -> float:
     """Convert pOH to pH at 25 °C (``pH + pOH = 14``)."""
     return 14.0 - poh
 
 
-def poh_from_ph(ph: float) -> float:
+def poh_from_ph(ph: float, /) -> float:
     """Convert pH to pOH at 25 °C (``pH + pOH = 14``)."""
     return 14.0 - ph
 
 
-def concentration_from_ph(ph: float) -> float:
+def concentration_from_ph(ph: float, /) -> float:
     """Return the H⁺ concentration from a pH value."""
     return 10.0 ** (-ph)
 
 
-def concentration_from_poh(poh: float) -> float:
+def concentration_from_poh(poh: float, /) -> float:
     """Return the OH⁻ concentration from a pOH value."""
     return 10.0 ** (-poh)
 
