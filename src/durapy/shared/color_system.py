@@ -38,6 +38,8 @@ ANSI_COLORS: dict[str, str] = {
 def color_text(
     text: str,
     color: str | None,
+    /,
+    *,
     bold: bool = False,
     underline: bool = False,
     italic: bool = False,
@@ -60,16 +62,16 @@ def color_text(
     return ansi + text + "\033[0m"
 
 
-def clip_int(val: int, lower: int, upper: int) -> int:
+def clip_int(val: int, /, low: int, high: int) -> int:
     """Clips the given integer to the given range."""
-    if val <= lower:
-        return lower
-    elif val >= upper:
-        return upper
+    if val <= low:
+        return low
+    elif val >= high:
+        return high
     return val
 
 
-def validate_hex(hexcode: str) -> str:
+def validate_hex(hexcode: str, /) -> str:
     """Validates a hexstring for colors. If invalid, returns `#000000`"""
 
     if not isinstance(hexcode, str):
@@ -109,7 +111,7 @@ class _BaseColor:
 class RGB(_BaseColor):
     "RGB color data type."
 
-    def __init__(self, colorname: str, r: int, g: int, b: int) -> None:
+    def __init__(self, colorname: str, /, *, r: int, g: int, b: int) -> None:
         super().__init__(colorname)
         self._r = clip_int(int(r), 0, 255)
         self._g = clip_int(int(g), 0, 255)
@@ -178,21 +180,25 @@ class RGB(_BaseColor):
 
         k = 1 - max(r_scaled, g_scaled, b_scaled)
         if k == 1:
-            return CMYK(self.colorname, 0, 0, 0, 100)
+            return CMYK(self.colorname, c=0, m=0, y=0, k=100)
 
         c = (1 - r_scaled - k) / (1 - k)
         m = (1 - g_scaled - k) / (1 - k)
         y = (1 - b_scaled - k) / (1 - k)
 
         return CMYK(
-            self.colorname, int(c * 100), int(m * 100), int(y * 100), int(k * 100)
+            self.colorname,
+            c=int(c * 100),
+            m=int(m * 100),
+            y=int(y * 100),
+            k=int(k * 100),
         )
 
 
 class HEX(_BaseColor):
     "Hex color data type."
 
-    def __init__(self, colorname: str, hexcode: str):
+    def __init__(self, colorname: str, hexcode: str, /):
         super().__init__(colorname)
         self.hexcode = validate_hex(hexcode)
 
@@ -242,7 +248,7 @@ class HEX(_BaseColor):
         r = int(hexcode[0:2], 16)
         g = int(hexcode[2:4], 16)
         b = int(hexcode[4:6], 16)
-        return RGB(self.colorname, r, g, b)
+        return RGB(self.colorname, r=r, g=g, b=b)
 
     def toCMYK(self) -> CMYK:
         """Converts the hexadecimal color code to CMYK color values."""
@@ -253,21 +259,25 @@ class HEX(_BaseColor):
 
         k = 1 - max(r_scaled, g_scaled, b_scaled)
         if k == 1:
-            return CMYK(self.colorname, 0, 0, 0, 100)  # Pure black
+            return CMYK(self.colorname, c=0, m=0, y=0, k=100)  # Pure black
 
         c = (1 - r_scaled - k) / (1 - k)
         m = (1 - g_scaled - k) / (1 - k)
         y = (1 - b_scaled - k) / (1 - k)
 
         return CMYK(
-            self.colorname, int(c * 100), int(m * 100), int(y * 100), int(k * 100)
+            self.colorname,
+            c=int(c * 100),
+            m=int(m * 100),
+            y=int(y * 100),
+            k=int(k * 100),
         )
 
 
 class CMYK(_BaseColor):
     "CMYK color data type."
 
-    def __init__(self, colorname: str, c: int, m: int, y: int, k: int):
+    def __init__(self, colorname: str, /, *, c: int, m: int, y: int, k: int):
         super().__init__(colorname)
         self.c: int = clip_int(c, 0, 100)
         self.m: int = clip_int(m, 0, 100)
@@ -298,7 +308,7 @@ class CMYK(_BaseColor):
         r = 255 * (1 - self.c / 100) * (1 - self.k / 100)
         g = 255 * (1 - self.m / 100) * (1 - self.k / 100)
         b = 255 * (1 - self.y / 100) * (1 - self.k / 100)
-        return RGB(self.colorname, int(r), int(g), int(b))
+        return RGB(self.colorname, r=int(r), g=int(g), b=int(b))
 
     def toHex(self) -> HEX:
         """Converts the CMYK color values to a hexadecimal color code in the format "#RRGGBB"."""

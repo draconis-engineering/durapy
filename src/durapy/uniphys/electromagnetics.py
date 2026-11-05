@@ -71,7 +71,7 @@ def hertz(wavelength: float, *, in_nm: bool = False) -> Quantity:
     return Quantity(C.value / lam_m, HERTZ)
 
 
-def ems(wavelength: float) -> tuple[str, float, str]:
+def ems_from_wavelength(wavelength: float, /) -> tuple[str, float, str]:
     """Get the part of the electromagnetic spectrum the wavelength `λ` sits in, as well as the hertz."""
     label = spectrum_label(wavelength, EM_SPECTRUM_WAVELENGTHS)
     hz = hertz(wavelength).value
@@ -105,7 +105,7 @@ __all__ = [
     "EM_SPECTRUM_WAVELENGTHS",
     "UV_SPECTRUM_WAVELENGTHS",
     "VISIBLE_SPECTRUM_WAVELENGTHS",
-    "ems",
+    "ems_from_wavelength",
     "hertz",
     "photon_energy_ev_from_hz",
     "photon_energy_ev_from_wavelength",

@@ -27,7 +27,7 @@ def gear_ratio(*, driving_teeth: int, driven_teeth: int) -> str:
 
 def angular_velocity_radians(rpm: float, /) -> Quantity:
     """Returns angular velocity from RPM in radians/s ( ω = RPM * 2π / 60 )"""
-    return Quantity(rpm * PI.value * 2 / 60, RADIAN)
+    return Quantity(rpm * PI * 2 / 60, RADIAN)
 
 
 def angular_velocity_degrees(rpm: float, /) -> Quantity:

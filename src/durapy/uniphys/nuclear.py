@@ -35,7 +35,7 @@ def mean_lifetime(decay_const: float) -> Quantity:
 
 def binding_energy(mass_defect: float) -> Quantity:
     """Returns the binding energy of a nucleus based on the mass defect (E=mc^2)."""
-    return Quantity(mass_defect * float(C) ** 2, JOULE)
+    return Quantity(mass_defect * C.value**2, JOULE)
 
 
 def mass_defect(proton_mass: float, neutron_mass: float, nucleus_mass: float) -> float:
@@ -59,4 +59,17 @@ def decay_rate(initial_quantity: float, decay_const: float) -> Quantity:
 
 def decay_energy(mass_defect: float) -> Quantity:
     """Returns the energy released in a nuclear decay based on the mass defect (E=mc^2)."""
-    return Quantity(mass_defect * float(C) ** 2, JOULE)
+    return Quantity(mass_defect * C.value**2, JOULE)
+
+
+__all__ = [
+    "activity",
+    "binding_energy",
+    "decay_constant",
+    "decay_energy",
+    "decay_rate",
+    "half_life",
+    "mass_defect",
+    "mean_lifetime",
+    "radioactive_decay",
+]

@@ -130,23 +130,23 @@ def gibbs_free_energy(enthalpy: float, entropy: float, temperature: float) -> Qu
     return Quantity(enthalpy - temperature * entropy, JOULE)
 
 
-def carnot_efficiency(temperature_hot: float, temperature_cold: float, /) -> float:
+def carnot_efficiency(*, hot: float, cold: float) -> float:
     """
     Calculate the efficiency of a Carnot engine given the temperatures of the hot and cold reservoirs.
 
     Parameters
     ----------
-        temperature_hot (float): The absolute temperature of the hot reservoir (in kelvin).
-        temperature_cold (float): The absolute temperature of the cold reservoir (in kelvin).
+        hot (float): The absolute temperature of the hot reservoir (in kelvin).
+        cold (float): The absolute temperature of the cold reservoir (in kelvin).
 
     Returns
     -------
         float: The efficiency of the Carnot engine (as a decimal).
     """
-    if temperature_hot <= 0 or temperature_cold <= 0:
+    if hot <= 0 or cold <= 0:
         raise ValueError("Temperatures must be greater than zero.")
 
-    return 1 - (temperature_cold / temperature_hot)
+    return 1 - (cold / hot)
 
 
 def clausius_clapeyron(
@@ -220,3 +220,17 @@ def van_der_waals_pressure(
     return Quantity(
         (n * GAS_CONSTANT.value * temp) / (vol - n * b) - (a * n**2) / vol**2, PASCAL
     )
+
+
+__all__ = [
+    "carnot_efficiency",
+    "clausius_clapeyron",
+    "entropy",
+    "gibbs_free_energy",
+    "heat_capacity",
+    "helmholtz_free_energy",
+    "ideal_gas_law",
+    "internal_energy",
+    "van_der_waals_pressure",
+    "work",
+]

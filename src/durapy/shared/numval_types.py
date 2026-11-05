@@ -203,6 +203,10 @@ class Quantity:
     def imagvalue(self) -> float:
         return self._value.imag
 
+    @property
+    def unit(self) -> Unit:
+        return self._unit
+
     def _value_in(self, unit: Unit) -> float | complex:
         """Return this quantity's value expressed in ``unit`` (same dimension).
 

@@ -84,3 +84,6 @@ def bernoullis_equation(
     solution = sp.solve(substituted_eq, missing[0])
 
     return f"{missing[0].name} = {solution[0]}"
+
+
+__all__ = ["bernoullis_equation", "dynamic_pressure", "reynolds_number"]

@@ -2,9 +2,11 @@
 
 import math
 
+from durapy.shared.exceptions import UnitError
+
 from ..shared.constants import GAS_CONSTANT, MACH
 from ..shared.numval_types import Quantity
-from ..shared.units import DECIBEL, HERTZ, METER, SECOND
+from ..shared.units import DECIBEL, HERTZ, METER, PASCAL, SECOND, WATT
 
 
 def sound_speed(temp: float, γ: float = 1.4, molar_mass: float = 0.02897) -> Quantity:
@@ -38,35 +40,58 @@ def wavelength_from_frequency(
     return Quantity(speed_of_sound / freq, METER)
 
 
-def decibel_to_intensity(decibel: float, reference_intensity: float = 1e-12) -> float:
+def decibel_to_intensity(
+    decibel: float | Quantity, reference_intensity: float = 1e-12
+) -> Quantity:
     """Convert a sound level in decibels (dB) to intensity given a reference intensity."""
-    return reference_intensity * (10 ** (decibel / 10))
+    if isinstance(decibel, Quantity) and not decibel.unit == DECIBEL:
+        raise UnitError("decibel_to_intensity requires a decibel quantity")
+    return Quantity(reference_intensity * (10 ** (decibel / 10)), WATT / METER**2)
 
 
-def decibel_to_pressure(decibel: float, reference_pressure: float = 20e-6) -> float:
+def decibel_to_pressure(
+    decibel: float | Quantity, reference_pressure: float = 20e-6
+) -> Quantity:
     """Convert a sound level in decibels (dB) to pressure given a reference pressure."""
-    return reference_pressure * (10 ** (decibel / 20))
+    return Quantity(reference_pressure * (10 ** (decibel / 20)), PASCAL)
 
 
-def intensity_to_decibel(intensity: float, reference_intensity: float = 1e-12) -> float:
+def intensity_to_decibel(
+    intensity: float, reference_intensity: float = 1e-12
+) -> Quantity:
     """Convert an intensity to decibels (dB) given a reference intensity."""
-    return 10 * math.log10(intensity / reference_intensity)
+    return Quantity(10 * math.log10(intensity / reference_intensity), DECIBEL)
 
 
-def pressure_to_decibel(pressure: float, reference_pressure: float = 20e-6) -> float:
+def pressure_to_decibel(pressure: float, reference_pressure: float = 20e-6) -> Quantity:
     """Convert a pressure to decibels (dB) given a reference pressure."""
-    return 20 * math.log10(pressure / reference_pressure)
+    return Quantity(20 * math.log10(pressure / reference_pressure), DECIBEL)
 
 
 def sound_intensity(
     pressure: float, speed_of_sound: float = MACH.value, density: float = 1.225
-) -> float:
+) -> Quantity:
     """Calculate the sound intensity given the pressure, speed of sound, and density of the medium."""
-    return (pressure**2) / (speed_of_sound * density)
+    return Quantity((pressure**2) / (speed_of_sound * density), WATT / METER**2)
 
 
 def sound_pressure(
     intensity: float, speed_of_sound: float = MACH.value, density: float = 1.225
-) -> float:
+) -> Quantity:
     """Calculate the sound pressure given the intensity, speed of sound, and density of the medium."""
-    return math.sqrt(intensity * speed_of_sound * density)
+    return Quantity(math.sqrt(intensity * speed_of_sound * density), PASCAL)
+
+
+__all__ = [
+    "decibel_to_intensity",
+    "decibel_to_pressure",
+    "frequency_from_wavelength",
+    "intensity_level",
+    "intensity_to_decibel",
+    "pressure_to_decibel",
+    "sound_intensity",
+    "sound_pressure",
+    "sound_pressure_level",
+    "sound_speed",
+    "wavelength_from_frequency",
+]
