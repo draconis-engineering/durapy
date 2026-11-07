@@ -41,8 +41,7 @@ def _sympy_polynomial(coefficients: Sequence[float]) -> sympy.Poly:
     x = sympy.symbols("x")
     degree = len(values) - 1
     expression = sum(
-        coefficient * x ** (degree - index)
-        for index, coefficient in enumerate(values)
+        coefficient * x ** (degree - index) for index, coefficient in enumerate(values)
     )
     return sympy.Poly(expression, x)
 
@@ -158,9 +157,7 @@ def line_general_from_cartesian_points(
     return line_general_from_points(a.x, a.y, b.x, b.y)
 
 
-def line_general_from_slope_intercept(
-    m: float, b: float
-) -> tuple[float, float, float]:
+def line_general_from_slope_intercept(m: float, b: float) -> tuple[float, float, float]:
     """Return `A, B, C` for `y = mx + b` in general form."""
     return (m, -1.0, b)
 
@@ -205,9 +202,7 @@ def lines_are_parallel(a1: float, b1: float, a2: float, b2: float) -> bool:
     return _is_close(a1 * b2 - a2 * b1, 0)
 
 
-def lines_are_perpendicular(
-    a1: float, b1: float, a2: float, b2: float
-) -> bool:
+def lines_are_perpendicular(a1: float, b1: float, a2: float, b2: float) -> bool:
     """Return True when two lines in general form are perpendicular."""
     _validate_line_coefficients(a1, b1)
     _validate_line_coefficients(a2, b2)
@@ -235,9 +230,7 @@ def perpendicular_line_through_point(
     )
 
 
-def point_line_distance(
-    a: float, b: float, c: float, x: float, y: float
-) -> float:
+def point_line_distance(a: float, b: float, c: float, x: float, y: float) -> float:
     """Return the perpendicular distance from `(x, y)` to `Ax + By + C = 0`."""
     _validate_line_coefficients(a, b)
     return abs(a * x + b * y + c) / math.hypot(a, b)
@@ -256,9 +249,7 @@ def line_point_projection(
     )
 
 
-def line_contains_point(
-    a: float, b: float, c: float, x: float, y: float
-) -> bool:
+def line_contains_point(a: float, b: float, c: float, x: float, y: float) -> bool:
     """Return True when `(x, y)` lies on `Ax + By + C = 0`."""
     _validate_line_coefficients(a, b)
     return _is_close(a * x + b * y + c, 0)
@@ -300,9 +291,7 @@ def circle_equation(
     )
 
 
-def circle_from_equation(
-    d: float, e: float, f: float
-) -> tuple[float, float, float]:
+def circle_from_equation(d: float, e: float, f: float) -> tuple[float, float, float]:
     """Return `center_x, center_y, radius` from `x² + y² + Dx + Ey + F = 0`."""
     center_x = -d / 2
     center_y = -e / 2
@@ -555,10 +544,7 @@ def polynomial_integral(
     """Return the antiderivative coefficients of a polynomial."""
     values = _normalize_coefficients(coefficients)
     degree = len(values) - 1
-    result = [
-        values[index] / (degree - index + 1)
-        for index in range(len(values))
-    ]
+    result = [values[index] / (degree - index + 1) for index in range(len(values))]
     result.append(float(constant))
     return _normalize_coefficients(result)
 
@@ -575,38 +561,26 @@ def _align_coefficients(
     )
 
 
-def polynomial_add(
-    first: Sequence[float], second: Sequence[float]
-) -> list[float]:
+def polynomial_add(first: Sequence[float], second: Sequence[float]) -> list[float]:
     """Add two polynomials represented by descending coefficients."""
     first_values, second_values = _align_coefficients(first, second)
-    return _normalize_coefficients(
-        [a + b for a, b in zip(first_values, second_values)]
-    )
+    return _normalize_coefficients([a + b for a, b in zip(first_values, second_values)])
 
 
-def polynomial_subtract(
-    first: Sequence[float], second: Sequence[float]
-) -> list[float]:
+def polynomial_subtract(first: Sequence[float], second: Sequence[float]) -> list[float]:
     """Subtract two polynomials represented by descending coefficients."""
     first_values, second_values = _align_coefficients(first, second)
-    return _normalize_coefficients(
-        [a - b for a, b in zip(first_values, second_values)]
-    )
+    return _normalize_coefficients([a - b for a, b in zip(first_values, second_values)])
 
 
-def polynomial_multiply(
-    first: Sequence[float], second: Sequence[float]
-) -> list[float]:
+def polynomial_multiply(first: Sequence[float], second: Sequence[float]) -> list[float]:
     """Multiply two polynomials represented by descending coefficients."""
     first_values = _normalize_coefficients(first)
     second_values = _normalize_coefficients(second)
     result = [0.0] * (len(first_values) + len(second_values) - 1)
     for first_index, first_coefficient in enumerate(first_values):
         for second_index, second_coefficient in enumerate(second_values):
-            result[first_index + second_index] += (
-                first_coefficient * second_coefficient
-            )
+            result[first_index + second_index] += first_coefficient * second_coefficient
     return _normalize_coefficients(result)
 
 
@@ -630,9 +604,7 @@ def polynomial_long_division(
         coefficient = remainder[index] / divisor_values[0]
         quotient[index] = coefficient
         for divisor_index, divisor_coefficient in enumerate(divisor_values):
-            remainder[index + divisor_index] -= (
-                coefficient * divisor_coefficient
-            )
+            remainder[index + divisor_index] -= coefficient * divisor_coefficient
 
     remainder_values = remainder[quotient_length:]
     return (
@@ -664,7 +636,7 @@ def polynomial_roots(coefficients: Sequence[float]) -> list[complex]:
         if _is_close(values[0], 0):
             raise ValueError("The zero polynomial has infinitely many roots")
         return []
-    return [complex(root) for root in np.roots(values)]
+    return [complex(root) for root in np.roots(values)]  # replace with dlx
 
 
 def polynomial_real_roots(
@@ -686,10 +658,8 @@ def polynomial_rational_roots(
             raise ValueError("The zero polynomial has infinitely many roots")
         return []
 
-    roots = sympy.ground_roots(_sympy_polynomial(values))
-    return sorted(
-        {Fraction(int(root.p), int(root.q)) for root in roots}
-    )
+    roots = sympy.ground_roots(_sympy_polynomial([float(value) for value in values]))
+    return sorted({Fraction(int(root.p), int(root.q)) for root in roots})
 
 
 def polynomial_factorized(coefficients: Sequence[float]) -> str:

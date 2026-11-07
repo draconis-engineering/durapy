@@ -24,42 +24,42 @@ __all__ = [
 ]
 
 
-def degrees_to_radians(degrees: float) -> float:
+def degrees_to_radians(degrees: float, /) -> float:
     """Convert an angle from degrees to radians."""
     return math.radians(degrees)
 
 
-def radians_to_degrees(radians: float) -> float:
+def radians_to_degrees(radians: float, /) -> float:
     """Convert an angle from radians to degrees."""
     return math.degrees(radians)
 
 
-def sin_deg(degrees: float) -> float:
+def sin_deg(degrees: float, /) -> float:
     """Return the sine of an angle given in degrees."""
     return math.sin(math.radians(degrees))
 
 
-def cos_deg(degrees: float) -> float:
+def cos_deg(degrees: float, /) -> float:
     """Return the cosine of an angle given in degrees."""
     return math.cos(math.radians(degrees))
 
 
-def tan_deg(degrees: float) -> float:
+def tan_deg(degrees: float, /) -> float:
     """Return the tangent of an angle given in degrees."""
     return math.tan(math.radians(degrees))
 
 
-def asin_deg(value: float) -> float:
+def asin_deg(value: float, /) -> float:
     """Return the arcsine of `value` in degrees."""
     return math.degrees(math.asin(value))
 
 
-def acos_deg(value: float) -> float:
+def acos_deg(value: float, /) -> float:
     """Return the arccosine of `value` in degrees."""
     return math.degrees(math.acos(value))
 
 
-def atan_deg(value: float) -> float:
+def atan_deg(value: float, /) -> float:
     """Return the arctangent of `value` in degrees."""
     return math.degrees(math.atan(value))
 

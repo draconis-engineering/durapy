@@ -20,9 +20,9 @@ def tw_ratio(thrust: float, weight: float) -> str:
     return f"Ratio: {color_text(f'{ratio}', 'green' if ratio > 1 else 'red' if ratio != 1 else 'yellow')}"
 
 
-def mach_number(vel: float, mach: float = MACH.value) -> str:
+def mach_number(velocity: float, mach: float = MACH.value) -> str:
     """Mach Number Calulator. Speed of sound is defaulted to 343 m/s. Ensure consistent units!"""
-    ratio = vel / mach
+    ratio = velocity / mach
     label = (
         "SUBSONIC"
         if ratio < 1
@@ -49,10 +49,10 @@ def mach_number(vel: float, mach: float = MACH.value) -> str:
 
 
 def lift_drag_equation(
-    coeff: float, dynamic_pressure: float, ref_area: float
+    coefficient: float, dynamic_pressure: float, ref_area: float
 ) -> Quantity:
     """Lift/Drag equation calculator. Returns the lift/drag force in Newtons."""
-    return Quantity(coeff * dynamic_pressure * ref_area, NEWTON)
+    return Quantity(coefficient * dynamic_pressure * ref_area, NEWTON)
 
 
 def reynolds_number(

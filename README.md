@@ -68,6 +68,28 @@ Or, without installing the console script:
 
 ```bash
 python -m durapy.uniCLI.repl
+# or with uv:
+uv run durapy
+```
+
+```bash
+PS C:\Prosjekter\durapy> uv run durapy
+╭─────────────────────────────────────────────────────────── DuraPy REPL ────────────────────────────────────────────────────────────╮
+│ DuraPy 1.0.2.0 interactive shell                                                                                                   │
+│ Tab completes names and keyword arguments.                                                                                         │
+│ Up/Down recalls history; Ctrl-Space opens completion.                                                                              │
+│                                                                                                                                    │
+│ Try:                                                                                                                               │
+│   mach_number 340                                                                                                                  │
+│   slope 0 0 2 4                                                                                                                    │
+│   thermodynamics.ideal_gas_law V=0.022414 n=1.0 T=273.15                                                                           │
+│   :again 680                                                                                                                       │
+│   last(680)                                                                                                                        │
+│   _                                                                                                                                │
+│                                                                                                                                    │
+│ :help for all commands, :quit to exit.                                                                                             │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+durapy>
 ```
 
 Inside the shell, functions can be called Python-style or shell-style:
@@ -93,19 +115,19 @@ Type `:help` inside the shell for the full command list.
 
 ## Module Overview
 
-| Module | Purpose |
-| --- | --- |
-| `durapy.shared` | Core primitives: `Quantity`, `Unit`, `Dimension`, `Constant`, color systems, exceptions |
-| `durapy.unimath` | Algebra, geometry, coordinate systems, number theory, trigonometry |
-| `durapy.uniphys` | Physics: classical (mechanics, thermodynamics, fluids, acoustics, electromagnetism), modern (nuclear, relativity), astrophysics (gravitation, orbital mechanics, cosmology, rocketry) |
-| `durapy.unisky` | Aerospace/spaceflight: aerodynamics, propulsion, gas laws, Bernoulli, rocket equations (built on `uniphys`) |
-| `durapy.unichem` | Chemistry: periodic table, formula parsing/molar mass, stoichiometry, balancing, acid/base, gas laws |
-| `durapy.unipower` | Electronics: component models, MNA circuit solver (DC/AC), RLC/filters, power analysis |
-| `durapy.uniops` | Robotics/mechatronics: kinematics, dynamics, PID controllers |
-| `durapy.unibio` | Bioinformatics: sequence tools, ORFs, GC content, melting temp, translation |
-| `durapy.unicogni` | ML/NLP utilities and activation/loss functions |
-| `durapy.unicrypto` | Cryptography primitives |
-| `durapy.uniCLI` | CLI framework utilities |
+| Module             | Purpose                                                                                                                                                                               |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `durapy.shared`    | Core primitives: `Quantity`, `Unit`, `Dimension`, `Constant`, color systems, exceptions                                                                                               |
+| `durapy.unimath`   | Algebra, geometry, coordinate systems, number theory, trigonometry                                                                                                                    |
+| `durapy.uniphys`   | Physics: classical (mechanics, thermodynamics, fluids, acoustics, electromagnetism), modern (nuclear, relativity), astrophysics (gravitation, orbital mechanics, cosmology, rocketry) |
+| `durapy.unisky`    | Aerospace/spaceflight: aerodynamics, propulsion, gas laws, Bernoulli, rocket equations (built on `uniphys`)                                                                           |
+| `durapy.unichem`   | Chemistry: periodic table, formula parsing/molar mass, stoichiometry, balancing, acid/base, gas laws                                                                                  |
+| `durapy.unipower`  | Electronics: component models, MNA circuit solver (DC/AC), RLC/filters, power analysis                                                                                                |
+| `durapy.uniops`    | Robotics/mechatronics: kinematics, dynamics, PID controllers                                                                                                                          |
+| `durapy.unibio`    | Bioinformatics: sequence tools, ORFs, GC content, melting temp, translation                                                                                                           |
+| `durapy.unicogni`  | ML/NLP utilities and activation/loss functions                                                                                                                                        |
+| `durapy.unicrypto` | Cryptography primitives                                                                                                                                                               |
+| `durapy.uniCLI`    | CLI framework utilities                                                                                                                                                               |
 
 ## Documentation
 

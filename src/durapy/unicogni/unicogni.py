@@ -1,31 +1,34 @@
 """`UniCogni` source"""
 
+import dracolix as dlx
 import numpy as np
 from scipy import special
 
 from ..shared.constants import PI
 
-### ACTIVATION FUNCTIONS
+# -------------------------------------- #
+#          ACTIVATION FUNCTIONS          #
+# -------------------------------------- #
 
 
-def relu(x: np.ndarray, /) -> np.ndarray:
+def relu(x: np.ndarray, /) -> dlx.Array:
     """Returns the Rectified Linear Unit activation of x."""
-    return np.maximum(0.0, x)
+    return dlx.array(np.maximum(0.0, x))
 
 
-def d_relu(x: np.ndarray, /) -> np.ndarray:
+def d_relu(x: np.ndarray, /) -> dlx.Array:
     """Returns the derivative of the Rectified Linear Unit activation function."""
-    return (x > 0).astype(np.float32)
+    return dlx.array((x > 0).astype(np.float32))
 
 
-def leaky_relu(x: np.ndarray, /) -> np.ndarray:
+def leaky_relu(x: np.ndarray, /) -> dlx.Array:
     """Returns the Leaky ReLU activation of X."""
-    return np.maximum(0.01 * x, x)
+    return dlx.array(np.maximum(0.01 * x, x))
 
 
-def d_leaky_relu(x: np.ndarray, /) -> np.ndarray:
+def d_leaky_relu(x: np.ndarray, /) -> dlx.Array:
     """Returns the derivative of the Leaky ReLU activation function."""
-    return np.where(x > 0, 1.0, 0.01).astype(np.float32)
+    return dlx.array(np.where(x > 0, 1.0, 0.01).astype(np.float32))
 
 
 def gelu(x: np.ndarray, /) -> np.ndarray:
@@ -122,6 +125,7 @@ def mish(x: np.ndarray, /) -> np.ndarray:
 
 def d_mish(x: np.ndarray, /) -> np.ndarray:
     """Derivative of the Mish activation function."""
+
     # Clip the exponent so exp(x) cannot overflow to inf (which yields nan,
     # since np.exp on an array warns instead of raising OverflowError).
     # For x > 20 the derivative is already 1 to within float precision.
@@ -138,7 +142,9 @@ def softmax(z: np.ndarray, /) -> np.ndarray:
     return exp_z / np.sum(exp_z, axis=-1, keepdims=True)
 
 
-### PERFORMANCE METRICS
+# ------------------------------------- #
+#          PERFORMANCE METRICS          #
+# ------------------------------------- #
 
 
 def mae(actual: np.ndarray, pred: np.ndarray) -> float:
@@ -204,4 +210,5 @@ def cross_entropy_loss(actual: np.ndarray, pred: np.ndarray) -> float:
     log_likelihood = -np.log(
         flat_probabilities[np.arange(flat_probabilities.shape[0]), flat_targets]
     )
+
     return float(np.mean(log_likelihood))

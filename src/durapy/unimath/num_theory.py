@@ -25,7 +25,7 @@ __all__ = [
 
 def _require_int(value: object, name: str) -> None:
     if not isinstance(value, int) or isinstance(value, bool):
-        raise ValueError(f"{name} requires an integer")
+        raise TypeError(f"{name} requires an integer")
 
 
 def _proper_divisor_sum(n: int) -> int:
@@ -103,8 +103,9 @@ def subfactorial(n: int, /) -> int:
 
     previous_two, previous_one = 1, 0
     for k in range(2, n + 1):
-        previous_two, previous_one = previous_one, (k - 1) * (
-            previous_one + previous_two
+        previous_two, previous_one = (
+            previous_one,
+            (k - 1) * (previous_one + previous_two),
         )
     return previous_one
 
