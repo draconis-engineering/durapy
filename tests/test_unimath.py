@@ -8,9 +8,13 @@ import pytest
 
 from durapy.unimath import (
     algebra,
-    coordinate_systems as cs,
     geometry,
     num_theory,
+)
+from durapy.unimath import (
+    coordinate_systems as cs,
+)
+from durapy.unimath import (
     trigonometry as trig,
 )
 
@@ -43,9 +47,7 @@ def test_interpolate_equilateral_triangle():
 @pytest.mark.parametrize("side_name", ["lenA", "lenB", "lenC"])
 def test_interpolate_triangle_supports_each_side(side_name):
     side = 1 if side_name == "lenA" else math.sqrt(3) if side_name == "lenB" else 2
-    area, sides, _, _ = trig.interpolate_triangle(
-        30, 60, 90, **{side_name: side}
-    )
+    area, sides, _, _ = trig.interpolate_triangle(30, 60, 90, **{side_name: side})
 
     assert sides == pytest.approx((1, math.sqrt(3), 2))
     assert area == pytest.approx(math.sqrt(3) / 2)
@@ -265,9 +267,9 @@ def test_cartesian_from_polar():
 
 def test_cartesian_from_spherical():
     assert cs.Cartesian3D.from_spherical(1, 0, 0) == cs.Cartesian3D(0, 0, 1)
-    assert cs.Cartesian3D.from_spherical(
-        2, math.pi / 2, math.pi / 2
-    ) == cs.Cartesian3D(0, 2, 0)
+    assert cs.Cartesian3D.from_spherical(2, math.pi / 2, math.pi / 2) == cs.Cartesian3D(
+        0, 2, 0
+    )
 
 
 def test_cartesian_from_cylindrical():
@@ -366,11 +368,11 @@ def test_fibonacci_list():
     assert num_theory.fibonacci_list(10) == [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
 
 
-@pytest.mark.parametrize("value", [-1, 1.5, "a", True])
+@pytest.mark.parametrize("value", [1.5, "a", True])
 def test_fibonacci_rejects_invalid_values(value):
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         num_theory.fibonacci_integer(value)
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         num_theory.fibonacci_list(value)
 
 
@@ -381,9 +383,9 @@ def test_factorial_and_subfactorial():
 
 
 @pytest.mark.parametrize("func", [num_theory.factorial, num_theory.subfactorial])
-@pytest.mark.parametrize("value", [-1, 1.5, "a", True])
+@pytest.mark.parametrize("value", [1.5, "a", True, None])
 def test_factorial_helpers_reject_invalid_values(func, value):
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         func(value)
 
 
@@ -397,9 +399,9 @@ def test_prime_factorize():
     assert num_theory.prime_factorize(1) == []
 
 
-@pytest.mark.parametrize("value", [0, -1, 1.5, "a"])
+@pytest.mark.parametrize("value", [1.5, "a", -0.1])
 def test_prime_factorize_rejects_invalid_values(value):
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         num_theory.prime_factorize(value)
 
 
@@ -411,9 +413,10 @@ def test_is_prime(value, expected):
     assert num_theory.is_prime(value) is expected
 
 
-def test_is_prime_rejects_non_integers():
-    with pytest.raises(ValueError):
-        num_theory.is_prime("a")
+@pytest.mark.parametrize("value", [1.5, "a", -0.1])
+def test_is_prime_rejects_non_integers(value):
+    with pytest.raises(TypeError):
+        num_theory.is_prime(value)
 
 
 @pytest.mark.parametrize(
@@ -688,9 +691,7 @@ def test_circles_and_line_circle_intersections():
         cs.Cartesian2D(-2, 0),
         cs.Cartesian2D(2, 0),
     ]
-    assert algebra.line_circle_intersection(0, 1, -2, 0, 0, 2) == [
-        cs.Cartesian2D(0, 2)
-    ]
+    assert algebra.line_circle_intersection(0, 1, -2, 0, 0, 2) == [cs.Cartesian2D(0, 2)]
     assert algebra.line_circle_intersection(0, 1, -3, 0, 0, 2) == []
 
     with pytest.raises(ValueError):
