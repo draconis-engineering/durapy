@@ -1,9 +1,10 @@
 """`UniPhys` classical mechanics source"""
 
-from ..shared.color_system import color_text
-from ..shared.constants import EARTH_G, PI, C
-from ..shared.numval_types import Quantity
-from ..shared.units import DEGREE, JOULE, NEWTONMETER, RADIAN
+from ...shared.color_system import color_text
+from ...shared.constants import EARTH_G, PI
+from ...shared.numval_types import Quantity
+from ...shared.units import DEGREE, JOULE, NEWTONMETER, RADIAN
+from ..modern.relativity import einstein_mass_energy_equivalence
 
 
 def torque(moment_arm_distance: float, force: float) -> Quantity:
@@ -12,11 +13,11 @@ def torque(moment_arm_distance: float, force: float) -> Quantity:
 
 
 # Pos-only because of the names being easily mixed up
-def gear_ratio(*, driving_teeth: int, driven_teeth: int) -> str:
+def gear_ratio(*, driving: int, driven: int) -> str:
     """Returns the gear ratio from the driving gear's teeth count and the driven gear's teeth count."""
-    if driving_teeth == 0:
+    if driving == 0:
         raise ValueError("driving_teeth cannot be zero")
-    ratio = driven_teeth / driving_teeth
+    ratio = driven / driving
     if ratio > 1:
         return f"{ratio} - {color_text('Speed-', 'red')} - {color_text('Torque+', 'green')}"
     elif ratio < 1:
@@ -45,10 +46,6 @@ def potential_energy(
 ) -> Quantity:
     """Returns the potential energy of a mass. Gravity is defaulted to 9.8m /s^2"""
     return Quantity(mass * g * height, JOULE)
-
-
-def einstein_mass_energy_equivalence(mass: float) -> Quantity:
-    return Quantity(mass * C.value**2, JOULE)
 
 
 __all__ = [

@@ -20,7 +20,11 @@ def test_registry_resolves_bare_qualified_and_alias():
     assert registry.resolve("unisky.mach_number").name == "unisky.mach_number"
     assert (
         registry.resolve("thermodynamics.ideal_gas_law").name
-        == "uniphys.thermodynamics.ideal_gas_law"
+        == "uniphys.classical.thermodynamics.ideal_gas_law"
+    )
+    assert (
+        registry.resolve("classical.thermodynamics.ideal_gas_law").name
+        == "uniphys.classical.thermodynamics.ideal_gas_law"
     )
 
 

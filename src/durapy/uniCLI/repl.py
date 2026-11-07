@@ -188,9 +188,9 @@ class ReplRegistry:
             self._short.setdefault(qualified.rsplit(".", 1)[-1], []).append(qualified)
 
         unique = {
-            name: candidates[0]
+            name: min(candidates, key=lambda candidate: len(candidate[0]))
             for name, candidates in self._submodule_candidates.items()
-            if len(candidates) == 1 and name not in self.modules
+            if name not in self.modules
         }
         self.submodules = {name: module for name, (_, module) in unique.items()}
         self._submodule_prefix = {name: prefix for name, (prefix, _) in unique.items()}

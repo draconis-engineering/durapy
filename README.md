@@ -38,7 +38,7 @@ pip install -e .
 
 ```python
 from durapy.unimath import algebra
-from durapy.uniphys import mechanics, thermodynamics
+from durapy.uniphys.classical import mechanics, thermodynamics
 from durapy.unisky import mach_number, reynolds_number
 
 # Algebra
@@ -97,7 +97,7 @@ Type `:help` inside the shell for the full command list.
 | --- | --- |
 | `durapy.shared` | Core primitives: `Quantity`, `Unit`, `Dimension`, `Constant`, color systems, exceptions |
 | `durapy.unimath` | Algebra, geometry, coordinate systems, number theory, trigonometry |
-| `durapy.uniphys` | Physics: mechanics, thermodynamics, fluid dynamics, acoustics, electromagnetics, astrophysics, nuclear, quantum |
+| `durapy.uniphys` | Physics: classical (mechanics, thermodynamics, fluids, acoustics, electromagnetism), modern (nuclear, relativity), astrophysics (gravitation, orbital mechanics, cosmology, rocketry) |
 | `durapy.unisky` | Aerospace/spaceflight: aerodynamics, propulsion, gas laws, Bernoulli, rocket equations (built on `uniphys`) |
 | `durapy.unichem` | Chemistry: periodic table, formula parsing/molar mass, stoichiometry, balancing, acid/base, gas laws |
 | `durapy.unipower` | Electronics: component models, MNA circuit solver (DC/AC), RLC/filters, power analysis |

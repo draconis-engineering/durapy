@@ -1,6 +1,7 @@
 """Correctness and validation tests for the unimath package."""
 
 import math
+from fractions import Fraction
 
 import dracolix as dlx
 import pytest
@@ -216,6 +217,94 @@ def test_ascii_angle_aliases():
 def test_distance_to_origin_handles_negative_radii():
     assert cs.Polar(-3, 0).distance_to_origin() == 3
     assert cs.Spherical(-3, 0, 0).distance_to_origin() == 3
+
+
+def test_coordinate_as_tuple():
+    assert cs.Cartesian1D(1).as_tuple() == (1,)
+    assert cs.Cartesian2D(1, 2).as_tuple() == (1, 2)
+    assert cs.Cartesian3D(1, 2, 3).as_tuple() == (1, 2, 3)
+    assert cs.Polar(1, 0.5).as_tuple() == (1, 0.5)
+    assert cs.Spherical(1, 0.5, 0.25).as_tuple() == (1, 0.5, 0.25)
+    assert cs.Cylindrical(1, 0.5, 2).as_tuple() == (1, 0.5, 2)
+
+
+def test_coordinate_repr_and_equality():
+    assert cs.Cartesian2D(1, 2) == cs.Cartesian2D(1, 2)
+    assert cs.Cartesian2D(1, 2) == cs.Cartesian2D(1 + 1e-13, 2)
+    assert cs.Cartesian2D(1, 2) != cs.Cartesian2D(1, 3)
+    assert cs.Cartesian2D(1, 2) != cs.Cartesian2D(1, 2, unit="m")
+    assert cs.Cartesian2D(1, 2) != cs.Polar(1, 2)
+    assert repr(cs.Cartesian2D(1, 2)) == "Cartesian2D(1, 2, unit='unitless')"
+
+
+def test_coordinate_distance_to():
+    assert cs.Cartesian1D(0).distance_to(cs.Cartesian1D(3)) == 3
+    assert cs.Cartesian2D(0, 0).distance_to(cs.Cartesian2D(3, 4)) == 5
+    assert cs.Cartesian2D(0, 0).distance_to(cs.Polar(3, 0)) == 3
+    assert cs.Cartesian3D(0, 0, 0).distance_to(cs.Spherical(1, 0, 0)) == 1
+    assert cs.Cartesian3D(0, 0, 0).distance_to(
+        cs.Cylindrical(1, 0, 1)
+    ) == pytest.approx(math.sqrt(2))
+
+
+def test_coordinate_distance_to_validation():
+    with pytest.raises(TypeError):
+        cs.Cartesian1D(0).distance_to(1)
+    with pytest.raises(ValueError):
+        cs.Cartesian1D(0).distance_to(cs.Cartesian2D(0, 0))
+    with pytest.raises(ValueError):
+        cs.Cartesian1D(0, unit="m").distance_to(cs.Cartesian1D(1))
+
+
+def test_cartesian_from_polar():
+    assert cs.Cartesian2D.from_polar(1, 0) == cs.Cartesian2D(1, 0)
+
+    point = cs.Cartesian2D.from_polar(2, math.pi / 2, unit="m")
+    assert point == cs.Cartesian2D(0, 2, unit="m")
+
+
+def test_cartesian_from_spherical():
+    assert cs.Cartesian3D.from_spherical(1, 0, 0) == cs.Cartesian3D(0, 0, 1)
+    assert cs.Cartesian3D.from_spherical(
+        2, math.pi / 2, math.pi / 2
+    ) == cs.Cartesian3D(0, 2, 0)
+
+
+def test_cartesian_from_cylindrical():
+    assert cs.Cartesian3D.from_cylindrical(1, 0, 2) == cs.Cartesian3D(1, 0, 2)
+
+
+def test_coordinate_from_cartesian_constructors():
+    polar = cs.Polar.from_cartesian2D(1, 1)
+    assert polar.r == pytest.approx(math.sqrt(2))
+    assert polar.θ == pytest.approx(math.pi / 4)
+
+    spherical = cs.Spherical.from_cartesian3D(0, 0, 1)
+    assert spherical.r == 1
+    assert spherical.φ == 0
+
+    cylindrical = cs.Cylindrical.from_cartesian3D(1, 0, 2)
+    assert cylindrical.r == 1
+    assert cylindrical.θ == 0
+    assert cylindrical.z == 2
+
+
+def test_coordinate_degree_accessors():
+    polar = cs.Polar(2, math.pi)
+    assert polar.theta_degrees == pytest.approx(180)
+    assert polar.to_degrees() == pytest.approx((2, 180))
+    assert polar.to_radians() == pytest.approx((2, math.pi))
+
+    spherical = cs.Spherical(1, math.pi / 2, math.pi)
+    assert spherical.theta_degrees == pytest.approx(90)
+    assert spherical.phi_degrees == pytest.approx(180)
+    assert spherical.to_degrees() == pytest.approx((1, 90, 180))
+    assert spherical.to_radians() == pytest.approx((1, math.pi / 2, math.pi))
+
+    cylindrical = cs.Cylindrical(1, math.pi / 2, 2)
+    assert cylindrical.theta_degrees == pytest.approx(90)
+    assert cylindrical.to_degrees() == pytest.approx((1, 90, 2))
+    assert cylindrical.to_radians() == pytest.approx((1, math.pi / 2, 2))
 
 
 def test_sas_area():
@@ -457,6 +546,163 @@ def test_cubic_num_roots():
 def test_cubic_evaluation_and_bruteforce():
     assert algebra.cubic_evaluation(1, 0, -1, 0, 2) == 6
     assert algebra.cubic_evaluation_bruteforce(1, 0, -1, 0, -2, 2, 1) == [-1, 0, 1]
+
+
+def test_polynomial_basics():
+    assert algebra.polynomial_degree([0, 2, 3]) == 1
+    assert algebra.polynomial_degree([0]) == -1
+    assert algebra.polynomial_leading_coefficient([0, 2, 3]) == 2
+    assert algebra.polynomial_evaluation([2, -3, 1], 2) == 3
+    assert algebra.polynomial_derivative([2, -3, 1]) == [4.0, -3.0]
+    assert algebra.polynomial_integral([3, 0], 4) == [1.5, 0.0, 4.0]
+
+    with pytest.raises(ValueError):
+        algebra.polynomial_degree([])
+
+
+def test_polynomial_arithmetic():
+    assert algebra.polynomial_add([1, 2], [3]) == [1.0, 5.0]
+    assert algebra.polynomial_subtract([1, 2], [1, 5]) == [-3.0]
+    assert algebra.polynomial_multiply([1, 1], [1, -1]) == [1.0, 0.0, -1.0]
+    assert algebra.polynomial_long_division([1, 0, -1], [1, -1]) == (
+        [1.0, 1.0],
+        [0.0],
+    )
+    assert algebra.polynomial_long_division([1, 0, 0], [1, -1]) == (
+        [1.0, 1.0],
+        [1.0],
+    )
+    assert algebra.polynomial_long_division([2, 4], [2]) == (
+        [1.0, 2.0],
+        [0.0],
+    )
+    assert algebra.polynomial_synthetic_division([1, -3, 2], 1) == (
+        [1.0, -2.0],
+        0.0,
+    )
+
+    with pytest.raises(ValueError):
+        algebra.polynomial_long_division([1, 2], [0])
+
+
+def test_polynomial_roots_and_factoring():
+    assert sorted(
+        algebra.polynomial_roots([1, 0, 1]), key=lambda root: root.imag
+    ) == pytest.approx([-1j, 1j])
+    assert algebra.polynomial_real_roots([1, 0, -1]) == pytest.approx([-1, 1])
+    assert algebra.polynomial_rational_roots([2, -3, 1]) == [
+        Fraction(1, 2),
+        Fraction(1),
+    ]
+    assert algebra.polynomial_factorized([1, -3, 2]) == "(x - 2)*(x - 1)"
+    assert algebra.polynomial_from_roots([1, 2], leading_coefficient=2) == [
+        2.0,
+        -6.0,
+        4.0,
+    ]
+
+    with pytest.raises(ValueError):
+        algebra.polynomial_roots([0])
+    with pytest.raises(ValueError):
+        algebra.polynomial_rational_roots([0])
+    with pytest.raises(ValueError):
+        algebra.polynomial_from_roots([1], leading_coefficient=0)
+
+
+def test_polynomial_zero_and_constant_edges():
+    assert algebra.polynomial_factorized([0]) == "0"
+    assert algebra.polynomial_roots([5]) == []
+    assert algebra.polynomial_rational_roots([5]) == []
+    assert algebra.polynomial_real_roots([5]) == []
+    assert algebra.polynomial_long_division([1, 2], [1, 0, 0]) == (
+        [0.0],
+        [1.0, 2.0],
+    )
+
+
+def test_general_line_forms():
+    line = algebra.line_general_from_points(0, 0, 1, 1)
+    assert algebra.line_contains_point(*line, 2, 2)
+    assert algebra.line_general_from_cartesian_points(
+        a=cs.Cartesian2D(0, 0), b=cs.Cartesian2D(1, 1)
+    ) == pytest.approx(line)
+    assert algebra.line_general_from_slope_intercept(2, 3) == (2, -1.0, 3)
+    assert algebra.line_slope_intercept_from_general(2, -1, 3) == (2, 3)
+    assert algebra.line_through_point_with_slope(1, 2, 3) == (3, -1.0, -1)
+
+    vertical = algebra.line_general_from_points(1, 0, 1, 2)
+    assert algebra.line_contains_point(*vertical, 1, 42)
+
+    with pytest.raises(ValueError):
+        algebra.line_general_from_points(1, 1, 1, 1)
+    with pytest.raises(ValueError):
+        algebra.line_slope_intercept_from_general(0, 0, 1)
+    with pytest.raises(ValueError):
+        algebra.line_slope_intercept_from_general(*vertical)
+
+
+def test_general_line_relationships():
+    assert algebra.line_intersection_general(1, 0, -1, 0, 1, -1) == (
+        cs.Cartesian2D(1, 1)
+    )
+    assert algebra.lines_are_parallel(1, 2, 2, 4)
+    assert algebra.lines_are_perpendicular(1, 0, 0, 1)
+    assert algebra.line_contains_point(
+        *algebra.parallel_line_through_point(1, 2, 3, 4), 3, 4
+    )
+    assert algebra.line_contains_point(
+        *algebra.perpendicular_line_through_point(1, 2, 3, 4), 3, 4
+    )
+
+    with pytest.raises(ValueError):
+        algebra.line_intersection_general(1, 0, 1, 2, 0, 2)
+    with pytest.raises(ValueError):
+        algebra.lines_are_parallel(0, 0, 1, 0)
+
+
+def test_point_line_geometry():
+    assert algebra.point_line_distance(0, 1, 0, 3, 4) == 4
+    assert algebra.line_point_projection(0, 1, 0, 3, 4) == cs.Cartesian2D(3, 0)
+    assert algebra.midpoint(0, 0, 2, 4) == cs.Cartesian2D(1, 2)
+    assert algebra.midpoint_from_points(
+        a=cs.Cartesian2D(0, 0), b=cs.Cartesian2D(2, 4)
+    ) == cs.Cartesian2D(1, 2)
+
+    bisector = algebra.perpendicular_bisector(0, 0, 2, 0)
+    assert algebra.line_contains_point(*bisector, 1, 0)
+    assert algebra.lines_are_perpendicular(*bisector[:2], 0, 2)
+
+    with pytest.raises(ValueError):
+        algebra.perpendicular_bisector(1, 1, 1, 1)
+
+
+def test_circles_and_line_circle_intersections():
+    assert algebra.circle_equation(1, 2, 3) == (-2, -4, -4)
+    assert algebra.circle_from_equation(-2, -4, -4) == pytest.approx((1, 2, 3))
+    assert algebra.circle_from_three_points(0, 0, 2, 0, 0, 2) == pytest.approx(
+        (1, 1, math.sqrt(2))
+    )
+
+    intersections = algebra.line_circle_intersection(0, 1, 0, 0, 0, 2)
+    assert intersections == [
+        cs.Cartesian2D(-2, 0),
+        cs.Cartesian2D(2, 0),
+    ]
+    assert algebra.line_circle_intersection(0, 1, -2, 0, 0, 2) == [
+        cs.Cartesian2D(0, 2)
+    ]
+    assert algebra.line_circle_intersection(0, 1, -3, 0, 0, 2) == []
+
+    with pytest.raises(ValueError):
+        algebra.circle_equation(0, 0, -1)
+    with pytest.raises(ValueError):
+        algebra.circle_from_equation(0, 0, 1)
+    with pytest.raises(ValueError):
+        algebra.circle_from_three_points(0, 0, 1, 1, 2, 2)
+    with pytest.raises(ValueError):
+        algebra.line_circle_intersection(0, 0, 0, 0, 0, 1)
+    with pytest.raises(ValueError):
+        algebra.line_circle_intersection(0, 1, 0, 0, 0, -1)
 
 
 def test_vector_point_roundtrip():

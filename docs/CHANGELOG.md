@@ -8,12 +8,27 @@
   `unimath.trigonometry`.
 - ASCII aliases (`theta`, `phi`) for the Unicode angle attributes on the
   coordinate-system classes.
+- Coordinate conveniences: `as_tuple`, `distance_to`, value-based equality and
+  readable `repr`, plus `from_polar`, `from_spherical`, `from_cylindrical`, and
+  reciprocal `from_cartesian*` constructors.
+- Degree accessors (`theta_degrees`, `phi_degrees`, `to_degrees`,
+  `to_radians`) for polar, spherical, and cylindrical coordinates.
 - Dedicated `tests/test_unimath.py` coverage for trigonometry, coordinate
   systems, geometry, number theory, and algebra.
+- Polynomial toolkit in `unimath.algebra`: degree/leading coefficient,
+  evaluation, derivative/integral, arithmetic, long/synthetic division, roots,
+  rational roots, factored form, and construction from roots.
+- Analytic-geometry helpers in `unimath.algebra`: general line form,
+  conversions, intersections, parallel/perpendicular lines, point-line
+  distance/projection, perpendicular bisectors, circles, and line-circle
+  intersections.
 
 ### Changed
 
 - Documented that coordinate-system angles are expressed in radians.
+- Reorganized `uniphys` into `classical`, `modern`, and `astrophysics`
+  domains. Legacy top-level modules were removed.
+- Removed the empty `uniphys.quantum` placeholder.
 - Declared `dracolix` as a project dependency.
 - `fibonacci_integer` and `fibonacci_list` now accept indices `0` and `1`.
 - Number-theory predicates now raise `ValueError` for non-integer inputs.

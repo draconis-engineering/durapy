@@ -2,8 +2,8 @@
 
 import sympy as sp
 
-from ..shared.numval_types import Quantity
-from ..shared.units import PASCAL
+from ...shared.numval_types import Quantity
+from ...shared.units import PASCAL
 
 
 def reynolds_number(

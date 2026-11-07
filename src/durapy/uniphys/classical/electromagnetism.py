@@ -1,9 +1,9 @@
 """`UniPhys` electromagnetics source"""
 
-from ..shared.color_system import color_text
-from ..shared.constants import INF, PLANCK, C
-from ..shared.numval_types import Quantity
-from ..shared.units import ELECTRONVOLT, HERTZ, JOULE, METER
+from ...shared.color_system import color_text
+from ...shared.constants import INF, PLANCK, C
+from ...shared.numval_types import Quantity
+from ...shared.units import ELECTRONVOLT, HERTZ, JOULE, METER
 
 # Ultraviolet Spectrum Wavelengths
 UV_SPECTRUM_WAVELENGTHS: dict[tuple[float, float], str] = {

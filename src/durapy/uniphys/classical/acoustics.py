@@ -4,9 +4,9 @@ import math
 
 from durapy.shared.exceptions import UnitError
 
-from ..shared.constants import GAS_CONSTANT, MACH
-from ..shared.numval_types import Quantity
-from ..shared.units import DECIBEL, HERTZ, METER, PASCAL, SECOND, WATT
+from ...shared.constants import GAS_CONSTANT, MACH
+from ...shared.numval_types import Quantity
+from ...shared.units import DECIBEL, HERTZ, METER, PASCAL, SECOND, WATT
 
 
 def sound_speed(temp: float, γ: float = 1.4, molar_mass: float = 0.02897) -> Quantity:

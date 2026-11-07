@@ -1,8 +1,8 @@
 """`UniPhys` thermodynamics source"""
 
-from ..shared.constants import GAS_CONSTANT
-from ..shared.numval_types import Quantity
-from ..shared.units import JOULE, KELVIN, PASCAL
+from ...shared.constants import GAS_CONSTANT
+from ...shared.numval_types import Quantity
+from ...shared.units import JOULE, KELVIN, PASCAL
 
 
 def work(force: float, distance: float) -> Quantity:
@@ -174,8 +174,7 @@ def clausius_clapeyron(
         raise ValueError("Temperature cant be negative (kelvin scale)")
 
     return Quantity(
-        (latent_heat)
-        / (temperature * (specific_volume_vapor - specific_volume_liquid)),
+        latent_heat / (temperature * (specific_volume_vapor - specific_volume_liquid)),
         PASCAL / KELVIN,
     )
 

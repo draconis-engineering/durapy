@@ -11,7 +11,7 @@ import math
 import re
 from functools import reduce
 
-from ..uniphys.thermodynamics import ideal_gas_law as _ideal_gas_law
+from ..uniphys.classical.thermodynamics import ideal_gas_law as _ideal_gas_law
 from .elements import ELEMENTS_BY_SYMBOL, atomic_mass
 from .exceptions import (
     ChemistryError,

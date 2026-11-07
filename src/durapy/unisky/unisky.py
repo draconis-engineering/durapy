@@ -4,14 +4,14 @@ from ..shared.color_system import color_text
 from ..shared.constants import EARTH_G, GAS_CONSTANT, MACH
 from ..shared.numval_types import Quantity
 from ..shared.units import NEWTON
-from ..uniphys.fluid_dynamics import (
+from ..uniphys.classical.fluids import (
     bernoullis_equation,
     dynamic_pressure,
 )
-from ..uniphys.fluid_dynamics import (
+from ..uniphys.classical.fluids import (
     reynolds_number as _reynolds_number,
 )
-from ..uniphys.thermodynamics import ideal_gas_law as _ideal_gas_law
+from ..uniphys.classical.thermodynamics import ideal_gas_law as _ideal_gas_law
 
 
 def tw_ratio(thrust: float, weight: float) -> str:
@@ -60,7 +60,7 @@ def reynolds_number(
 ) -> float:
     """Calculates the dimensionless Reynolds Number to predict flow patterns.
 
-    Thin wrapper over :func:`durapy.uniphys.fluid_dynamics.reynolds_number` that
+    Thin wrapper over :func:`durapy.uniphys.classical.fluids.reynolds_number` that
     keeps the aerospace-style ``chord_length`` parameter name.
     """
     return _reynolds_number(velocity, chord_length, kinematic_viscosity)
@@ -107,7 +107,7 @@ def ideal_gas_law(
 ) -> str:
     """Solve for the ideal gas law and return the solved variable as a string.
 
-    Thin wrapper over :func:`durapy.uniphys.thermodynamics.ideal_gas_law` that
+    Thin wrapper over :func:`durapy.uniphys.classical.thermodynamics.ideal_gas_law` that
     preserves UniSky's string return format.
 
     Variables

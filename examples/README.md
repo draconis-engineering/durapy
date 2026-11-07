@@ -14,7 +14,7 @@ PYTHONPATH=src python examples/unimath/01_vectors_matrices.py
 | Example | Description |
 | --- | --- |
 | `unimath/01_vectors_matrices.py` | Vectors, matrices, dot products, determinants, trig & number theory |
-| `uniphys/01_mechanics_thermo_fluids.py` | Mechanics, thermodynamics (Quantity returns), fluid dynamics, acoustics |
+| `uniphys/01_mechanics_thermo_fluids.py` | Classical mechanics, thermodynamics (Quantity returns), fluids, acoustics, relativity |
 | `unisky/01_aerospace_basics.py` | Mach, Reynolds, lift/drag, Bernoulli, rocket equations, gas law |
 | `unichem/01_chemistry_basics.py` | Periodic table, formulas, stoichiometry, balancing, gas law, pH |
 | `unipower/01_circuit_basics.py` | Ohm's law, power, voltage dividers, components, RC circuits |
@@ -25,5 +25,5 @@ PYTHONPATH=src python examples/unimath/01_vectors_matrices.py
 ## Tips
 
 - Many physics functions now return `Quantity` objects from `durapy.shared.numval_types`. You can access `.value` or convert as needed.
-- `uniphys.thermodynamics.ideal_gas_law` and `uniphys.fluid_dynamics` are the canonical implementations; `unisky` and `unichem` provide thin wrappers.
+- `uniphys.classical.thermodynamics.ideal_gas_law` and `uniphys.classical.fluids` are the canonical implementations; `unisky` and `unichem` provide thin wrappers.
 - For linear algebra, use NumPy or the separate [DracoLIX](https://github.com/draconis-engineering/DracoLIX) project; DuraPy no longer ships `unimath.linalg`.
