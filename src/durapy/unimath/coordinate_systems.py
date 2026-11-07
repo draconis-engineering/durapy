@@ -6,7 +6,7 @@ import math
 
 
 class _BaseCoordinate:
-    def __init__(self, dims: int, unit: str):
+    def __init__(self, dims: int, *, unit: str):
         self.dims = dims
         self.unit = unit
 
@@ -18,17 +18,14 @@ class Cartesian1D(_BaseCoordinate):
         super().__init__(unit=unit, dims=1)
         self.x = x
 
-    def distance_to_origo(self) -> float:
+    def distance_to_origin(self) -> float:
         return abs(self.x)
-
-    # Backwards compat for typo
-    distance_to_origin = distance_to_origo
 
 
 class Cartesian2D(_BaseCoordinate):
     """The 2-dimensional Cartesian coordinate system."""
 
-    def __init__(self, x: float, y: float, unit: str = "unitless") -> None:
+    def __init__(self, x: float, y: float, *, unit: str = "unitless") -> None:
         super().__init__(dims=2, unit=unit)
         self.x = x
         self.y = y
@@ -38,17 +35,14 @@ class Cartesian2D(_BaseCoordinate):
             unit=self.unit, r=math.hypot(self.x, self.y), θ=math.atan2(self.y, self.x)
         )
 
-    def distance_to_origo(self) -> float:
+    def distance_to_origin(self) -> float:
         return math.hypot(self.x, self.y)
-
-    # Backwards compat for typo
-    distance_to_origin = distance_to_origo
 
 
 class Cartesian3D(_BaseCoordinate):
     """The 3-dimensional Cartesian coordinate system."""
 
-    def __init__(self, x: float, y: float, z: float, unit: str = "unitless") -> None:
+    def __init__(self, x: float, y: float, z: float, *, unit: str = "unitless") -> None:
         super().__init__(unit=unit, dims=3)
         self.x = x
         self.y = y
@@ -70,17 +64,14 @@ class Cartesian3D(_BaseCoordinate):
             z=self.z,
         )
 
-    def distance_to_origo(self) -> float:
+    def distance_to_origin(self) -> float:
         return math.hypot(self.x, self.y, self.z)
-
-    # Backwards compat for typo
-    distance_to_origin = distance_to_origo
 
 
 class Polar(_BaseCoordinate):
     """The polar coordinate system."""
 
-    def __init__(self, r: float, θ: float, unit: str = "unitless") -> None:
+    def __init__(self, r: float, θ: float, *, unit: str = "unitless") -> None:
         super().__init__(unit=unit, dims=2)
         self.r = r
         self.θ = θ
@@ -90,17 +81,14 @@ class Polar(_BaseCoordinate):
             unit=self.unit, x=self.r * math.cos(self.θ), y=self.r * math.sin(self.θ)
         )
 
-    def distance_to_origo(self) -> float:
+    def distance_to_origin(self) -> float:
         return self.r
-
-    # Backwards compat for typo
-    distance_to_origin = distance_to_origo
 
 
 class Spherical(_BaseCoordinate):
     """The spherical coordinate system."""
 
-    def __init__(self, r: float, θ: float, φ: float, unit: str = "unitless") -> None:
+    def __init__(self, r: float, θ: float, φ: float, *, unit: str = "unitless") -> None:
         super().__init__(unit=unit, dims=3)
         self.r = r
         self.θ = θ
@@ -119,17 +107,14 @@ class Spherical(_BaseCoordinate):
             unit=self.unit, r=self.r, θ=self.θ, z=self.r * math.cos(self.φ)
         )
 
-    def distance_to_origo(self) -> float:
+    def distance_to_origin(self) -> float:
         return self.r
-
-    # Backwards compat for typo
-    distance_to_origin = distance_to_origo
 
 
 class Cylindrical(_BaseCoordinate):
     """The cylindrical coordinate system."""
 
-    def __init__(self, r: float, θ: float, z: float, unit: str = "unitless") -> None:
+    def __init__(self, r: float, θ: float, z: float, *, unit: str = "unitless") -> None:
         super().__init__(unit=unit, dims=3)
         self.r = r
         self.θ = θ
@@ -148,8 +133,5 @@ class Cylindrical(_BaseCoordinate):
 
         return Spherical(unit=self.unit, r=dist, θ=self.θ, φ=math.acos(self.z / dist))
 
-    def distance_to_origo(self) -> float:
+    def distance_to_origin(self) -> float:
         return math.hypot(self.r, self.z)
-
-    # Backwards compat for typo
-    distance_to_origin = distance_to_origo

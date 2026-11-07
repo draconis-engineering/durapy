@@ -2,10 +2,28 @@
 
 import math
 
+import dracolix as dlx
 import sympy
 
 from ._parsing import parse_expression
 from .coordinate_systems import Cartesian2D, Cartesian3D
+
+
+def vector_from_point(x: Cartesian2D | Cartesian3D, /) -> dlx.Array:
+    return (
+        dlx.array([x.x, x.y])
+        if isinstance(x, Cartesian2D)
+        else dlx.array([x.x, x.y, x.z])
+    )
+
+
+def point_from_vector(x: dlx.Array) -> Cartesian2D | Cartesian3D:
+    if x.size == 2:
+        return Cartesian2D(x[0], x[1])
+    elif x.size == 3:
+        return Cartesian3D(x[0], x[1], x[2])
+    else:
+        raise ValueError("Vector doesnt fit into 2/3D points")
 
 
 def slope(x1: float, y1: float, x2: float, y2: float) -> float:
@@ -25,7 +43,7 @@ def distance2D(x1: float, y1: float, x2: float, y2: float) -> float:
     return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
 
 
-def distance2D_from_points(*, a: Cartesian2D, b: Cartesian2D):
+def distance_from_2Dpoints(*, a: Cartesian2D, b: Cartesian2D):
     """Return the distance between two 2D-cartesian points `a` and `b`"""
     return distance2D(a.x, a.y, b.x, b.y)
 
@@ -42,7 +60,7 @@ def distance3D(
     return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2 + (z2 - z1) ** 2)
 
 
-def distance3D_from_points(*, a: Cartesian3D, b: Cartesian3D) -> float:
+def distance_from_3Dpoints(*, a: Cartesian3D, b: Cartesian3D) -> float:
     return distance3D(a.x, a.y, a.z, b.x, b.y, b.z)
 
 
@@ -108,23 +126,23 @@ def quadratic_num_roots(a: float, b: float, c: float) -> int:
 
 
 def quadratic_solutions(
-    A: float, B: float, C: float
+    a: float, b: float, c: float
 ) -> tuple[float, float] | float | None:
     """Solves quadratic equations and returns x-values in a tuple."""
 
-    if A == 0:
+    if a == 0:
         raise ValueError("Invalid quadratic equation! A cannot be 0.")
 
-    D = B**2 - 4 * A * C
+    D = b**2 - 4 * a * c
 
     if D > 0:
         sqrtD = math.sqrt(D)
-        x1 = (-B - sqrtD) / (2 * A)
-        x2 = (-B + sqrtD) / (2 * A)
+        x1 = (-b - sqrtD) / (2 * a)
+        x2 = (-b + sqrtD) / (2 * a)
         return (x1, x2)
 
     elif D == 0:
-        x1 = -B / (2 * A)
+        x1 = -b / (2 * a)
         return x1
 
     else:
@@ -239,9 +257,9 @@ __all__ = [
     "cubic_zeros",
     "derivative",
     "distance2D",
-    "distance2D_from_points",
     "distance3D",
-    "distance3D_from_points",
+    "distance_from_2Dpoints",
+    "distance_from_3Dpoints",
     "line_from_cartesian_points",
     "line_from_points",
     "line_intersection",
