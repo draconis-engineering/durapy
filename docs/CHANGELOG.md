@@ -1,5 +1,38 @@
 # DURAPY CHANGELOG
 
+## Unreleased
+
+### Added
+
+- Degree/radian conversion and degree-based trigonometric helpers in
+  `unimath.trigonometry`.
+- ASCII aliases (`theta`, `phi`) for the Unicode angle attributes on the
+  coordinate-system classes.
+- Dedicated `tests/test_unimath.py` coverage for trigonometry, coordinate
+  systems, geometry, number theory, and algebra.
+
+### Changed
+
+- Documented that coordinate-system angles are expressed in radians.
+- Declared `dracolix` as a project dependency.
+- `fibonacci_integer` and `fibonacci_list` now accept indices `0` and `1`.
+- Number-theory predicates now raise `ValueError` for non-integer inputs.
+- Proper-divisor sums are computed in O(sqrt(n)) time.
+
+### Fixed
+
+- `Spherical.to_cylindrical` now uses the projected radius `r*sin(phi)`.
+- `Cylindrical.to_spherical` no longer divides by zero at the origin.
+- `reverse_cosine_rule` rejects side lengths that violate the triangle
+  inequality instead of silently clamping the result.
+- `interpolate_triangle` now validates angles and side lengths and reports
+  missing or duplicate sides clearly.
+- Regular-polygon helpers validate the number of sides and side length.
+- `is_perfect_cube` recognises negative perfect cubes, and an empty sociable
+  chain is no longer reported as valid.
+- Algebra helpers use tolerance-based comparisons and reject non-quadratic or
+  non-cubic coefficients instead of dividing by zero.
+
 ## 1.0.1.3 — 30.10.2026
 
 ### Security

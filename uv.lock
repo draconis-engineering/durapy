@@ -16,10 +16,33 @@ wheels = [
 ]
 
 [[package]]
+name = "dracolix"
+version = "0.3.1"
+source = { registry = "https://pypi.org/simple" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7a/ef/13b62ef5cad24b2972c155ad57648fe0e4c51372f8e2504573356b5e7258/dracolix-0.3.1-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:432db69a4048f500fa2d1075113b297a78951da6a622cbc17321dee9910200d4", size = 286219, upload-time = "2026-11-06T09:40:19.042Z" },
+    { url = "https://files.pythonhosted.org/packages/9b/dd/26839fc264ed70a61562ec995e11baaf1b165b3034493be78dc85b0930ae/dracolix-0.3.1-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:3a83f346c75833415bf78071f2f82174e645d01b8826578628f534ff8fe5de50", size = 405622, upload-time = "2026-11-06T09:40:20.195Z" },
+    { url = "https://files.pythonhosted.org/packages/09/d7/9a11cbdcbedcb28e99f46684f1ccb759bc379a283c5439961d542eea865f/dracolix-0.3.1-cp311-cp311-win_amd64.whl", hash = "sha256:59c25baa83199cf47170fede94b58353c1a72fcfa59ccd9d8f591339186e8917", size = 510039, upload-time = "2026-11-06T09:40:21.257Z" },
+    { url = "https://files.pythonhosted.org/packages/0d/f6/72b858eaacdecfff6662facc9d4d61db68aa3a5a1e625c29a2fc0c63018a/dracolix-0.3.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:09e4e9e1daa7dd9f4362dc0cf07853eec59d8176c06916ae2f6e69f432b06870", size = 285484, upload-time = "2026-11-06T09:40:22.697Z" },
+    { url = "https://files.pythonhosted.org/packages/bd/1f/9c9cf5556dc24c2a739620cc778a2c2546f3701ccf69ae70e6dc9beccaa8/dracolix-0.3.1-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:4532c78c34bf7b025ae86035fc57cfbca56e9c53205edf7e160ae1f8a5129eb9", size = 405189, upload-time = "2026-11-06T09:40:23.939Z" },
+    { url = "https://files.pythonhosted.org/packages/59/ad/c51e3819e4d29eeb1c3f5b9b7ec94dacc7f4a720ea6e0cc5681aeb7c4fef/dracolix-0.3.1-cp312-cp312-win_amd64.whl", hash = "sha256:0abc52399ef8b75498605087dbca64da175eec43cd659708ef391d328fd1fcf4", size = 510726, upload-time = "2026-11-06T09:40:25.551Z" },
+    { url = "https://files.pythonhosted.org/packages/26/12/62edd3188f0603497c8915165ae5621a7e6519a7136c50d0db1642d43083/dracolix-0.3.1-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:dcab35002a5decdfed10d9aa4a57451bd17abe4961aa16283ad8ad235cd091b5", size = 285498, upload-time = "2026-11-06T09:40:26.759Z" },
+    { url = "https://files.pythonhosted.org/packages/b0/c3/534e26c3f0ac919b9fe1cc14cbd7c4ea3f430cfce172031b1b6304fcc4a6/dracolix-0.3.1-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:9506b6a7f78a9c1f1440693817a5ba488d91bdeea05d2dabc17fd60fcee26055", size = 405122, upload-time = "2026-11-06T09:40:27.982Z" },
+    { url = "https://files.pythonhosted.org/packages/e1/ef/1e6e009c10d279e4251716b3cd784895fbe631bd6e40f6d911fc42ccd759/dracolix-0.3.1-cp313-cp313-win_amd64.whl", hash = "sha256:7ef4ca14036cb50faf2682eba8c569528bc287e2a3844484428fb24a48de71d1", size = 510626, upload-time = "2026-11-06T09:40:29.185Z" },
+    { url = "https://files.pythonhosted.org/packages/6c/18/6579168bf722ab12210f07b1b82261e72abca2e7d49924c3a1f3499d4a52/dracolix-0.3.1-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:2b3361880c3ec3ad4423fb5e42a9bf4d0daa8cc28f85f5f1d2b23d250aef9f60", size = 285623, upload-time = "2026-11-06T09:40:30.306Z" },
+    { url = "https://files.pythonhosted.org/packages/29/4d/822a181e4a39692a21179b0aaa64ba5e4b54eb27ffb5ee113b50e5a80eab/dracolix-0.3.1-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:ae735d6ee170b4cb5ef10dd1ce2b176b8e0ee201ce2893fd773b300b1cb2102a", size = 405244, upload-time = "2026-11-06T09:40:31.361Z" },
+    { url = "https://files.pythonhosted.org/packages/ad/ba/1915b3ae0c0ce29ca8cb1b8379cf59a88963914e20b884640df873be0151/dracolix-0.3.1-cp314-cp314-win_amd64.whl", hash = "sha256:e4b2606779adcc19efb56597fa5d8f8fb15f63e824abad6752bb7cabc7562d26", size = 527007, upload-time = "2026-11-06T09:40:32.402Z" },
+    { url = "https://files.pythonhosted.org/packages/2f/32/046209ef2e0dc7c7785ee1c6719db3b8102876ac52c9b8be77d69659f812/dracolix-0.3.1-cp315-cp315-macosx_11_0_arm64.whl", hash = "sha256:eaa2b4d3ba5188a9d4600749b93a8c890cb7e0fbd7494c6742a9f9c29bc01923", size = 285833, upload-time = "2026-11-06T09:40:33.841Z" },
+    { url = "https://files.pythonhosted.org/packages/ff/6a/3879122e76df919e4f9cc02e87a3b8c7e92b8826f3c76055e486078318ec/dracolix-0.3.1-cp315-cp315-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:3bff7a7abdb14becd2c7878acabd0308c1bcffc5b5e0150dcbaf44cf8b75358d", size = 405338, upload-time = "2026-11-06T09:40:35.155Z" },
+    { url = "https://files.pythonhosted.org/packages/1c/2c/cac2451ab24e23cb6fd309daefdbbb1d058a18f480296e3948e5a8e96ca1/dracolix-0.3.1-cp315-cp315-win_amd64.whl", hash = "sha256:46481a5cb0f6a0a4b736bb5a9db3bf480604602befd2b0b56232b21b88336308", size = 527269, upload-time = "2026-11-06T09:40:36.506Z" },
+]
+
+[[package]]
 name = "durapy"
-version = "1.0.1.3"
+version = "1.0.2.0"
 source = { editable = "." }
 dependencies = [
+    { name = "dracolix" },
     { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "numpy", version = "2.5.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "prompt-toolkit" },
@@ -37,6 +60,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "dracolix" },
     { name = "numpy" },
     { name = "prompt-toolkit" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },

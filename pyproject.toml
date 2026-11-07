@@ -41,6 +41,7 @@ classifiers = [
 dependencies = [
 	"questionary",
 	"prompt_toolkit",
+	"dracolix",
 	"numpy",
 	"sympy",
 	"scipy",

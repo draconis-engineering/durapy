@@ -2,6 +2,46 @@
 
 import math
 
+__all__ = [
+    "factorial",
+    "fibonacci_integer",
+    "fibonacci_list",
+    "gcd",
+    "is_abundant_number",
+    "is_amicable_pair",
+    "is_deficient_number",
+    "is_perfect_cube",
+    "is_perfect_number",
+    "is_perfect_power",
+    "is_perfect_square",
+    "is_prime",
+    "is_sociable_chain",
+    "lcm",
+    "lovelace",
+    "prime_factorize",
+    "subfactorial",
+]
+
+
+def _require_int(value: object, name: str) -> None:
+    if not isinstance(value, int) or isinstance(value, bool):
+        raise ValueError(f"{name} requires an integer")
+
+
+def _proper_divisor_sum(n: int) -> int:
+    if n < 2:
+        return 0
+
+    total = 1
+    root = math.isqrt(n)
+    for divisor in range(2, root + 1):
+        if n % divisor == 0:
+            total += divisor
+            other = n // divisor
+            if other != divisor:
+                total += other
+    return total
+
 
 def lovelace(
     a: float, b: float, c: float, d: float, e: float, f: float
@@ -15,68 +55,58 @@ def lovelace(
     return x, y
 
 
-def fibonacci_integer(n: int) -> int:
-    """Fibonacci integer generator that returns the Fibonacci integer at the given index."""
+def fibonacci_integer(n: int, /) -> int:
+    """Return the Fibonacci number at index `n`, where F(0) = 0 and F(1) = 1."""
+    _require_int(n, "fibonacci_integer")
+    if n < 0:
+        raise ValueError("fibonacci_integer requires n >= 0")
+    if n < 2:
+        return n
 
-    if n < 2 or not isinstance(n, int):
-        raise ValueError(
-            "fibonacci_integer does not take integers less than 2 or floats/strings!"
-        )
-
-    fib0, fib1, fib2 = 0, 1, 1
-
-    for _ in range(n - 1):
-        fib2 = fib0 + fib1
-        fib0, fib1 = fib1, fib2
-
-    return fib2
+    fib0, fib1 = 0, 1
+    for _ in range(2, n + 1):
+        fib0, fib1 = fib1, fib0 + fib1
+    return fib1
 
 
-def fibonacci_list(n: int) -> list[int]:
-    """Fibonacci sequence generator that returns a list of the sequence up to the given length."""
+def fibonacci_list(n: int, /) -> list[int]:
+    """Return the Fibonacci sequence with `n` elements."""
+    _require_int(n, "fibonacci_list")
+    if n < 0:
+        raise ValueError("fibonacci_list requires n >= 0")
+    if n == 0:
+        return []
+    if n == 1:
+        return [0]
 
-    if n < 2 or not isinstance(n, int):
-        raise ValueError(
-            "fibonacci_list does not take integers less than 2 or floats/strings!"
-        )
-
-    if n == 2:
-        return [0, 1]
-
-    fib0, fib1, fiblist = 0, 1, [0, 1]
-
-    for _ in range(n - 2):
-        fib2 = fib0 + fib1
-        fib0, fib1 = fib1, fib2
-        fiblist.append(fib2)
-
-    return fiblist
+    sequence = [0, 1]
+    for _ in range(2, n):
+        sequence.append(sequence[-1] + sequence[-2])
+    return sequence
 
 
-def factorial(n: int) -> int:
+def factorial(n: int, /) -> int:
     """Returns the factorial of a non-negative integer `n`."""
-    if n < 0 or not isinstance(n, int):
-        raise ValueError(
-            "Factorial is not defined for negative numbers or floats/strings!"
-        )
+    _require_int(n, "factorial")
+    if n < 0:
+        raise ValueError("Factorial is not defined for negative numbers")
+    return math.factorial(n)
 
-    elif n == 0 or n == 1:
+
+def subfactorial(n: int, /) -> int:
+    """Returns the subfactorial of a non-negative integer `n`."""
+    _require_int(n, "subfactorial")
+    if n < 0:
+        raise ValueError("Subfactorial is not defined for negative numbers")
+    if n == 0:
         return 1
 
-    else:
-        result = 1
-        for i in range(2, n + 1):
-            result *= i
-        return result
-
-
-def subfactorial(n: int) -> int:
-    """Returns the subfactorial of a non-negative integer `n`."""
-    if n < 0 or not isinstance(n, int):
-        raise ValueError(
-            "Subfactorial and Factorial are not defined for negative numbers or floats/strings!"
+    previous_two, previous_one = 1, 0
+    for k in range(2, n + 1):
+        previous_two, previous_one = previous_one, (k - 1) * (
+            previous_one + previous_two
         )
-    return round(factorial(n) * sum((-1) ** k / factorial(k) for k in range(n + 1)))
+    return previous_one
 
 
 def gcd(*ints: int) -> int:
@@ -89,97 +119,122 @@ def lcm(*ints: int) -> int:
     return math.lcm(*ints)
 
 
-def prime_factorize(n: int) -> list[int]:
+def prime_factorize(n: int, /) -> list[int]:
     """Returns the prime factorization of a number as a list of its prime factors."""
-    factors: list[int] = []
-    div = 2
+    _require_int(n, "prime_factorize")
+    if n < 1:
+        raise ValueError("prime_factorize requires n >= 1")
 
-    while n >= 2:
-        if n % div == 0:
-            factors.append(div)
-            n //= div
-        else:
-            div += 1
+    factors: list[int] = []
+    while n % 2 == 0:
+        factors.append(2)
+        n //= 2
+
+    divisor = 3
+    while divisor * divisor <= n:
+        while n % divisor == 0:
+            factors.append(divisor)
+            n //= divisor
+        divisor += 2
+
+    if n > 1:
+        factors.append(n)
 
     return factors
 
 
-def is_prime(n: int) -> bool:
+def is_prime(n: int, /) -> bool:
     """Returns True if the number is prime, else returns False."""
+    _require_int(n, "is_prime")
     if n <= 1:
         return False
     if n == 2:
         return True
-    for i in range(2, int(math.sqrt(n)) + 1):
+    if n % 2 == 0:
+        return False
+    for i in range(3, math.isqrt(n) + 1, 2):
         if n % i == 0:
             return False
     return True
 
 
-def is_perfect_square(n: int) -> bool:
+def is_perfect_square(n: int, /) -> bool:
     """Returns True if the number is a perfect square, else returns False."""
+    _require_int(n, "is_perfect_square")
     if n < 0:
         return False
     r = math.isqrt(n)
     return r * r == n
 
 
-def is_perfect_cube(n: int) -> bool:
+def is_perfect_cube(n: int, /) -> bool:
     """Returns True if the number is a perfect cube, else returns False."""
-    if n < 0:
-        return False
-    c = round(n ** (1 / 3))
-    # Check neighbors to handle floating errors
-    return any((c + d) ** 3 == n for d in (-1, 0, 1))
+    _require_int(n, "is_perfect_cube")
+    magnitude = abs(n)
+    c = round(magnitude ** (1 / 3))
+    return any((c + d) ** 3 == magnitude for d in (-1, 0, 1))
 
 
-def is_perfect_power(n: int) -> bool:
+def is_perfect_power(n: int, /) -> bool:
     """Returns True if the number is a perfect power - a number that can be expressed as an integer raised to an integer power - else returns False."""
+    _require_int(n, "is_perfect_power")
     if n < 1:
         return False
-    for b in range(2, int(math.log2(n)) + 1):
-        a: int = round(pow(n, 1 / b))
-        if a**b == n:
+    for exponent in range(2, int(math.log2(n)) + 1):
+        base: int = round(pow(n, 1 / exponent))
+        if base**exponent == n:
             return True
     return False
 
 
-def is_perfect_number(n: int) -> bool:
+def is_perfect_number(n: int, /) -> bool:
     """Returns True if the number is a perfect number - a number equal to the sum of its proper divisors - else returns False."""
+    _require_int(n, "is_perfect_number")
     if n < 1:
         return False
-    return sum(i for i in range(1, n) if n % i == 0) == n
+    return _proper_divisor_sum(n) == n
 
 
-def is_abundant_number(n: int) -> bool:
+def is_abundant_number(n: int, /) -> bool:
     """Returns True if the number is an abundant number - a number for which the sum of its proper divisors is greater than the number itself - else returns False."""
+    _require_int(n, "is_abundant_number")
     if n < 1:
         return False
-    return sum(i for i in range(1, n) if n % i == 0) > n
+    return _proper_divisor_sum(n) > n
 
 
-def is_deficient_number(n: int) -> bool:
+def is_deficient_number(n: int, /) -> bool:
     """Returns True if the number is a deficient number - a number for which the sum of its proper divisors is less than the number itself - else returns False."""
+    _require_int(n, "is_deficient_number")
     if n < 1:
         return False
-    return sum(i for i in range(1, n) if n % i == 0) < n
+    return _proper_divisor_sum(n) < n
 
 
-def is_amicable_pair(a: int, b: int) -> bool:
+def is_amicable_pair(a: int, b: int, /) -> bool:
     """Returns True if the numbers are an amicable pair - two numbers for which the sum of the proper divisors of each is equal to the other number - else returns False."""
+    _require_int(a, "is_amicable_pair")
+    _require_int(b, "is_amicable_pair")
     if a < 1 or b < 1:
         return False
-    return (
-        sum(i for i in range(1, a) if a % i == 0) == b
-        and sum(i for i in range(1, b) if b % i == 0) == a
-    )
+    return _proper_divisor_sum(a) == b and _proper_divisor_sum(b) == a
 
 
 def is_sociable_chain(chain: list[int]) -> bool:
     """Returns True if the numbers form a sociable chain - a sequence of numbers for which the sum of the proper divisors of each number is equal to the next number in the sequence, and the last number in the sequence is equal to the first number - else returns False."""
+    if not isinstance(chain, list):
+        raise TypeError("chain must be a list of integers")
+    if not chain:
+        return False
+
+    for n in chain:
+        _require_int(n, "is_sociable_chain")
+
     if any(n < 1 for n in chain):
         return False
+
+    length = len(chain)
     return all(
-        sum(i for i in range(1, n) if n % i == 0) == chain[(idx + 1) % len(chain)]
+        _proper_divisor_sum(n) == chain[(idx + 1) % length]
         for idx, n in enumerate(chain)
     )
