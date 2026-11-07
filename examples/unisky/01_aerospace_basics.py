@@ -32,7 +32,7 @@ print(f"Glide ratio L/D: {gl:.1f}")
 
 # Lift/drag
 L = lift_drag_equation(
-    coeff=0.4, dynamic_pressure=dynamic_pressure(80)._value, ref_area=16
+    coefficient=0.4, dynamic_pressure=dynamic_pressure(80).value, ref_area=16
 )
 print("Lift (Cl=0.4, v=80 m/s):", L)
 

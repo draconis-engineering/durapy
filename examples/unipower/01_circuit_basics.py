@@ -16,7 +16,7 @@ P = power_dissipation(v=12, r=10)
 print("Power dissipation (12V across 10Ω):", P)
 
 # Voltage divider
-vout = volt_divider(5, 1000, 2000)
+vout = volt_divider(v_in=5, r_1=1000, r_2=2000)
 print("Voltage divider (5V, R1=1k, R2=2k):", vout)
 
 # RC time constant
