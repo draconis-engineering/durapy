@@ -172,7 +172,7 @@ def is_perfect_cube(n: int, /) -> bool:
     """Returns True if the number is a perfect cube, else returns False."""
     _require_int(n, "is_perfect_cube")
     magnitude = abs(n)
-    c = round(magnitude ** (1 / 3))
+    c = round(math.cbrt(magnitude))
     return any((c + d) ** 3 == magnitude for d in (-1, 0, 1))
 
 

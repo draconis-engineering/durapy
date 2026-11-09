@@ -8,6 +8,10 @@ from scipy import special
 
 from ..shared.constants import PI
 
+### NOTE:
+# Still heavily dependent on NumPy.
+# Replace all numpy functionality and remove as dep when dracolix version is >= 0.4.x
+
 # -------------------------------------- #
 #          ACTIVATION FUNCTIONS          #
 # -------------------------------------- #
@@ -49,12 +53,12 @@ def d_gelu(x: np.ndarray, /) -> np.ndarray:
     return cdf + x * pdf
 
 
-def silu(x: np.ndarray, /) -> np.ndarray:
+def silu(x: dlx.Array, /) -> dlx.Array:
     """Sigmoid Linear Unit."""
     return x * sigmoid(x)
 
 
-def d_silu(x: np.ndarray, /) -> np.ndarray:
+def d_silu(x: dlx.Array, /) -> dlx.Array:
     """Derivative of the SiLU activation function."""
     s = sigmoid(x)
     return s * (1.0 + x * (1.0 - s))
@@ -88,13 +92,16 @@ def d_cdelu(x: np.ndarray, /, *, a: float = 1.0) -> np.ndarray:
     return np.where(x > 0, 1.0, np.exp(x / a))
 
 
-def sigmoid(x: np.ndarray, /) -> np.ndarray:
+def sigmoid(x: dlx.Array, /) -> dlx.Array:
     """Returns the Sigmoid activation of x with overflow protection."""
-    expx = np.exp(x)
-    return np.where(x >= 0, 1.0 / (1.0 + np.exp(-x)), expx / (1.0 + expx))
+    expx = np.array(dlx.exp(x))
+    npx = np.array(x)
+    return dlx.array(
+        np.where(npx >= 0, 1.0 / (1.0 + np.exp(-npx)), expx / (1.0 + expx))
+    )
 
 
-def d_sigmoid(x: np.ndarray, /) -> np.ndarray:
+def d_sigmoid(x: dlx.Array, /) -> dlx.Array:
     """Returns the derivative of the Sigmoid activation function."""
     s = sigmoid(x)
     return s * (1.0 - s)
@@ -111,12 +118,12 @@ def d_tanh(x: dlx.Array, /) -> dlx.Array:
     return 1.0 - t**2
 
 
-def swish(x: np.ndarray, /, *, β: float = 1.0) -> np.ndarray:
+def swish(x: dlx.Array, /, *, β: float = 1.0) -> dlx.Array:
     """Swish activation function."""
     return x * sigmoid(x * β)
 
 
-def d_swish(x: np.ndarray, /, *, β: float = 1.0) -> np.ndarray:
+def d_swish(x: dlx.Array, /, *, β: float = 1.0) -> dlx.Array:
     """Derivative of the Swish activation function."""
     s = sigmoid(x * β)
     return s + (β * x * s * (1.0 - s))
