@@ -1,5 +1,7 @@
 """`UniCogni` source"""
 
+import math
+
 import dracolix as dlx
 import numpy as np
 from scipy import special
@@ -16,9 +18,9 @@ def relu(x: np.ndarray, /) -> dlx.Array:
     return dlx.array(np.maximum(0.0, x))
 
 
-def d_relu(x: np.ndarray, /) -> dlx.Array:
+def d_relu(x: dlx.Array, /) -> dlx.Array:
     """Returns the derivative of the Rectified Linear Unit activation function."""
-    return dlx.array((x > 0).astype(np.float32))
+    return (x > 0).astype(dlx.f32)
 
 
 def leaky_relu(x: np.ndarray, /) -> dlx.Array:
@@ -31,9 +33,9 @@ def d_leaky_relu(x: np.ndarray, /) -> dlx.Array:
     return dlx.array(np.where(x > 0, 1.0, 0.01).astype(np.float32))
 
 
-def gelu(x: np.ndarray, /) -> np.ndarray:
+def gelu(x: dlx.Array, /) -> dlx.Array:
     """Gaussian Error Linear Unit using the tanh approximation."""
-    return 0.5 * x * (1.0 + tanh(np.sqrt(2.0 / PI.value) * (x + 0.044715 * x**3)))
+    return 0.5 * x * (1.0 + tanh(math.sqrt(2.0 / PI.value) * (x + 0.044715 * x**3)))
 
 
 def d_gelu(x: np.ndarray, /) -> np.ndarray:
@@ -42,8 +44,8 @@ def d_gelu(x: np.ndarray, /) -> np.ndarray:
         gauss = np.exp(-0.5 * x**2)
     except OverflowError:
         gauss = 0.0
-    cdf = 0.5 * (1.0 + special.erf(x / np.sqrt(2)))
-    pdf = (1.0 / np.sqrt(2 * PI.value)) * gauss
+    cdf = 0.5 * (1.0 + special.erf(x / math.sqrt(2)))
+    pdf = (1.0 / math.sqrt(2 * PI.value)) * gauss
     return cdf + x * pdf
 
 
@@ -66,6 +68,9 @@ def prelu(x: np.ndarray, /, *, a: float) -> np.ndarray:
 def dx_prelu(x: np.ndarray, /, *, a: float) -> np.ndarray:
     """Derivative of PReLU with respect to x. Note: you will also need a gradient w.r.t 'a' during backprop!"""
     return np.where(x > 0, 1.0, a)
+
+
+# dxprelu needs gradient w.r.t. A
 
 
 def da_prelu(x: np.ndarray, /, *, a: float) -> np.ndarray:
@@ -95,12 +100,12 @@ def d_sigmoid(x: np.ndarray, /) -> np.ndarray:
     return s * (1.0 - s)
 
 
-def tanh(x: np.ndarray, /) -> np.ndarray:
+def tanh(x: dlx.Array, /) -> dlx.Array:
     """Returns the Tanh activation of x using a numerically stable approach."""
-    return np.tanh(x)
+    return dlx.tanh(x)
 
 
-def d_tanh(x: np.ndarray, /) -> np.ndarray:
+def d_tanh(x: dlx.Array, /) -> dlx.Array:
     """Returns the derivative of the Tanh activation function."""
     t = tanh(x)
     return 1.0 - t**2
@@ -117,10 +122,10 @@ def d_swish(x: np.ndarray, /, *, β: float = 1.0) -> np.ndarray:
     return s + (β * x * s * (1.0 - s))
 
 
-def mish(x: np.ndarray, /) -> np.ndarray:
+def mish(x: np.ndarray, /) -> dlx.Array:
     """A self-regularized, smooth, non-monotonic activation function."""
     softplus = np.where(x < 20.0, np.log1p(np.exp(x)), x)
-    return x * tanh(softplus)
+    return x * tanh(dlx.array(softplus))
 
 
 def d_mish(x: np.ndarray, /) -> np.ndarray:
@@ -147,36 +152,36 @@ def softmax(z: np.ndarray, /) -> np.ndarray:
 # ------------------------------------- #
 
 
-def mae(actual: np.ndarray, pred: np.ndarray) -> float:
+def mae(actual: dlx.Array, pred: dlx.Array) -> float:
     """Mean Absolute Error metric function"""
     if len(pred) != len(actual):
         raise ValueError("Loss functions must be given two equal-length arrays/lists!")
 
-    return float(np.mean(np.abs(np.asarray(actual) - np.asarray(pred))))
+    return float(dlx.abs(dlx.asarray(actual) - dlx.asarray(pred)).mean().real)
 
 
-def mse(actual: np.ndarray, pred: np.ndarray) -> float:
+def mse(actual: dlx.Array, pred: dlx.Array) -> float:
     """Mean Squared Error metric function"""
     if len(pred) != len(actual):
         raise ValueError("Loss functions must be given two equal-length arrays/lists!")
 
-    return float(np.mean((np.asarray(actual) - np.asarray(pred)) ** 2))
+    return float(((dlx.asarray(actual) - dlx.asarray(pred)) ** 2).mean().real)
 
 
-def mse_grad(actual: np.ndarray, pred: np.ndarray) -> np.ndarray:
+def mse_grad(actual: dlx.Array, pred: dlx.Array) -> dlx.Array:
     """Gradient of the Mean Squared Error metric function (d/d_pred MSE)"""
     if len(pred) != len(actual):
         raise ValueError("Loss functions must be given two equal-length arrays/lists!")
 
-    return 2 * (np.asarray(pred) - np.asarray(actual)) / len(np.asarray(actual))
+    return 2 * (dlx.asarray(pred) - dlx.asarray(actual)) / len(dlx.asarray(actual))
 
 
-def rmse(actual: np.ndarray, pred: np.ndarray) -> float:
+def rmse(actual: dlx.Array, pred: dlx.Array) -> float:
     """Root Mean Squared Error metric function"""
     if len(pred) != len(actual):
         raise ValueError("Loss functions must be given two equal-length arrays/lists!")
 
-    return np.sqrt(mse(actual, pred))
+    return math.sqrt(mse(actual, pred))
 
 
 def cross_entropy_loss(actual: np.ndarray, pred: np.ndarray) -> float:
