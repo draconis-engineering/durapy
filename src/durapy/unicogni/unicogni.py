@@ -17,9 +17,9 @@ from ..shared.constants import PI
 # -------------------------------------- #
 
 
-def relu(x: np.ndarray, /) -> dlx.Array:
+def relu(x: dlx.Array, /) -> dlx.Array:
     """Returns the Rectified Linear Unit activation of x."""
-    return dlx.array(np.maximum(0.0, x))
+    return dlx.array(dlx.maximum(0.0, x))
 
 
 def d_relu(x: dlx.Array, /) -> dlx.Array:
@@ -27,14 +27,14 @@ def d_relu(x: dlx.Array, /) -> dlx.Array:
     return (x > 0).astype(dlx.f32)
 
 
-def leaky_relu(x: np.ndarray, /) -> dlx.Array:
+def leaky_relu(x: dlx.Array, /) -> dlx.Array:
     """Returns the Leaky ReLU activation of X."""
-    return dlx.array(np.maximum(0.01 * x, x))
+    return dlx.array(dlx.maximum(0.01 * x, x))
 
 
-def d_leaky_relu(x: np.ndarray, /) -> dlx.Array:
+def d_leaky_relu(x: dlx.Array, /) -> dlx.Array:
     """Returns the derivative of the Leaky ReLU activation function."""
-    return dlx.array(np.where(x > 0, 1.0, 0.01).astype(np.float32))
+    return dlx.array(dlx.where(x > 0, 1.0, 0.01)).astype(dlx.f32)
 
 
 def gelu(x: dlx.Array, /) -> dlx.Array:
@@ -64,41 +64,38 @@ def d_silu(x: dlx.Array, /) -> dlx.Array:
     return s * (1.0 + x * (1.0 - s))
 
 
-def prelu(x: np.ndarray, /, *, a: float) -> np.ndarray:
+def prelu(x: dlx.Array, /, *, a: float) -> dlx.Array:
     """Parametric ReLU."""
-    return np.maximum(0.0, x) + a * np.minimum(0.0, x)
+    return dlx.array(dlx.maximum(0.0, x) + dlx.minimum(0.0, x) * a)
 
 
-def dx_prelu(x: np.ndarray, /, *, a: float) -> np.ndarray:
+def dx_prelu(x: dlx.Array, /, *, a: float) -> dlx.Array:
     """Derivative of PReLU with respect to x. Note: you will also need a gradient w.r.t 'a' during backprop!"""
-    return np.where(x > 0, 1.0, a)
+    return dlx.array(dlx.where(x > 0, 1.0, a))
 
 
 # dxprelu needs gradient w.r.t. A
 
 
-def da_prelu(x: np.ndarray, /, *, a: float) -> np.ndarray:
+def da_prelu(x: dlx.Array, /, *, a: float) -> dlx.Array:
     """Derivative of PReLU with respect to 'a'."""
-    return np.where(x < 0, x, 0.0)
+    return dlx.array(dlx.where(x < 0, x, 0.0))
 
 
-def cdelu(x: np.ndarray, /, *, a: float = 1.0) -> np.ndarray:
+def cdelu(x: dlx.Array, /, *, a: float = 1.0) -> dlx.Array:
     """Continuously Differentiable Exponential Linear Unit (CDELU)."""
-    return np.maximum(0.0, x) + np.minimum(0.0, a * np.expm1(x / a))
+    return dlx.array(dlx.maximum(0.0, x) + dlx.minimum(0.0, a * dlx.expm1(x / a)))
 
 
-def d_cdelu(x: np.ndarray, /, *, a: float = 1.0) -> np.ndarray:
+def d_cdelu(x: dlx.Array, /, *, a: float = 1.0) -> dlx.Array:
     """Derivative of the CDELU activation function."""
-    return np.where(x > 0, 1.0, np.exp(x / a))
+    return dlx.array(dlx.where(x > 0, 1.0, dlx.exp(x / a)))
 
 
 def sigmoid(x: dlx.Array, /) -> dlx.Array:
     """Returns the Sigmoid activation of x with overflow protection."""
-    expx = np.array(dlx.exp(x))
-    npx = np.array(x)
-    return dlx.array(
-        np.where(npx >= 0, 1.0 / (1.0 + np.exp(-npx)), expx / (1.0 + expx))
-    )
+    expx = dlx.exp(x)
+    return dlx.array(dlx.where(x >= 0, 1.0 / (1.0 + dlx.exp(-x)), expx / (1.0 + expx)))
 
 
 def d_sigmoid(x: dlx.Array, /) -> dlx.Array:
@@ -129,29 +126,29 @@ def d_swish(x: dlx.Array, /, *, β: float = 1.0) -> dlx.Array:
     return s + (β * x * s * (1.0 - s))
 
 
-def mish(x: np.ndarray, /) -> dlx.Array:
+def mish(x: dlx.Array, /) -> dlx.Array:
     """A self-regularized, smooth, non-monotonic activation function."""
-    softplus = np.where(x < 20.0, np.log1p(np.exp(x)), x)
+    softplus = dlx.where(x < 20.0, dlx.log1p(dlx.exp(x)), x)
     return x * tanh(dlx.array(softplus))
 
 
-def d_mish(x: np.ndarray, /) -> np.ndarray:
+def d_mish(x: dlx.Array, /) -> dlx.Array:
     """Derivative of the Mish activation function."""
 
     # Clip the exponent so exp(x) cannot overflow to inf (which yields nan,
     # since np.exp on an array warns instead of raising OverflowError).
     # For x > 20 the derivative is already 1 to within float precision.
-    ex = np.exp(np.minimum(x, 20.0))
+    ex = dlx.exp(dlx.array(dlx.minimum(x, 20.0)))
 
     omega = 4.0 * (x + 1.0) + 4.0 * ex**2 + ex**3 + ex * (4.0 * x + 6.0)
     delta = 2.0 * ex + ex**2 + 2.0
     return (ex * omega) / (delta**2)
 
 
-def softmax(z: np.ndarray, /) -> np.ndarray:
+def softmax(z: dlx.Array, /) -> dlx.Array:
     """Softmax activation function for multi-class classification. Converts raw scores (logits) into probabilities."""
-    exp_z = np.exp(z - np.max(z, axis=-1, keepdims=True))
-    return exp_z / np.sum(exp_z, axis=-1, keepdims=True)
+    exp_z = dlx.exp(z - z.max(axis=-1))
+    return exp_z / exp_z.sum(axis=-1)
 
 
 # ------------------------------------- #
@@ -210,7 +207,7 @@ def cross_entropy_loss(actual: np.ndarray, pred: np.ndarray) -> float:
     if actual.ndim == 0:
         raise ValueError("Cross-entropy loss requires at least a 1-D input.")
 
-    probabilities = np.clip(softmax(pred), 1e-15, 1.0)
+    probabilities = np.clip(np.array(softmax(dlx.array(pred))), 1e-15, 1.0)
     targets = np.argmax(actual, axis=-1)
 
     if pred.ndim == 1:

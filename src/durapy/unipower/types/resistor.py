@@ -56,7 +56,15 @@ TOLERANCES: MappingProxyType[str, float] = MappingProxyType(
 def resistor_insight(
     C1: str, C2: str, C3: str, C4: str, C5: str | None = None
 ) -> tuple[float, float, float, float]:
-    """Returns the resistance value of a resistor given its color bands."""
+    """Returns the resistance value of a resistor given its color bands.
+
+    Returns
+    -------
+        ohms \n
+        tolerance percent \n
+        lower bound \n
+        upper bound \n
+    """
 
     # Try given colors
     try:

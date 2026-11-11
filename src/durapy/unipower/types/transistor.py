@@ -42,7 +42,7 @@ class Transistor:
             raise ValueError("vbe_on cannot be negative")
         if self.vce_sat < 0:
             raise ValueError("vce_sat cannot be negative")
-        if self.polarity not in ("npn", "pnp"):
+        if self.polarity not in {"npn", "pnp"}:
             raise ValueError("polarity must be 'npn' or 'pnp'")
 
     def collector_current(self, base_current: float) -> float:
@@ -73,6 +73,5 @@ class Transistor:
         ):
             return False
         return not (
-            self.max_power is not None
-            and abs(vce * collector_current) > self.max_power
+            self.max_power is not None and abs(vce * collector_current) > self.max_power
         )
