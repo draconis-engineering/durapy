@@ -5,6 +5,7 @@ Each test corresponds to a confirmed defect so it cannot silently return.
 
 import math
 
+import dracolix as dlx
 import numpy as np
 import pytest
 
@@ -135,6 +136,6 @@ def test_quantity_incompatible_units_raise():
 def test_d_mish_matches_numeric_derivative(x):
     h = 1e-6
     numeric = (
-        float(mish(np.array([x + h]))[0]) - float(mish(np.array([x - h]))[0])
+        float(mish(dlx.array([x + h]))[0]) - float(mish(dlx.array([x - h]))[0])
     ) / (2 * h)
-    assert float(d_mish(np.array([x]))[0]) == pytest.approx(numeric, abs=1e-3)
+    assert float(d_mish(dlx.array([x]))[0]) == pytest.approx(numeric, abs=1e-3)

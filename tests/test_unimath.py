@@ -113,7 +113,7 @@ def test_tangent_formula_returns_equal_derivative_points():
 
 def test_tangent_formula_requires_strings():
     with pytest.raises(TypeError):
-        trig.tangent_formula(1, "x")
+        trig.tangent_formula(1, "x")  # type: ignore | TypeError
 
 
 def test_cartesian1d_distance_to_origin():
@@ -251,7 +251,7 @@ def test_coordinate_distance_to():
 
 def test_coordinate_distance_to_validation():
     with pytest.raises(TypeError):
-        cs.Cartesian1D(0).distance_to(1)
+        cs.Cartesian1D(0).distance_to(1)  # type: ignore | TypeError
     with pytest.raises(ValueError):
         cs.Cartesian1D(0).distance_to(cs.Cartesian2D(0, 0))
     with pytest.raises(ValueError):
@@ -344,7 +344,7 @@ def test_regular_polygon_helpers_reject_too_few_sides(n):
 
 def test_regular_polygon_helpers_reject_non_integer_sides():
     with pytest.raises(TypeError):
-        geometry.polygon_area(4.0, 1)
+        geometry.polygon_area(4.0, 1)  # type: ignore | TypeError
 
 
 @pytest.mark.parametrize("side_length", [0, -1])
@@ -468,7 +468,7 @@ def test_sociable_chain():
 
 def test_sociable_chain_requires_a_list():
     with pytest.raises(TypeError):
-        num_theory.is_sociable_chain((6,))
+        num_theory.is_sociable_chain((6,))  # type: ignore | TypeError
 
 
 def test_lovelace():

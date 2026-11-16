@@ -85,6 +85,6 @@ def test_clear_terminal_does_not_shell_out(monkeypatch):
     def fake_clear(self):
         called["cleared"] = True
 
-    monkeypatch.setattr(unicli.RichConsole, "clear", fake_clear)
+    monkeypatch.setattr(unicli.Console, "clear", fake_clear)
     unicli.clear_terminal()
     assert called.get("cleared") is True

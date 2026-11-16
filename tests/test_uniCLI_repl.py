@@ -63,6 +63,7 @@ def test_last_call_memory_with_again():
     assert last is not None
     assert last.short_name == "slope"
     assert repl.execute(":again 0 0 1 1") == pytest.approx(1.0)
+    assert repl.last_call is not None
     assert repl.last_call.args == (0, 0, 1, 1)
 
 
@@ -71,6 +72,9 @@ def test_last_callable_reruns_with_new_arguments():
     repl.execute("slope 0 0 2 4")
 
     assert repl.execute("last(0, 0, 4, 8)") == pytest.approx(2.0)
+    # BPR doesnt know that last_call isnt None after line 73,
+    # so explicitly tell it that it isnt None here
+    assert repl.last_call is not None
     assert repl.last_call.args == (0, 0, 4, 8)
 
 
