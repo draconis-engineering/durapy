@@ -10,36 +10,28 @@ from .exceptions import UnitError
 
 @dataclass(frozen=True, slots=True)
 class Dimension:
-    exponents: tuple[Fraction, ...]
+    exps: tuple[Fraction, ...]
 
     def __iter__(self):
-        return iter(self.exponents)
+        return iter(self.exps)
 
     def __neg__(self) -> Dimension:
-        return Dimension(tuple(-x for x in self.exponents))
+        return Dimension(tuple(-x for x in self.exps))
 
     def __mul__(self, other: Dimension) -> Dimension:
-        return Dimension(
-            tuple(Fraction(a + b) for a, b in zip(self.exponents, other.exponents))
-        )
+        return Dimension(tuple(Fraction(a + b) for a, b in zip(self.exps, other.exps)))
 
     def __rmul__(self, other: Dimension) -> Dimension:
-        return Dimension(
-            tuple(Fraction(a + b) for a, b in zip(self.exponents, other.exponents))
-        )
+        return Dimension(tuple(Fraction(a + b) for a, b in zip(self.exps, other.exps)))
 
     def __truediv__(self, other: Dimension) -> Dimension:
-        return Dimension(
-            tuple(Fraction(a - b) for a, b in zip(self.exponents, other.exponents))
-        )
+        return Dimension(tuple(Fraction(a - b) for a, b in zip(self.exps, other.exps)))
 
     def __rtruediv__(self, other: Dimension) -> Dimension:
-        return Dimension(
-            tuple(Fraction(b - a) for a, b in zip(self.exponents, other.exponents))
-        )
+        return Dimension(tuple(Fraction(b - a) for a, b in zip(self.exps, other.exps)))
 
     def __pow__(self, power: float | Fraction) -> Dimension:
-        return Dimension(tuple(Fraction(power) * x for x in self.exponents))
+        return Dimension(tuple(Fraction(power) * x for x in self.exps))
 
     def __rpow__(self, base: float) -> Dimension:
         raise TypeError(
